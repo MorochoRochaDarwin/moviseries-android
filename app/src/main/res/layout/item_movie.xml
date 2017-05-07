@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="2dp"
         app:cardBackgroundColor="#ffffff"
+        app:cardCornerRadius="0dp"
         app:cardElevation="6dp">
 
         <LinearLayout
@@ -17,7 +18,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-            android:paddingTop="5dp">
+            android:paddingTop="0dp">
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -52,6 +53,7 @@
                 android:text="HD1080p | HD720p"
                 android:textColor="#0f0860"
                 android:textSize="9sp"
+                android:maxLines="1"
                 android:textStyle="bold" />
 
         </LinearLayout>

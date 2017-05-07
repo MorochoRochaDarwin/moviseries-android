@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     android:orientation="vertical">
 
     <FrameLayout
@@ -20,19 +21,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:visibility="gone"
             android:padding="3dp"
-            >
+            android:visibility="gone">
 
             <xyz.moviseries.moviseries.custom_views.DMTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:background="@color/colorPrimary"
+                android:gravity="center_horizontal"
                 android:text="ULTIMAS PELICULAS"
                 android:textColor="#fff"
-                android:gravity="center_horizontal"
-                android:textStyle="bold"
-                android:layout_marginTop="3dp"
-                android:background="@color/colorPrimary"/>
+                android:textStyle="bold" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView"
@@ -41,35 +41,35 @@
 
 
             <android.support.v4.app.FragmentTabHost
-                android:layout_marginTop="6dp"
                 android:id="@android:id/tabhost"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginTop="6dp">
 
                 <LinearLayout
-                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
                     <TabWidget
                         android:id="@android:id/tabs"
-                        android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:tabStripEnabled="true"
-                        android:layout_weight="0"/>
+                        android:layout_weight="0"
+                        android:orientation="horizontal"
+                        android:tabStripEnabled="true" />
 
                     <FrameLayout
                         android:id="@android:id/tabcontent"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
-                        android:layout_weight="0"/>
+                        android:layout_weight="0" />
 
                     <FrameLayout
                         android:id="@+id/realtabcontent"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1" />
 
                 </LinearLayout>
             </android.support.v4.app.FragmentTabHost>

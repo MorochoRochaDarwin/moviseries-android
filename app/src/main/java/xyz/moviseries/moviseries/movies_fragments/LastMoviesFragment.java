@@ -76,9 +76,9 @@ public class LastMoviesFragment extends Fragment {
         mTabHost.addTab(mTabHost.newTabSpec("tab1").setIndicator("Ultimas Series"),
                 LastSeriesFragment.class, null);
         mTabHost.addTab(mTabHost.newTabSpec("tab2").setIndicator("Series Actualizadas"),
-                LastSeriesFragment.class, null);
+                LastSeasonsFragment.class, null);
         mTabHost.addTab(mTabHost.newTabSpec("tab3").setIndicator("Top Peliculas"),
-                LastSeriesFragment.class, null);
+                TopMoviesFragment.class, null);
 
 
         for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {

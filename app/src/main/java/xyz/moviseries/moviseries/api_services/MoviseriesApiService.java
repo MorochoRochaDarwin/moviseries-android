@@ -14,7 +14,9 @@ import retrofit2.http.Query;
 import retrofit2.http.Url;
 import xyz.moviseries.moviseries.MovieQualities;
 import xyz.moviseries.moviseries.models.Movie;
+import xyz.moviseries.moviseries.models.Season;
 import xyz.moviseries.moviseries.models.Serie;
+import xyz.moviseries.moviseries.models.TopMovie;
 
 /**
  * Created by DARWIN on 6/5/2017.
@@ -33,4 +35,14 @@ public interface MoviseriesApiService {
 
     @GET
     Call<List<Serie>> getLastSeries(@Url String url);
+
+
+
+    @GET
+    Call<List<Season>> getLastSeasons(@Url String url);
+
+
+    @GET
+    Call<List<TopMovie>> getTopMovies(@Url String url);
+
 }

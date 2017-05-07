@@ -5,14 +5,14 @@ package xyz.moviseries.moviseries.models;
  */
 
 public class Movie {
-    private String movie_id;
-    private String name;
-    private String year;
-    private String cover;
-    private String trailer;
-    private String short_description;
-    private String created_at;
-    private String updated_at;
+    protected String movie_id;
+    protected String name;
+    protected String year;
+    protected String cover;
+    protected String trailer;
+    protected String short_description;
+    protected String created_at;
+    protected String updated_at;
 
     public String getMovie_id() {
         return movie_id;
