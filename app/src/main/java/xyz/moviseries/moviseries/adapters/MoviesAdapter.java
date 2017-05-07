@@ -9,7 +9,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -21,6 +23,7 @@ import java.util.List;
 
 import xyz.moviseries.moviseries.MovieQualities;
 import xyz.moviseries.moviseries.R;
+import xyz.moviseries.moviseries.custom_views.DMTextView;
 import xyz.moviseries.moviseries.models.Movie;
 import xyz.moviseries.moviseries.models.Quality;
 
@@ -48,6 +51,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieHolde
     @Override
     public void onBindViewHolder(final MovieHolder holder, int position) {
         final MovieQualities movie = movies.get(position);
+
+        holder.name.setText(movie.getMovie().getName());
+        holder.updated_at.setText(movie.getMovie().getUpdated_at());
+        holder.description.setText(movie.getMovie().getShort_description());
+
+
         List<Quality> qualities = movie.getQualities();
 
         String tmp = qualities.get(0).getQuality();
@@ -68,6 +77,14 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieHolde
             Log.i("apimoviseries", " err: " + e.getMessage());
         }
 
+
+        holder.item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                movieOnclickListener.MovieOptionsClick(movie);
+            }
+        });
+
     }
 
     @Override
@@ -78,12 +95,32 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieHolde
 
     class MovieHolder extends RecyclerView.ViewHolder {
         ImageView cover;
-        TextView qualities;
+        DMTextView name, description;
+        TextView updated_at, qualities;
+        LinearLayout item;
 
         public MovieHolder(View itemView) {
             super(itemView);
             cover = (ImageView) itemView.findViewById(R.id.cover);
+            name = (DMTextView) itemView.findViewById(R.id.name);
+            updated_at = (TextView) itemView.findViewById(R.id.timestamp);
             qualities = (TextView) itemView.findViewById(R.id.qualities);
+            description = (DMTextView) itemView.findViewById(R.id.short_description);
+            item=(LinearLayout) itemView.findViewById(R.id.item);
+
         }
+    }
+
+
+
+    public interface MovieOnclickListener{
+        void MovieOptionsClick(MovieQualities movie);
+    }
+
+
+    private MovieOnclickListener movieOnclickListener;
+
+    public void setMovieOnclickListener(MovieOnclickListener movieOnclickListener) {
+        this.movieOnclickListener = movieOnclickListener;
     }
 }

@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v7.widget.GridLayoutManager;
@@ -33,13 +34,14 @@ import xyz.moviseries.moviseries.R;
 import xyz.moviseries.moviseries.adapters.MoviesAdapter;
 import xyz.moviseries.moviseries.api_clients.MoviseriesApiClient;
 import xyz.moviseries.moviseries.api_services.MoviseriesApiService;
+import xyz.moviseries.moviseries.bottom_sheets.BottomSheetMovieOptions;
 import xyz.moviseries.moviseries.models.Movie;
 
 /**
  * Created by DARWIN on 6/5/2017.
  */
 
-public class LastMoviesFragment extends Fragment {
+public class LastMoviesFragment extends Fragment implements MoviesAdapter.MovieOnclickListener {
     private Context context;
     private RecyclerView recyclerView;
     private MoviesAdapter adapter;
@@ -49,15 +51,13 @@ public class LastMoviesFragment extends Fragment {
     private LinearLayout home;
 
 
-    private FragmentTabHost mTabHost;
-
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
     }
 
+    private  int gridsP=1, gridsL=2;
 
     @Nullable
     @Override
@@ -67,46 +67,39 @@ public class LastMoviesFragment extends Fragment {
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         home = (LinearLayout) rootView.findViewById(R.id.home);
         adapter = new MoviesAdapter(context, movies);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-        recyclerView.setAdapter(adapter);
-
-        mTabHost = (FragmentTabHost) rootView.findViewById(android.R.id.tabhost);
-        mTabHost.setup(context, getActivity().getSupportFragmentManager(), R.id.realtabcontent);
-
-        mTabHost.addTab(mTabHost.newTabSpec("tab1").setIndicator("Ultimas Series"),
-                LastSeriesFragment.class, null);
-        mTabHost.addTab(mTabHost.newTabSpec("tab2").setIndicator("Series Actualizadas"),
-                LastSeasonsFragment.class, null);
-        mTabHost.addTab(mTabHost.newTabSpec("tab3").setIndicator("Top Peliculas"),
-                TopMoviesFragment.class, null);
+        adapter.setMovieOnclickListener(this);
 
 
-        for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
-            mTabHost.getTabWidget().getChildAt(i)
-                    .setBackgroundResource(R.drawable.tab_unselected); // unselected
-            TextView tv = (TextView) mTabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title); //Unselected Tabs
-            tv.setTextColor(Color.parseColor("#ffffff"));
-            tv.setTextSize(10);
+        int screenSize = getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK;
+
+
+        switch(screenSize) {
+            case Configuration.SCREENLAYOUT_SIZE_LARGE:
+                gridsL=3;
+                gridsP=2;
+                break;
+            case Configuration.SCREENLAYOUT_SIZE_NORMAL:
+                gridsL=2;
+                gridsP=1;
+                break;
+            case Configuration.SCREENLAYOUT_SIZE_SMALL:
+                gridsL=2;
+                gridsP=1;
+                break;
+            default:
+                gridsL=2;
+                gridsP=1;
         }
-        mTabHost.getTabWidget().getChildAt(0)
-                .setBackgroundResource(R.drawable.tab_selected); // unselected
 
-
-
-        mTabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
-
-            public void onTabChanged(String arg0) {
-
-                for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
-                    mTabHost.getTabWidget().getChildAt(i)
-                            .setBackgroundResource(R.drawable.tab_unselected); // unselected
-                }
-
-                mTabHost.getTabWidget().getChildAt(mTabHost.getCurrentTab())
-                        .setBackgroundResource(R.drawable.tab_selected); // selected
-
-            }
-        });
+        if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            // Portrait Mode
+            recyclerView.setLayoutManager(new GridLayoutManager(context, gridsP));
+        } else {
+            // Landscape Mode
+            recyclerView.setLayoutManager(new GridLayoutManager(context, gridsL));
+        }
+        recyclerView.setAdapter(adapter);
 
 
         new Load().execute();
@@ -118,6 +111,24 @@ public class LastMoviesFragment extends Fragment {
         super.onConfigurationChanged(newConfig);
 
 
+
+
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            recyclerView.setLayoutManager(new GridLayoutManager(context, gridsL));
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            recyclerView.setLayoutManager(new GridLayoutManager(context, gridsP));
+        }
+
+    }
+
+    @Override
+    public void MovieOptionsClick(MovieQualities movie) {
+        Bundle args = new Bundle();
+        args.putString(BottomSheetMovieOptions.MOVIE_ID, movie.getMovie().getMovie_id());
+        args.putString(BottomSheetMovieOptions.TRAILER, movie.getMovie().getTrailer());
+        BottomSheetDialogFragment bottomSheet = BottomSheetMovieOptions.newInstance(args);
+        bottomSheet.show(getActivity().getSupportFragmentManager(), "BSDialog");
     }
 
     private class Load extends AsyncTask<Void, Void, Void> implements Callback<List<MovieQualities>> {

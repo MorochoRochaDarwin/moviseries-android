@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import xyz.moviseries.moviseries.custom_views.DMTextView;
+import xyz.moviseries.moviseries.fragments.HomeFragment;
 import xyz.moviseries.moviseries.movies_fragments.LastMoviesFragment;
 import xyz.moviseries.moviseries.movies_fragments.LastSeriesFragment;
 

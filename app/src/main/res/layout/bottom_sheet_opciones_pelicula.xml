@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btn_enlaces"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_link_black_24dp"
+        android:drawableRight="@drawable/ic_link_black_24dp"
+        android:text="ver enlaces" />
+
+    <Button
+        android:id="@+id/btn_trailer"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_youtube_play"
+        android:drawableRight="@drawable/ic_youtube_play"
+        android:text="Ver Trailer" />
+
+    <Button
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_screen_share_black_24dp"
+        android:drawableRight="@drawable/ic_screen_share_black_24dp"
+        android:text="Compartir Enlaces" />
+
+
+
+
+
+
+    <LinearLayout
+        android:id="@+id/marginBottom"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/colorAccent"
+        android:orientation="vertical" />
+
+
+</LinearLayout>
