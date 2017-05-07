@@ -84,6 +84,11 @@
     </string-array>
 
 
+    <string-array name="spinner_home">
+        <item>PELICULAS</item>
+        <item>SERIES</item>
+    </string-array>
+
 
     <!--preferencias-->
     <string name="preferencias_login">moviseries.LOGIN</string>

@@ -39,6 +39,7 @@ public class LastSeriesFragment extends Fragment {
     private ArrayList<Serie> series = new ArrayList<>();
 
     private ProgressBar progressBar;
+    private  int gridsP=1, gridsL=2;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,12 +55,34 @@ public class LastSeriesFragment extends Fragment {
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         adapter = new SeriesAdapter(context, series);
+        int screenSize = getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK;
+
+
+        switch(screenSize) {
+            case Configuration.SCREENLAYOUT_SIZE_LARGE:
+                gridsL=3;
+                gridsP=2;
+                break;
+            case Configuration.SCREENLAYOUT_SIZE_NORMAL:
+                gridsL=2;
+                gridsP=1;
+                break;
+            case Configuration.SCREENLAYOUT_SIZE_SMALL:
+                gridsL=2;
+                gridsP=1;
+                break;
+            default:
+                gridsL=2;
+                gridsP=1;
+        }
+
         if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             // Portrait Mode
-            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(3,StaggeredGridLayoutManager.VERTICAL));
+            recyclerView.setLayoutManager(new GridLayoutManager(context, gridsP));
         } else {
             // Landscape Mode
-            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(4,StaggeredGridLayoutManager.VERTICAL));
+            recyclerView.setLayoutManager(new GridLayoutManager(context, gridsL));
         }
 
         recyclerView.setAdapter(adapter);
@@ -72,11 +95,12 @@ public class LastSeriesFragment extends Fragment {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+
         // Checks the orientation of the screen
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(4,StaggeredGridLayoutManager.VERTICAL));
+            recyclerView.setLayoutManager(new GridLayoutManager(context, gridsL));
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(3,StaggeredGridLayoutManager.VERTICAL));
+            recyclerView.setLayoutManager(new GridLayoutManager(context, gridsP));
         }
 
     }

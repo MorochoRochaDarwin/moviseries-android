@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -38,9 +40,11 @@ public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.SerieHolde
 
     @Override
     public void onBindViewHolder(SerieHolder holder, int position) {
-        Serie serie=series.get(position);
+        Serie serie = series.get(position);
 
         holder.name.setText(serie.getSerie_name());
+        holder.description.setText(serie.getShort_description());
+        holder.updated_at.setText(serie.getCreated_at());
 
         try {
             Picasso.with(context)
@@ -60,13 +64,19 @@ public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.SerieHolde
     }
 
 
-    class SerieHolder extends RecyclerView.ViewHolder{
+    class SerieHolder extends RecyclerView.ViewHolder {
         ImageView cover;
-        DMTextView name;
+        DMTextView  description;
+        TextView name,updated_at;
+        LinearLayout item;
+
         public SerieHolder(View itemView) {
             super(itemView);
-            name=(DMTextView) itemView.findViewById(R.id.name);
             cover = (ImageView) itemView.findViewById(R.id.cover);
+            name = (TextView) itemView.findViewById(R.id.name);
+            updated_at = (TextView) itemView.findViewById(R.id.timestamp);
+            description = (DMTextView) itemView.findViewById(R.id.short_description);
+            item = (LinearLayout) itemView.findViewById(R.id.item);
         }
     }
 }

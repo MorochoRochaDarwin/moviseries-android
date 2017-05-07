@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="2dp"
-        app:cardBackgroundColor="@color/colorPrimary"
         app:cardCornerRadius="0dp"
         app:cardElevation="5dp">
 
@@ -45,16 +44,16 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <xyz.moviseries.moviseries.custom_views.DMTextView
+                    <TextView
                         android:id="@+id/name"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
                         android:maxLines="1"
                         android:text="Metting Tungurahua"
-                        android:textColor="#fff"
+                        android:textColor="@color/colorPrimary"
                         android:textStyle="bold"
-                        app:dm_font="segoe_print" />
+                         />
 
                     <TextView
                         android:id="@+id/timestamp"
@@ -62,14 +61,14 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
                         android:text="22 hours ago"
-                        android:textColor="#fff"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="10sp" />
 
                     <TextView
                         android:id="@+id/qualities"
                         android:layout_marginLeft="8dp"
                         android:textStyle="bold"
-                        android:textColor="#fff"
+                        android:textColor="@color/colorPrimary"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
@@ -83,7 +82,7 @@
                         android:paddingLeft="8dp"
                         android:paddingRight="5dp"
                         android:text="La Provincia de Tungurahua es una de las 24 provincias que conforman la República del Ecuador, situada en el centro del país, en la zona geográfica conocida como región interandina o sierra"
-                        android:textColor="#fff"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="8sp"
                         app:dm_font="segoe_print" />
 

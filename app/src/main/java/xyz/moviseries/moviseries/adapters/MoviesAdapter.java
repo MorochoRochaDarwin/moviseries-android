@@ -95,14 +95,14 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieHolde
 
     class MovieHolder extends RecyclerView.ViewHolder {
         ImageView cover;
-        DMTextView name, description;
-        TextView updated_at, qualities;
+        DMTextView description;
+        TextView name,updated_at, qualities;
         LinearLayout item;
 
         public MovieHolder(View itemView) {
             super(itemView);
             cover = (ImageView) itemView.findViewById(R.id.cover);
-            name = (DMTextView) itemView.findViewById(R.id.name);
+            name = (TextView) itemView.findViewById(R.id.name);
             updated_at = (TextView) itemView.findViewById(R.id.timestamp);
             qualities = (TextView) itemView.findViewById(R.id.qualities);
             description = (DMTextView) itemView.findViewById(R.id.short_description);

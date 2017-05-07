@@ -22,7 +22,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import xyz.moviseries.moviseries.custom_views.DMTextView;
@@ -31,7 +34,7 @@ import xyz.moviseries.moviseries.movies_fragments.LastMoviesFragment;
 import xyz.moviseries.moviseries.movies_fragments.LastSeriesFragment;
 
 public class DashboardActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemSelectedListener {
 
     private Toolbar toolbar;
     private ViewPager pager;
@@ -44,12 +47,21 @@ public class DashboardActivity extends BaseActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+// Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.spinner_home, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
 
 
         initDrawer();
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_content,new LastMoviesFragment());
+        transaction.replace(R.id.fragment_content, new LastMoviesFragment());
         transaction.commit();
 
 
@@ -95,14 +107,8 @@ public class DashboardActivity extends BaseActivity
         int id = item.getItemId();
 
 
-        Fragment fragment = null;
-        if (id == R.id.nav_inicio) {
-            fragment=new LastMoviesFragment();
-        }
 
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_content,fragment);
-        transaction.commit();
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -165,6 +171,23 @@ public class DashboardActivity extends BaseActivity
         textViewUserID.setText("Usuario ID: " + usuario_id);
         textViewUserType.setText("Cuenta: " + tipo);
 
+
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if(i==0){
+            transaction.replace(R.id.fragment_content, new LastMoviesFragment());
+
+        }else{
+            transaction.replace(R.id.fragment_content, new LastSeriesFragment());
+        }
+        transaction.commit();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
 

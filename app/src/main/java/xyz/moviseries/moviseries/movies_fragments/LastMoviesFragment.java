@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TabHost;
@@ -57,7 +58,9 @@ public class LastMoviesFragment extends Fragment implements MoviesAdapter.MovieO
         context = getActivity();
     }
 
-    private  int gridsP=1, gridsL=2;
+    private int gridsP = 1, gridsL = 2;
+    private boolean loading;
+    private GridLayoutManager glm;
 
     @Nullable
     @Override
@@ -74,35 +77,57 @@ public class LastMoviesFragment extends Fragment implements MoviesAdapter.MovieO
                 Configuration.SCREENLAYOUT_SIZE_MASK;
 
 
-        switch(screenSize) {
+        switch (screenSize) {
             case Configuration.SCREENLAYOUT_SIZE_LARGE:
-                gridsL=3;
-                gridsP=2;
+                gridsL = 3;
+                gridsP = 2;
                 break;
             case Configuration.SCREENLAYOUT_SIZE_NORMAL:
-                gridsL=2;
-                gridsP=1;
+                gridsL = 2;
+                gridsP = 1;
                 break;
             case Configuration.SCREENLAYOUT_SIZE_SMALL:
-                gridsL=2;
-                gridsP=1;
+                gridsL = 2;
+                gridsP = 1;
                 break;
             default:
-                gridsL=2;
-                gridsP=1;
+                gridsL = 2;
+                gridsP = 1;
         }
 
+
         if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            // Portrait Mode
-            recyclerView.setLayoutManager(new GridLayoutManager(context, gridsP));
+            glm = new GridLayoutManager(context, gridsP);
         } else {
             // Landscape Mode
-            recyclerView.setLayoutManager(new GridLayoutManager(context, gridsL));
+            glm = new GridLayoutManager(context, gridsL);
+
         }
+
         recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(glm);
+
 
 
         new Load().execute();
+
+
+        Button more=(Button)rootView.findViewById(R.id.more);
+        more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!loading) {//si no hay una tarea pendiente
+                    offset += 10;
+                    new Load().execute();
+                }
+            }
+        });
+
+
+
+
+
+
         return rootView;
     }
 
@@ -111,14 +136,14 @@ public class LastMoviesFragment extends Fragment implements MoviesAdapter.MovieO
         super.onConfigurationChanged(newConfig);
 
 
-
-
         // Checks the orientation of the screen
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            recyclerView.setLayoutManager(new GridLayoutManager(context, gridsL));
+            glm=new GridLayoutManager(context, gridsL);
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            recyclerView.setLayoutManager(new GridLayoutManager(context, gridsP));
+            glm=new GridLayoutManager(context, gridsP);
+
         }
+        recyclerView.setLayoutManager(glm);
 
     }
 
@@ -131,14 +156,18 @@ public class LastMoviesFragment extends Fragment implements MoviesAdapter.MovieO
         bottomSheet.show(getActivity().getSupportFragmentManager(), "BSDialog");
     }
 
+    private int limit = 10, offset = 0;
+
     private class Load extends AsyncTask<Void, Void, Void> implements Callback<List<MovieQualities>> {
-        private String url = "http://moviseries.xyz/android/last-movies";
+        private String url = "http://moviseries.xyz/android/last-movies/" + limit + "/" + offset;
+
+        private int prev_size = 0;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            movies.clear();
-            home.setVisibility(View.GONE);
+            prev_size = movies.size();
+            loading = true;
         }
 
         @Override
@@ -162,28 +191,32 @@ public class LastMoviesFragment extends Fragment implements MoviesAdapter.MovieO
 
 
             if (response != null) {
-                movies.addAll(response.body());
-                int n = movies.size();
-                //Log.i("apimoviseries","tam:"+n);
-                if (n > 0) {
-                    adapter.notifyItemRangeInserted(0, n);
-                    adapter.notifyDataSetChanged();
+                if(response.isSuccessful()){
+                    if(response.body()!=null){
+                        movies.addAll(response.body());
+                        int n = movies.size();
+                        //Log.i("apimoviseries","tam:"+n);
+                        if (n > prev_size) {
+                            adapter.notifyItemRangeInserted(prev_size - 1, n);
+                            adapter.notifyDataSetChanged();
 
+                        }
+                    }
                 }
+
             }
 
 
             progressBar.setVisibility(View.GONE);
             home.setVisibility(View.VISIBLE);
 
-            recyclerView.scrollToPosition(0);
-
+            loading = false;
 
         }
 
         @Override
         public void onFailure(Call<List<MovieQualities>> call, Throwable t) {
-
+            loading = false;
         }
     }
 }
