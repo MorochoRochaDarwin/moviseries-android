@@ -1,0 +1,96 @@
+<resources>
+    <string name="app_name">Moviseries</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+
+    <!--NO modificar este array-->
+    <string-array name="fonts">
+        <item>Aleida.ttf</item>
+        <item>Big Pixel.otf</item>
+        <item>Bold and Stylish Calligraphy.ttf</item>
+        <item>CFGreenCorn-Regular.ttf</item>
+        <item>CFHalloween-Regular.ttf</item>
+        <item>CFSnowboardProject.ttf</item>
+        <item>Cherry and Kisses.ttf</item>
+        <item>Consequad St.ttf</item>
+        <item>Convincing.ttf</item>
+        <item>DANCING JUNGLE.ttf</item>
+        <item>DK Grumpy Tiger.otf</item>
+        <item>dk_bupkis.otf</item>
+        <item>FeatherScript.otf</item>
+        <item>KGRiseUP.ttf</item>
+        <item>KGShePersisted.ttf</item>
+        <item>KittenMonoline.ttf</item>
+        <item>Leon-Regular.ttf</item>
+        <item>Les Mousquetaires.ttf</item>
+        <item>lmsans8-oblique.otf</item>
+        <item>lmsans8-regular.otf</item>
+        <item>lmsans9-oblique.otf</item>
+        <item>lmsans9-regular.otf</item>
+        <item>lmsans10-bold.otf</item>
+        <item>lmsans10-boldoblique.otf</item>
+        <item>lmsans10-oblique.otf</item>
+        <item>lmsans10-regular.otf</item>
+        <item>lmsans12-oblique.otf</item>
+        <item>lmsans12-regular.otf</item>
+        <item>lmsans17-oblique.otf</item>
+        <item>lmsans17-regular.otf</item>
+        <item>MarioNett.ttf</item>
+        <item>McLetters.ttf</item>
+        <item>Niagra Faults.otf</item>
+        <item>response.otf</item>
+        <item>Sensations and Qualities.ttf</item>
+        <item>Shine.ttf</item>
+        <item>Sigismundus.ttf</item>
+        <item>snow riders xo.ttf</item>
+        <item>snow riders xs.ttf</item>
+        <item>Soft Marshmallow.otf</item>
+        <item>Sunny Spring Day.ttf</item>
+        <item>tablaksh.ttf</item>
+        <item>taylor-Regular.ttf</item>
+        <item>tayloritalic-Regular.ttf</item>
+        <item>The Bad Times St.ttf</item>
+        <item>tradizional.otf</item>
+        <item>Typo Angular Rounded Bold Italic.otf</item>
+        <item>Typo Angular Rounded Bold.otf</item>
+        <item>Typo Angular Rounded Italic.otf</item>
+        <item>Typo Angular Rounded Light Italic.otf</item>
+        <item>Typo Angular Rounded Light.otf</item>
+        <item>Typo Angular Rounded Thin Italic.otf</item>
+        <item>Typo Angular Rounded Thin.otf</item>
+        <item>waltographUI.ttf</item>
+        <item>White Chocolate Mint.ttf</item>
+        <item>Whortle.ttf</item>
+        <item>WOX_Modelist_Bold.otf</item>
+        <item>WOX_Modelist_Hairline.otf</item>
+        <item>WOX_Modelist_Italic.otf</item>
+        <item>April Flowers.ttf</item>
+        <item>MotionPicture_PersonalUseOnly.ttf</item>
+        <item>ASansrounded.ttf</item>
+        <item>SegoePrint.ttf</item>
+    </string-array>
+
+
+    <string-array name="titulos_main_tab">
+        <item>Ultimas\nPeliculas</item>
+        <item>Ultimas\nSeries</item>
+        <item>Series\nActualizadas</item>
+        <item>Top\nPeliculas</item>
+        <item>Top\nSeries</item>
+    </string-array>
+
+
+
+    <!--preferencias-->
+    <string name="preferencias_login">moviseries.LOGIN</string>
+    <string name="usuario_nombre">moviseries.usuario_nombre</string>
+    <string name="usuario_email">moviseries.usuario_emaile</string>
+    <string name="usuario_id">moviseries.usuario_id</string>
+    <string name="usuario_tipo">moviseries.usuario_tipo</string>
+
+
+</resources>
