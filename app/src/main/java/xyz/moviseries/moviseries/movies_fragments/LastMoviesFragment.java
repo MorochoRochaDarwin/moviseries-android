@@ -2,18 +2,24 @@ package xyz.moviseries.moviseries.movies_fragments;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTabHost;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TabHost;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +46,11 @@ public class LastMoviesFragment extends Fragment {
     private ArrayList<MovieQualities> movies = new ArrayList<>();
 
     private ProgressBar progressBar;
+    private LinearLayout home;
+
+
+    private FragmentTabHost mTabHost;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,15 +65,49 @@ public class LastMoviesFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_last_movies, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+        home = (LinearLayout) rootView.findViewById(R.id.home);
         adapter = new MoviesAdapter(context, movies);
-        if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            // Portrait Mode
-            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(3,StaggeredGridLayoutManager.VERTICAL));
-        } else {
-            // Landscape Mode
-            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(4,StaggeredGridLayoutManager.VERTICAL));
-        }
+        recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
         recyclerView.setAdapter(adapter);
+
+        mTabHost = (FragmentTabHost) rootView.findViewById(android.R.id.tabhost);
+        mTabHost.setup(context, getActivity().getSupportFragmentManager(), R.id.realtabcontent);
+
+        mTabHost.addTab(mTabHost.newTabSpec("tab1").setIndicator("Ultimas Series"),
+                LastSeriesFragment.class, null);
+        mTabHost.addTab(mTabHost.newTabSpec("tab2").setIndicator("Series Actualizadas"),
+                LastSeriesFragment.class, null);
+        mTabHost.addTab(mTabHost.newTabSpec("tab3").setIndicator("Top Peliculas"),
+                LastSeriesFragment.class, null);
+
+
+        for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
+            mTabHost.getTabWidget().getChildAt(i)
+                    .setBackgroundResource(R.drawable.tab_unselected); // unselected
+            TextView tv = (TextView) mTabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title); //Unselected Tabs
+            tv.setTextColor(Color.parseColor("#ffffff"));
+            tv.setTextSize(10);
+        }
+        mTabHost.getTabWidget().getChildAt(0)
+                .setBackgroundResource(R.drawable.tab_selected); // unselected
+
+
+
+        mTabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+
+            public void onTabChanged(String arg0) {
+
+                for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
+                    mTabHost.getTabWidget().getChildAt(i)
+                            .setBackgroundResource(R.drawable.tab_unselected); // unselected
+                }
+
+                mTabHost.getTabWidget().getChildAt(mTabHost.getCurrentTab())
+                        .setBackgroundResource(R.drawable.tab_selected); // selected
+
+            }
+        });
+
 
         new Load().execute();
         return rootView;
@@ -71,12 +116,7 @@ public class LastMoviesFragment extends Fragment {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        // Checks the orientation of the screen
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(4,StaggeredGridLayoutManager.VERTICAL));
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(3,StaggeredGridLayoutManager.VERTICAL));
-        }
+
 
     }
 
@@ -87,7 +127,7 @@ public class LastMoviesFragment extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             movies.clear();
-            recyclerView.setVisibility(View.GONE);
+            home.setVisibility(View.GONE);
         }
 
         @Override
@@ -110,18 +150,22 @@ public class LastMoviesFragment extends Fragment {
         public void onResponse(Call<List<MovieQualities>> call, Response<List<MovieQualities>> response) {
 
 
-           if(response!=null){
-               movies.addAll(response.body());
-               int n = movies.size();
-               //Log.i("apimoviseries","tam:"+n);
-               if (n > 0) {
-                   adapter.notifyItemRangeInserted(0, n);
-                   adapter.notifyDataSetChanged();
-               }
-           }
+            if (response != null) {
+                movies.addAll(response.body());
+                int n = movies.size();
+                //Log.i("apimoviseries","tam:"+n);
+                if (n > 0) {
+                    adapter.notifyItemRangeInserted(0, n);
+                    adapter.notifyDataSetChanged();
+
+                }
+            }
+
 
             progressBar.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
+            home.setVisibility(View.VISIBLE);
+
+            recyclerView.scrollToPosition(0);
 
 
         }

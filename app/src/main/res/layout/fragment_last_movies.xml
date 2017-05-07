@@ -1,25 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-  <FrameLayout
-      android:layout_width="match_parent"
-      android:layout_height="match_parent">
-      <ProgressBar
-          android:id="@+id/progressBar"
-          style="?android:attr/progressBarStyle"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:padding="90dp"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-      <android.support.v7.widget.RecyclerView
-          android:id="@+id/recyclerView"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:visibility="gone"/>
-  </FrameLayout>
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="90dp" />
 
+        <LinearLayout
+            android:id="@+id/home"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:padding="3dp"
+            >
+
+            <xyz.moviseries.moviseries.custom_views.DMTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ULTIMAS PELICULAS"
+                android:textColor="#fff"
+                android:gravity="center_horizontal"
+                android:textStyle="bold"
+                android:layout_marginTop="3dp"
+                android:background="@color/colorPrimary"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+            <android.support.v4.app.FragmentTabHost
+                android:layout_marginTop="6dp"
+                android:id="@android:id/tabhost"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TabWidget
+                        android:id="@android:id/tabs"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:tabStripEnabled="true"
+                        android:layout_weight="0"/>
+
+                    <FrameLayout
+                        android:id="@android:id/tabcontent"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="0"/>
+
+                    <FrameLayout
+                        android:id="@+id/realtabcontent"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"/>
+
+                </LinearLayout>
+            </android.support.v4.app.FragmentTabHost>
+
+
+        </LinearLayout>
+    </FrameLayout>
 
 
 </LinearLayout>

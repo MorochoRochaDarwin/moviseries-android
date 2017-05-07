@@ -10,6 +10,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,37 +44,14 @@ public class DashboardActivity extends BaseActivity
         setSupportActionBar(toolbar);
 
 
-        pager = (ViewPager) findViewById(R.id.pager);
-        tabs = (TabLayout) findViewById(R.id.tabLayout);
-
-
-        MPagerAdapter pagerAdapter = new MPagerAdapter(getSupportFragmentManager());
-        pager.setAdapter(pagerAdapter);
-
-
-        String[] titulos = getResources().getStringArray(R.array.titulos_main_tab);
-
-
-        tabs.setupWithViewPager(pager);
-
-        setTabIconText(0, titulos[0]);
-        setTabIconText(1, titulos[1]);
-        setTabIconText(2, titulos[2]);
-        setTabIconText(3, titulos[3]);
-        setTabIconText(4, titulos[4]);
-
 
         initDrawer();
 
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_content,new LastMoviesFragment());
+        transaction.commit();
 
-    }
 
-
-    private void setTabIconText(int tab_position, String text) {
-        View icon_tab_inflater = LayoutInflater.from(context).inflate(R.layout.icon_tab, null);
-        DMTextView text_tab = (DMTextView) icon_tab_inflater.findViewById(R.id.textViewTitle);
-        text_tab.setText(text);
-        tabs.getTabAt(tab_position).setCustomView(icon_tab_inflater);
     }
 
 
@@ -115,19 +93,15 @@ public class DashboardActivity extends BaseActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        Fragment fragment = null;
+        if (id == R.id.nav_inicio) {
+            fragment=new LastMoviesFragment();
         }
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_content,fragment);
+        transaction.commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -171,14 +145,14 @@ public class DashboardActivity extends BaseActivity
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
-       String nombre_usuario = preferences.getString(getString(R.string.usuario_nombre), "none");
+        String nombre_usuario = preferences.getString(getString(R.string.usuario_nombre), "none");
         String email_usuario = preferences.getString(getString(R.string.usuario_email), "none");
         String login_usuario = preferences.getString(getString(R.string.preferencias_login), "none");
         String tipo = preferences.getString(getString(R.string.usuario_tipo), "free");
         String usuario_id = preferences.getString(getString(R.string.usuario_id), "-1");
 
 
-       View headerView = navigationView.getHeaderView(0);
+        View headerView = navigationView.getHeaderView(0);
 
         TextView textViewUserName = (TextView) headerView.findViewById(R.id.username);
         TextView textViewUserEmail = (TextView) headerView.findViewById(R.id.email);
@@ -187,9 +161,8 @@ public class DashboardActivity extends BaseActivity
 
         textViewUserName.setText(nombre_usuario);
         textViewUserEmail.setText(email_usuario);
-        textViewUserID.setText("Usuario ID: "+usuario_id);
-        textViewUserEmail.setText("Cuenta: "+tipo);
-
+        textViewUserID.setText("Usuario ID: " + usuario_id);
+        textViewUserType.setText("Cuenta: " + tipo);
 
 
     }

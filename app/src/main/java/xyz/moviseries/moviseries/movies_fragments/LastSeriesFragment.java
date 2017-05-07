@@ -50,7 +50,7 @@ public class LastSeriesFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_last_movies, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_recycler, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         adapter = new SeriesAdapter(context, series);
