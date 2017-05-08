@@ -34,6 +34,7 @@ import retrofit2.Response;
 import xyz.moviseries.moviseries.DeveloperKey;
 import xyz.moviseries.moviseries.R;
 import xyz.moviseries.moviseries.adapters.EnlacesAdapter;
+import xyz.moviseries.moviseries.adapters.EnlacesMegaAdapter;
 import xyz.moviseries.moviseries.api_clients.MoviseriesApiClient;
 import xyz.moviseries.moviseries.api_services.MoviseriesApiService;
 import xyz.moviseries.moviseries.custom_views.DMTextView;
@@ -70,8 +71,9 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment {
     private MovieScore movie;
     private ArrayList<UrlOnline> urls = new ArrayList<>();
     private ArrayList<MEGAUrl> mega_urls = new ArrayList<>();
-    private RecyclerView recyclerViewEnlaces;
+    private RecyclerView recyclerViewEnlaces, recyclerViewEnlacesMega;
     private EnlacesAdapter enlacesAdapter;
+    private EnlacesMegaAdapter enlacesMegaAdapter;
 
 
     public static BottomSheetDialogFragment newInstance(Bundle args) {
@@ -117,10 +119,14 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment {
         textViewVotos = (TextView) contentView.findViewById(R.id.votos);
         smileRating = (SmileRating) contentView.findViewById(R.id.ratingView);
         recyclerViewEnlaces = (RecyclerView) contentView.findViewById(R.id.enlaces);
+        recyclerViewEnlacesMega = (RecyclerView) contentView.findViewById(R.id.enlaces_mega);
 
         enlacesAdapter = new EnlacesAdapter(context, urls);
+        enlacesMegaAdapter = new EnlacesMegaAdapter(context, mega_urls);
         recyclerViewEnlaces.setLayoutManager(new LinearLayoutManager(context));
+        recyclerViewEnlacesMega.setLayoutManager(new LinearLayoutManager(context));
         recyclerViewEnlaces.setAdapter(enlacesAdapter);
+        recyclerViewEnlacesMega.setAdapter(enlacesMegaAdapter);
 
         smileRating.setNameForSmile(BaseRating.TERRIBLE, "Terrible");
         smileRating.setNameForSmile(BaseRating.BAD, "Mala");
@@ -147,7 +153,6 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment {
 
 
         mBehavior = BottomSheetBehavior.from((View) contentView.getParent());
-
 
 
         btn_trailer.setOnClickListener(new View.OnClickListener() {
@@ -249,12 +254,16 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment {
 
                     if (response.body().getMega_urls() != null) {
                         mega_urls.addAll(response.body().getMega_urls());
+                        if (mega_urls.size() > 0) {
+                            enlacesMegaAdapter.notifyItemRangeInserted(0, mega_urls.size());
+                            enlacesMegaAdapter.notifyDataSetChanged();
+                        }
                     }
 
                     if (response.body().getUrls() != null) {
                         urls.addAll(response.body().getUrls());
-                        if (urls.size()>0){
-                            enlacesAdapter.notifyItemRangeInserted(0,urls.size());
+                        if (urls.size() > 0) {
+                            enlacesAdapter.notifyItemRangeInserted(0, urls.size());
                             enlacesAdapter.notifyDataSetChanged();
                         }
                     }

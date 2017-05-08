@@ -5,10 +5,14 @@ package xyz.moviseries.moviseries.models;
  */
 
 public class MEGAUrl {
-    private String mega_id, url, movie_id, note, language_name;
+    private String mega_id, name,url, movie_id, note, language_name;
 
     public String getMega_id() {
         return mega_id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getUrl() {

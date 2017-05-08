@@ -129,19 +129,36 @@
 
             </android.support.v7.widget.CardView>
 
-            <Button
-                android:id="@+id/btn_trailer"
-                style="@style/Base.Widget.AppCompat.Button.Borderless"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_youtube_play"
-                android:drawableRight="@drawable/ic_youtube_play"
-                android:text="Ver Trailer" />
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal">
+               <Button
+                   android:id="@+id/btn_trailer"
+                   style="@style/Base.Widget.AppCompat.Button.Borderless"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="1"
+                   android:drawableLeft="@drawable/ic_youtube_play"
+                   android:text="Trailer" />
+
+
+               <Button
+                   android:id="@+id/btn_share"
+                   style="@style/Base.Widget.AppCompat.Button.Borderless"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="1"
+                   android:drawableLeft="@drawable/ic_screen_share_black_24dp"
+                   android:text="Compartir" />
+
+           </LinearLayout>
 
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingLeft="7dp"
                 android:text="Enlaces"
                 android:textColor="#fff"
                 android:textStyle="bold"
@@ -149,6 +166,22 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/enlaces"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="7dp"
+                android:text="Enlaces MEGA"
+                android:textColor="#fff"
+                android:textStyle="bold"
+                android:background="@color/colorAccent"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/enlaces_mega"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
