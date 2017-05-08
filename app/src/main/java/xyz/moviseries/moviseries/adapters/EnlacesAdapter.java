@@ -35,10 +35,16 @@ public class EnlacesAdapter extends RecyclerView.Adapter<EnlacesAdapter.MViewHol
 
     @Override
     public void onBindViewHolder(MViewHolder holder, int position) {
-        UrlOnline url = urls.get(position);
+        final UrlOnline url = urls.get(position);
         holder.audio.setText(url.getLanguage_name());
         holder.quality.setText(url.getQuality());
         holder.server.setText(url.getServer());
+        holder.item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickEnlaceListener.onClickEnlace(url);
+            }
+        });
     }
 
     @Override
@@ -58,5 +64,16 @@ public class EnlacesAdapter extends RecyclerView.Adapter<EnlacesAdapter.MViewHol
             server = (TextView) itemView.findViewById(R.id.server);
 
         }
+    }
+
+
+    public interface OnClickEnlaceListener{
+        void onClickEnlace(UrlOnline url);
+    }
+
+    private OnClickEnlaceListener onClickEnlaceListener;
+
+    public void setOnClickEnlaceListener(OnClickEnlaceListener onClickEnlaceListener) {
+        this.onClickEnlaceListener = onClickEnlaceListener;
     }
 }

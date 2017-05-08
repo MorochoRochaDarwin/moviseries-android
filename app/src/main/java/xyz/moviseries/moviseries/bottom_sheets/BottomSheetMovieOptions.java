@@ -21,11 +21,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.hsalf.smilerating.BaseRating;
 import com.hsalf.smilerating.SmileRating;
 import com.squareup.picasso.Picasso;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -47,7 +56,7 @@ import xyz.moviseries.moviseries.models.ViewMovie;
  * Created by DARWIN on 7/5/2017.
  */
 
-public class BottomSheetMovieOptions extends BottomSheetDialogFragment {
+public class BottomSheetMovieOptions extends BottomSheetDialogFragment implements EnlacesAdapter.OnClickEnlaceListener {
     public static final String MOVIE_ID = "BottomSheetOpcionesPelicula.movie_id";
     public static final String NAME = "BottomSheetOpcionesPelicula.name";
     public static final String TRAILER = "BottomSheetOpcionesPelicula.trailer";
@@ -122,6 +131,7 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment {
         recyclerViewEnlacesMega = (RecyclerView) contentView.findViewById(R.id.enlaces_mega);
 
         enlacesAdapter = new EnlacesAdapter(context, urls);
+        enlacesAdapter.setOnClickEnlaceListener(this);
         enlacesMegaAdapter = new EnlacesMegaAdapter(context, mega_urls);
         recyclerViewEnlaces.setLayoutManager(new LinearLayoutManager(context));
         recyclerViewEnlacesMega.setLayoutManager(new LinearLayoutManager(context));
@@ -144,12 +154,6 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment {
         textViewQualities.setText(qualities);
         textViewUpdateAt.setText(update_at);
         textViewDescription.setText(description);
-
-
-        LinearLayout layout = (LinearLayout) contentView.findViewById(R.id.marginBottom);
-
-        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) layout.getLayoutParams();
-        lp.height = navigationBarHeight();
 
 
         mBehavior = BottomSheetBehavior.from((View) contentView.getParent());
@@ -213,6 +217,13 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment {
         return 0;
     }
 
+    @Override
+    public void onClickEnlace(UrlOnline url) {
+        if (url.getServer().equals("stream.moe")) {
+            new DownloadLink(url.getFile_id()).execute();
+        }
+    }
+
 
     private class Load extends AsyncTask<Void, Void, Void> implements Callback<ViewMovie> {
         private String url = "http://moviseries.xyz/android/movie/" + movie_id;
@@ -274,6 +285,39 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment {
         @Override
         public void onFailure(Call<ViewMovie> call, Throwable t) {
             Log.i("apimovi", t.getMessage());
+        }
+    }
+
+
+    private class DownloadLink extends AsyncTask<Void, Void, Void> {
+        private String file_id;
+
+        public DownloadLink(String file_id) {
+            this.file_id = file_id;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            RequestQueue queue = Volley.newRequestQueue(context);
+
+            // Request a string response from the provided URL.
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, "https://stream.moe/" + file_id, new com.android.volley.Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    String firtsString=response.substring(response.lastIndexOf("https://wabbit.moecdn.io/"));
+                    Log.i("response", firtsString.substring(0,firtsString.indexOf("\"")));
+
+                }
+            }, new com.android.volley.Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.i("response", "error");
+                }
+            });
+            // Add the request to the RequestQueue.
+            queue.add(stringRequest);
+            return null;
         }
     }
 

@@ -48,9 +48,9 @@
                     android:id="@+id/mega"
                     style="@style/Base.Widget.AppCompat.Button.Borderless"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:src="@mipmap/ic_mega"
+                    android:src="@drawable/ic_mega"
                     tools:scaleType="fitCenter" />
 
                 <ImageButton
@@ -59,7 +59,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:src="@drawable/ic_content_copy_black_24dp" />
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_content_copy_black_24dp"
+                    tools:scaleType="centerInside" />
 
 
             </LinearLayout>
