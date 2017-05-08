@@ -79,16 +79,16 @@ public class LastMoviesFragment extends Fragment implements MoviesAdapter.MovieO
 
         switch (screenSize) {
             case Configuration.SCREENLAYOUT_SIZE_LARGE:
-                gridsL = 3;
-                gridsP = 2;
+                gridsL = 5;
+                gridsP = 4;
                 break;
             case Configuration.SCREENLAYOUT_SIZE_NORMAL:
-                gridsL = 2;
-                gridsP = 1;
+                gridsL = 4;
+                gridsP = 3;
                 break;
             case Configuration.SCREENLAYOUT_SIZE_SMALL:
-                gridsL = 2;
-                gridsP = 1;
+                gridsL = 3;
+                gridsP = 2;
                 break;
             default:
                 gridsL = 2;
@@ -148,10 +148,15 @@ public class LastMoviesFragment extends Fragment implements MoviesAdapter.MovieO
     }
 
     @Override
-    public void MovieOptionsClick(MovieQualities movie) {
+    public void MovieOptionsClick(MovieQualities movie,String qualities) {
         Bundle args = new Bundle();
         args.putString(BottomSheetMovieOptions.MOVIE_ID, movie.getMovie().getMovie_id());
+        args.putString(BottomSheetMovieOptions.NAME, movie.getMovie().getName());
         args.putString(BottomSheetMovieOptions.TRAILER, movie.getMovie().getTrailer());
+        args.putString(BottomSheetMovieOptions.COVER, movie.getMovie().getCover());
+        args.putString(BottomSheetMovieOptions.UPDATE_AT, movie.getMovie().getUpdated_at());
+        args.putString(BottomSheetMovieOptions.DESCRIPTION, movie.getMovie().getShort_description());
+        args.putString(BottomSheetMovieOptions.QUALITIES, qualities);
         BottomSheetDialogFragment bottomSheet = BottomSheetMovieOptions.newInstance(args);
         bottomSheet.show(getActivity().getSupportFragmentManager(), "BSDialog");
     }

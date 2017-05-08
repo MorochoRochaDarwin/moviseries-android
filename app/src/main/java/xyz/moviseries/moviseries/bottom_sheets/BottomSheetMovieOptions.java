@@ -4,21 +4,43 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialogFragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
+import com.hsalf.smilerating.BaseRating;
+import com.hsalf.smilerating.SmileRating;
+import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import xyz.moviseries.moviseries.DeveloperKey;
 import xyz.moviseries.moviseries.R;
+import xyz.moviseries.moviseries.adapters.EnlacesAdapter;
+import xyz.moviseries.moviseries.api_clients.MoviseriesApiClient;
+import xyz.moviseries.moviseries.api_services.MoviseriesApiService;
+import xyz.moviseries.moviseries.custom_views.DMTextView;
+import xyz.moviseries.moviseries.models.MEGAUrl;
+import xyz.moviseries.moviseries.models.MovieScore;
+import xyz.moviseries.moviseries.models.UrlOnline;
+import xyz.moviseries.moviseries.models.ViewMovie;
 
 /**
  * Created by DARWIN on 7/5/2017.
@@ -26,13 +48,30 @@ import xyz.moviseries.moviseries.R;
 
 public class BottomSheetMovieOptions extends BottomSheetDialogFragment {
     public static final String MOVIE_ID = "BottomSheetOpcionesPelicula.movie_id";
+    public static final String NAME = "BottomSheetOpcionesPelicula.name";
     public static final String TRAILER = "BottomSheetOpcionesPelicula.trailer";
+    public static final String COVER = "BottomSheetOpcionesPelicula.cover";
+    public static final String DESCRIPTION = "BottomSheetOpcionesPelicula.description";
+    public static final String QUALITIES = "BottomSheetOpcionesPelicula.qualities";
+    public static final String UPDATE_AT = "BottomSheetOpcionesPelicula.update_at";
 
-    private String movie_id,trailer;
+    private String name, movie_id, trailer, cover, description, qualities, update_at;
 
 
     private Context context;
     private BottomSheetBehavior mBehavior;
+
+    private ImageView imageViewCover;
+    private TextView textViewName, textViewUpdateAt, textViewQualities, textViewVotos;
+    private DMTextView textViewDescription;
+    private SmileRating smileRating;
+
+
+    private MovieScore movie;
+    private ArrayList<UrlOnline> urls = new ArrayList<>();
+    private ArrayList<MEGAUrl> mega_urls = new ArrayList<>();
+    private RecyclerView recyclerViewEnlaces;
+    private EnlacesAdapter enlacesAdapter;
 
 
     public static BottomSheetDialogFragment newInstance(Bundle args) {
@@ -48,8 +87,13 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment {
 
 
         Bundle args = getArguments();
+        name = args.getString(NAME);
         movie_id = args.getString(MOVIE_ID);
         trailer = args.getString(TRAILER);
+        cover = args.getString(COVER);
+        description = args.getString(DESCRIPTION);
+        qualities = args.getString(QUALITIES);
+        update_at = args.getString(UPDATE_AT);
 
 
     }
@@ -62,8 +106,38 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment {
         View contentView = View.inflate(context, R.layout.bottom_sheet_opciones_pelicula, null);
         dialog.setContentView(contentView);
 
-        Button btn_enlaces = (Button) contentView.findViewById(R.id.btn_enlaces);
+
         Button btn_trailer = (Button) contentView.findViewById(R.id.btn_trailer);
+
+        imageViewCover = (ImageView) contentView.findViewById(R.id.cover);
+        textViewName = (TextView) contentView.findViewById(R.id.name);
+        textViewQualities = (TextView) contentView.findViewById(R.id.qualities);
+        textViewUpdateAt = (TextView) contentView.findViewById(R.id.timestamp);
+        textViewDescription = (DMTextView) contentView.findViewById(R.id.short_description);
+        textViewVotos = (TextView) contentView.findViewById(R.id.votos);
+        smileRating = (SmileRating) contentView.findViewById(R.id.ratingView);
+        recyclerViewEnlaces = (RecyclerView) contentView.findViewById(R.id.enlaces);
+
+        enlacesAdapter = new EnlacesAdapter(context, urls);
+        recyclerViewEnlaces.setLayoutManager(new LinearLayoutManager(context));
+        recyclerViewEnlaces.setAdapter(enlacesAdapter);
+
+        smileRating.setNameForSmile(BaseRating.TERRIBLE, "Terrible");
+        smileRating.setNameForSmile(BaseRating.BAD, "Mala");
+        smileRating.setNameForSmile(BaseRating.OKAY, "Regular");
+        smileRating.setNameForSmile(BaseRating.GOOD, "Buena");
+        smileRating.setNameForSmile(BaseRating.GREAT, "Excelente");
+
+
+        Picasso.with(context)
+                .load(cover)
+                .resize(351, 526)
+                .centerCrop()
+                .into(imageViewCover);
+        textViewName.setText(name);
+        textViewQualities.setText(qualities);
+        textViewUpdateAt.setText(update_at);
+        textViewDescription.setText(description);
 
 
         LinearLayout layout = (LinearLayout) contentView.findViewById(R.id.marginBottom);
@@ -74,22 +148,19 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment {
 
         mBehavior = BottomSheetBehavior.from((View) contentView.getParent());
 
-        btn_enlaces.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-            }
-        });
 
         btn_trailer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                Intent  intent = YouTubeStandalonePlayer.createVideoIntent(
+                Intent intent = YouTubeStandalonePlayer.createVideoIntent(
                         getActivity(), DeveloperKey.DEVELOPER_KEY, trailer, 0, true, false);
                 startActivity(intent);
             }
         });
+
+        new Load().execute();
 
     }
 
@@ -135,6 +206,66 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment {
         }
 
         return 0;
+    }
+
+
+    private class Load extends AsyncTask<Void, Void, Void> implements Callback<ViewMovie> {
+        private String url = "http://moviseries.xyz/android/movie/" + movie_id;
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            MoviseriesApiService apiService = MoviseriesApiClient.getClient().create(MoviseriesApiService.class);
+            Call<ViewMovie> call = apiService.getMovie(url);
+            call.enqueue(this);
+            return null;
+        }
+
+        @Override
+        public void onResponse(Call<ViewMovie> call, Response<ViewMovie> response) {
+            if (response != null) {
+                if (response.body() != null) {
+
+                    if (response.body().getMovie() != null) {
+                        movie = response.body().getMovie();
+                        float score = Float.parseFloat(movie.getScore());
+                        if (score >= 0 && score < 2) {
+                            smileRating.setSelectedSmile(BaseRating.TERRIBLE);
+                        } else if (score >= 2 && score < 4) {
+                            smileRating.setSelectedSmile(BaseRating.BAD);
+                        } else if (score >= 4 && score < 6) {
+                            smileRating.setSelectedSmile(BaseRating.OKAY);
+                        } else if (score >= 6 && score < 8) {
+                            smileRating.setSelectedSmile(BaseRating.GOOD);
+                        } else {
+                            smileRating.setSelectedSmile(BaseRating.GREAT);
+                        }
+
+                        textViewVotos.setText("# votos: " + movie.getVotos());
+
+                    } else {
+                        Log.i("apimovi", "null movie");
+                    }
+
+
+                    if (response.body().getMega_urls() != null) {
+                        mega_urls.addAll(response.body().getMega_urls());
+                    }
+
+                    if (response.body().getUrls() != null) {
+                        urls.addAll(response.body().getUrls());
+                        if (urls.size()>0){
+                            enlacesAdapter.notifyItemRangeInserted(0,urls.size());
+                            enlacesAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ViewMovie> call, Throwable t) {
+            Log.i("apimovi", t.getMessage());
+        }
     }
 
 

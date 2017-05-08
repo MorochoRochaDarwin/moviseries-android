@@ -53,9 +53,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieHolde
         final MovieQualities movie = movies.get(position);
 
         holder.name.setText(movie.getMovie().getName());
-        holder.updated_at.setText(movie.getMovie().getUpdated_at());
-        holder.description.setText(movie.getMovie().getShort_description());
-
 
         List<Quality> qualities = movie.getQualities();
 
@@ -65,12 +62,13 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieHolde
         }
 
         holder.qualities.setText(tmp);
+        final String squalities = tmp;
 
 
         try {
             Picasso.with(context)
                     .load(movie.getMovie().getCover())
-                    .resize(351, 526)
+                    .resize(153, 219)
                     .centerCrop()
                     .into(holder.cover);
         } catch (Exception e) {
@@ -81,7 +79,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieHolde
         holder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                movieOnclickListener.MovieOptionsClick(movie);
+                movieOnclickListener.MovieOptionsClick(movie, squalities);
             }
         });
 
@@ -96,25 +94,22 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieHolde
     class MovieHolder extends RecyclerView.ViewHolder {
         ImageView cover;
         DMTextView description;
-        TextView name,updated_at, qualities;
+        TextView name, updated_at, qualities;
         LinearLayout item;
 
         public MovieHolder(View itemView) {
             super(itemView);
             cover = (ImageView) itemView.findViewById(R.id.cover);
             name = (TextView) itemView.findViewById(R.id.name);
-            updated_at = (TextView) itemView.findViewById(R.id.timestamp);
             qualities = (TextView) itemView.findViewById(R.id.qualities);
-            description = (DMTextView) itemView.findViewById(R.id.short_description);
-            item=(LinearLayout) itemView.findViewById(R.id.item);
+            item = (LinearLayout) itemView.findViewById(R.id.item);
 
         }
     }
 
 
-
-    public interface MovieOnclickListener{
-        void MovieOptionsClick(MovieQualities movie);
+    public interface MovieOnclickListener {
+        void MovieOptionsClick(MovieQualities movie, String qualities);
     }
 
 

@@ -32,6 +32,7 @@ import xyz.moviseries.moviseries.custom_views.DMTextView;
 import xyz.moviseries.moviseries.fragments.HomeFragment;
 import xyz.moviseries.moviseries.movies_fragments.LastMoviesFragment;
 import xyz.moviseries.moviseries.movies_fragments.LastSeriesFragment;
+import xyz.moviseries.moviseries.movies_fragments.TopMoviesFragment;
 
 public class DashboardActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemSelectedListener {
@@ -105,9 +106,17 @@ public class DashboardActivity extends BaseActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        Fragment fragment = null;
 
+        switch (id) {
+            case R.id.nav_topm:
+                fragment = new TopMoviesFragment();
+                break;
+        }
 
-
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_content, fragment);
+        transaction.commit();
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -177,10 +186,10 @@ public class DashboardActivity extends BaseActivity
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        if(i==0){
+        if (i == 0) {
             transaction.replace(R.id.fragment_content, new LastMoviesFragment());
 
-        }else{
+        } else {
             transaction.replace(R.id.fragment_content, new LastSeriesFragment());
         }
         transaction.commit();

@@ -1,394 +1,63 @@
-[
-  {
-    "movie": {
-      "movie_id": "22",
-      "name": "Dragon Ball Z - EL ataque del drag\u00f3n",
-      "year": "1995",
-      "cover": "http:\/\/moviseries.xyz\/covers\/movie-e6e234681c42989bcf7a3ebb541d24b6.png",
-      "trailer": "BVN9J0Ra61I",
-      "short_description": "En un planeta lejano llamado \"Konatzu\", al sur de la Galaxia, hubo por un tiempo un Monstruo muy peligroso, llamado\u00a0Hildegarn. Era capaz de destrozar planetas enteros y terrenos bastante amplios.\u00a0Hildegarn\u00a0se enfrent\u00f3 a\u00a0Minotia, con lo que despert\u00f3 a\u00a0Tapion, hermano mayor de Minotia. Tapion y Minoti",
-      "created_at": "2017-05-06 15:18:02",
-      "updated_at": "2017-05-06 15:18:29"
-    },
-    "qualities": [
-      {
-        "quality": "Dvdrip"
-      }
-    ]
+{
+  "movie": {
+    "movie_id": "12",
+    "name": "Iron man 1",
+    "year": "2008",
+    "cover": "http:\/\/moviseries.xyz\/covers\/movie-8d5ddddd37d7eb12cf33d0a9e5246688.png",
+    "trailer": "WUvq_9XW2Do",
+    "short_description": "Iron Man (titulada Iron Man: el hombre de hierro en Espa\u00f1a) es una pel\u00edcula de superh\u00e9roes . Es la primera entrega del Universo cinematogr\u00e1fico de Marvel Comics. La cinta fue dirigida por Jon Favreau, con un guion de Stan Lee, Hawk Ostby, Art Marcum y Matt Holloway. Es protagonizada por Robert Downe",
+    "created_at": "2017-05-04 11:31:31",
+    "updated_at": "2017-05-04 15:27:05",
+    "score": "9.0000",
+    "votos": "1"
   },
-  {
-    "movie": {
-      "movie_id": "21",
-      "name": "Dragon Ball Z - La fusion de Goku y Vegeta",
-      "year": "1995",
-      "cover": "http:\/\/moviseries.xyz\/covers\/movie-01179ed7eeade3a9132028f86291dd25.png",
-      "trailer": "R4DS-E2Lqio",
-      "short_description": "En el planeta del\u00a0Dai Kai\u014d\u00a0se celebra un torneo de artes marciales. All\u00ed\u00a0Gok\u016b\u00a0y\u00a0Paikuhan\u00a0pasan a la semi-final y comienza el espect\u00e1culo. Mientras tanto, en la zona donde van a parar las almas que condena el Juez\u00a0Emma Dai\u014d, un joven y alegre Oni llamado Saike es el encargado de purificarlas mediante",
-      "created_at": "2017-05-06 15:13:46",
-      "updated_at": "2017-05-06 15:14:04"
+  "urls": [
+    {
+      "url_id": "89",
+      "file_id": "9MnIC6IgOP0",
+      "quality": "HD720p",
+      "server": "openload",
+      "language_name": "latino"
     },
-    "qualities": [
-      {
-        "quality": "Dvdrip"
-      }
-    ]
-  },
-  {
-    "movie": {
-      "movie_id": "20",
-      "name": "Dragon Ball Z - El combate final",
-      "year": "1994",
-      "cover": "http:\/\/moviseries.xyz\/covers\/movie-5f6b1f924dd953f2f36c67f3698c56db.png",
-      "trailer": "NssXutTy6-U",
-      "short_description": "Lord Jaguar enemigo de\u00a0Mr. Sat\u00e1n, posee ahora el servicio del\u00a0Dr. Kori, que al parecer ha logrado hacer un\u00a0clon\u00a0de\u00a0Broly. Aparece\u00a0A-18, pues ha venido a buscar el dinero que le debe\u00a0Mr. Sat\u00e1n, despu\u00e9s del torneo encontr\u00e1ndose con\u00a0MenMen, que intenta enga\u00f1ar al propio\u00a0Mr. Sat\u00e1n. As\u00ed que,\u00a0Sat\u00e1n\u00a0se enf",
-      "created_at": "2017-05-06 15:07:33",
-      "updated_at": "2017-05-06 15:07:49"
+    {
+      "url_id": "90",
+      "file_id": "ZkSU7dyP5b8",
+      "quality": "Dvdrip",
+      "server": "openload",
+      "language_name": "latino"
     },
-    "qualities": [
-      {
-        "quality": "Dvdrip"
-      }
-    ]
-  },
-  {
-    "movie": {
-      "movie_id": "19",
-      "name": "Dragon Ball Z - El regreso del guerrero legendario",
-      "year": "1994",
-      "cover": "http:\/\/moviseries.xyz\/covers\/movie-d6115317efa98d97eaf20fb4bc02cdb3.png",
-      "trailer": "x9WJ8iuUVUM",
-      "short_description": "En est\u00e1 pel\u00edcula no aparecer\u00e1 Goku, con lo que la situaci\u00f3n se plantea m\u00e1s dif\u00edcil. En esta ocasi\u00f3n, han salido en b\u00fasqueda de las siete bolas de drag\u00f3n , para descansar de tanto entrenamiento y as\u00ed participar en el torneo de artes marciales , mientras esperan el torneo de artes marciales. Trunks, ",
-      "created_at": "2017-05-06 14:58:53",
-      "updated_at": "2017-05-06 15:00:28"
-    },
-    "qualities": [
-      {
-        "quality": "Dvdrip"
-      },
-      {
-        "quality": "HD720p"
-      }
-    ]
-  },
-  {
-    "movie": {
-      "movie_id": "18",
-      "name": "Hulk 1",
-      "year": "2003",
-      "cover": "http:\/\/moviseries.xyz\/covers\/movie-3d6f5942b4519959b021e029f5b2d9bb.png",
-      "trailer": "razocBxk4hg",
-      "short_description": "Bruce Banner (Eric Bana), un brillante investigador en el campo de la tecnolog\u00eda gen\u00e9tica, oculta un pasado doloroso que lo ha dejado estigmatizado. Su antigua novia, la investigadora Betty Ross (Jennifer Connelly), que perdi\u00f3 la paciencia esperando que recuperara la estabilidad emocional, fue testi",
-      "created_at": "2017-05-06 14:27:09",
-      "updated_at": "2017-05-06 14:31:09"
-    },
-    "qualities": [
-      {
-        "quality": "HD720p"
-      }
-    ]
-  },
-  {
-    "movie": {
-      "movie_id": "17",
-      "name": "El hombre ara\u00f1a 2 - spiderman 2",
-      "year": "2004",
-      "cover": "http:\/\/moviseries.xyz\/covers\/movie-d24d00d3d632e73ec837a23d2c0851be.png",
-      "trailer": "FSMmDB3f_iA",
-      "short_description": "La acci\u00f3n tiene lugar dos a\u00f1os despu\u00e9s de los sucesos de la primera pel\u00edcula. Revela los conflictos de Peter compaginando su vida personal y su rol como Spider-Man y el descenso a la locura del doctor Otto Octavius (Alfred Molina), a consecuencia de un experimento fallido que resulta en la muerte de",
-      "created_at": "2017-05-06 14:07:57",
-      "updated_at": "2017-05-06 14:08:26"
-    },
-    "qualities": [
-      {
-        "quality": "HD1080p"
-      }
-    ]
-  },
-  {
-    "movie": {
-      "movie_id": "16",
-      "name": "The Amazing Spider-Man - El sorprendente hombre ara\u00f1a",
-      "year": "2012",
-      "cover": "http:\/\/moviseries.xyz\/covers\/movie-898ff6b73be3721bf5258527713d5c96.png",
-      "trailer": "7xJBW6tY7mA",
-      "short_description": "Un ni\u00f1o llamado Peter Parker es abandonado por sus padres que lo dejan con sus t\u00edos Ben (Martin Sheen) y May (Sally Field) y luego se marchan sin dar ninguna explicaci\u00f3n.\r\n\r\nA\u00f1os despu\u00e9s un adolescente Peter Parker (Andrew Garfield) asiste al Instituto de Ciencias Midtown, donde es acosado por el ma",
-      "created_at": "2017-05-05 13:23:16",
-      "updated_at": "2017-05-06 14:01:26"
-    },
-    "qualities": [
-      {
-        "quality": "HD720p"
-      }
-    ]
-  },
-  {
-    "movie": {
-      "movie_id": "15",
-      "name": "El Sorprendente Hombre Ara\u00f1a 2: La amenaza de Electro",
-      "year": "2014",
-      "cover": "http:\/\/moviseries.xyz\/covers\/movie-825fa2429f4f2fdc618a50d4625e4606.png",
-      "trailer": "ayi5y0Y4s2A",
-      "short_description": "El ex-cient\u00edfico de Oscorp, Richard Parker graba un mensaje de v\u00eddeo para explicar su desaparici\u00f3n. M\u00e1s tarde, \u00e9l y su esposa Mary, se hallan a bordo de un avi\u00f3n privado secuestrado por un hombre enviado para asesinar a Richard. El avi\u00f3n se estrella, muriendo tanto Richard como a Mary, despu\u00e9s de ha",
-      "created_at": "2017-05-05 13:14:31",
-      "updated_at": "2017-05-06 13:57:53"
-    },
-    "qualities": [
-      {
-        "quality": "HD720p"
-      },
-      {
-        "quality": "HD1080p"
-      }
-    ]
-  },
-  {
-    "movie": {
-      "movie_id": "14",
-      "name": "Spiderman 1 - El Hombre Ara\u00f1a",
-      "year": "2000",
-      "cover": "http:\/\/moviseries.xyz\/covers\/movie-6c319ec94cb7f8f4ef54ba48c5be54b5.png",
-      "trailer": "EQdOOTQnuvk",
-      "short_description": "Peter Parker es un adolescente hu\u00e9rfano brillante cient\u00edficamente, pero inepto socialmente. Vive con sus t\u00edos, Benjamin 'Ben' y May, en el vecindario de Forest Hills, en el distrito neoyorquino de Queens. Est\u00e1 enamorado de su vecina, Mary Jane Watson aunque es demasiado t\u00edmido para acerc\u00e1rsele, y es",
-      "created_at": "2017-05-05 03:11:41",
-      "updated_at": "2017-05-05 12:30:19"
-    },
-    "qualities": [
-      {
-        "quality": "HD1080p"
-      }
-    ]
-  },
-  {
-    "movie": {
+    {
+      "url_id": "94",
+      "file_id": "eS1QaWW4poU",
+      "quality": "HD1080p",
+      "server": "openload",
+      "language_name": "latino"
+    }
+  ],
+  "mega_urls": [
+    {
+      "mega_id": "1",
+      "name": "Iron man 1 HD1080p",
+      "url": "https:\/\/mega.nz\/#!n9ZUGb7S!tNbHHKRxzt_nsJrRkDONFMHOeuWHsjPzxszI_YF-SAk",
       "movie_id": "12",
-      "name": "Iron man 1",
-      "year": "2008",
-      "cover": "http:\/\/moviseries.xyz\/covers\/movie-8d5ddddd37d7eb12cf33d0a9e5246688.png",
-      "trailer": "WUvq_9XW2Do",
-      "short_description": "Iron Man (titulada Iron Man: el hombre de hierro en Espa\u00f1a) es una pel\u00edcula de superh\u00e9roes . Es la primera entrega del Universo cinematogr\u00e1fico de Marvel Comics. La cinta fue dirigida por Jon Favreau, con un guion de Stan Lee, Hawk Ostby, Art Marcum y Matt Holloway. Es protagonizada por Robert Downe",
-      "created_at": "2017-05-04 11:31:31",
-      "updated_at": "2017-05-04 15:27:05"
+      "note": "No tiene contrase\u00f1a, audio latino dual",
+      "language_name": "latino"
     },
-    "qualities": [
-      {
-        "quality": "HD720p"
-      },
-      {
-        "quality": "Dvdrip"
-      },
-      {
-        "quality": "HD1080p"
-      }
-    ]
-  },
-  {
-    "movie": {
-      "movie_id": "9",
-      "name": "Dragon Ball Z - La galaxia corre peligro",
-      "year": "1993",
-      "cover": "http:\/\/moviseries.xyz\/covers\/movie-b17749ef384d8dc1fd974954c9c92c09.png",
-      "trailer": "Ia1Rmgwy7R0",
-      "short_description": "D\u00edas despu\u00e9s de los Cell Games un hombre muy adinerado crea un torneo de artes marciales y extraterrestres (hombres disfrazados) al cual invita a Mr. Sat\u00e1n para que se enfrente a el ganador por el cumplea\u00f1os de su hijo, mientras Goku y Kaio Sama del Norte se preparan para ver el torneo ya que partic",
-      "created_at": "2017-05-04 04:57:30",
-      "updated_at": "2017-05-04 13:23:29"
+    {
+      "mega_id": "2",
+      "name": "Iron man 1 HD1080p Opcion 2",
+      "url": "https:\/\/mega.nz\/#!v8AxWQhA!3B8fSO-anm8S-9A40oRWg2b8u2cRC4Ktwz2lYG_cWw8",
+      "movie_id": "12",
+      "note": "no tiene contrase\u00f1a | tama\u00f1o: 2.4 GB",
+      "language_name": "latino"
     },
-    "qualities": [
-      {
-        "quality": "Dvdrip"
-      },
-      {
-        "quality": "HD1080p"
-      }
-    ]
-  },
-  {
-    "movie": {
-      "movie_id": "8",
-      "name": "Dragon Ball Z - El Poder Invencible",
-      "year": "1993",
-      "cover": "http:\/\/moviseries.xyz\/covers\/movie-243743d77d98a4cfa0084ab2a4654818.png",
-      "trailer": "u_FS4K1ugQU",
-      "short_description": "Durante los diez d\u00edas antes del torneo de\u00a0Cell\u00a0(Los Juegos de Cell), un desconocido saiyajin,\u00a0Paragus, decide ir a buscar a\u00a0Vegeta\u00a0a la\u00a0Tierra. Su objetivo: Restablecer el poder de los\u00a0saiyajin\u00a0tal como\u00a0Freezer\u00a0los tem\u00eda en la \u00e9poca pasada...\r\n\r\nVegeta,\u00a0Trunks\u00a0y\u00a0Gohan\u00a0son llevados a un nuevo planeta",
-      "created_at": "2017-05-04 04:54:39",
-      "updated_at": "2017-05-04 13:20:30"
-    },
-    "qualities": [
-      {
-        "quality": "Dvdrip"
-      },
-      {
-        "quality": "HD720p"
-      }
-    ]
-  },
-  {
-    "movie": {
-      "movie_id": "13",
-      "name": "La Raz\u00f3n de estar contigo",
-      "year": "2017",
-      "cover": "http:\/\/moviseries.xyz\/covers\/movie-62eef7af7cee048cd2755621709879ef.png",
-      "trailer": "s5ng7UEPlm8",
-      "short_description": "La raz\u00f3n de estar contigo, comparte la conmovedora y sorprendente historia de un perro leal (voz de Josh Gad) que encuentra el significado de su propia existencia a trav\u00e9s de la vida de los humanos a los que les ense\u00f1a a re\u00edr y amar. Esta pel\u00edcula familiar, es narrada desde la perspectiva del perro.",
-      "created_at": "2017-05-04 11:57:07",
-      "updated_at": "2017-05-04 13:17:25"
-    },
-    "qualities": [
-      {
-        "quality": "HD720p"
-      }
-    ]
-  },
-  {
-    "movie": {
-      "movie_id": "11",
-      "name": "Ranma 1\/2 la gran aventura en nekonron",
-      "year": "1991",
-      "cover": "http:\/\/moviseries.xyz\/covers\/movie-f309fec6e0709ad6d2b5c9fb0d438ce7.png",
-      "trailer": "w_nWjN1bFRE",
-      "short_description": "Todo parece tranquilo en casa de los Tendo, hasta que aparece una misteriosa chica y su enorme elefante, la joven es china y se llama Lychee. El motivo de su visita: vengarse de Happosai por faltar a una promesa que hizo tiempo atr\u00e1s. Por si esto fuera poco, el pr\u00edncipe y L\u00edder de los Siete Dioses d",
-      "created_at": "2017-05-04 05:22:42",
-      "updated_at": "2017-05-04 05:22:54"
-    },
-    "qualities": [
-      {
-        "quality": "Dvdrip"
-      }
-    ]
-  },
-  {
-    "movie": {
-      "movie_id": "10",
-      "name": "Yu- Gi- Oh!: El Lado Oscuro de las Dimensiones",
-      "year": "2016",
-      "cover": "http:\/\/moviseries.xyz\/covers\/movie-25c54e2fa8f9a562f90647e014604950.png",
-      "trailer": "a5bSKuQgsfY",
-      "short_description": "Yugi Muto y sus amigos est\u00e1n en su \u00faltimo a\u00f1o de escuela secundaria y est\u00e1n hablando de lo que van a hacer en el futuro. Mientras tanto, Seto Kaiba ha encargado una excavaci\u00f3n para recuperar el Rompecabezas del Milenio desensamblado de las ruinas de la c\u00e1mara del Milenio. El Rompecabezas hab\u00eda alber",
-      "created_at": "2017-05-04 05:02:10",
-      "updated_at": "2017-05-04 05:02:30"
-    },
-    "qualities": [
-      {
-        "quality": "Cam"
-      }
-    ]
-  },
-  {
-    "movie": {
-      "movie_id": "7",
-      "name": "Dragon Ball Z - La Pelea de los 3 Saiyajin",
-      "year": "1992",
-      "cover": "http:\/\/moviseries.xyz\/covers\/movie-f018788e5b79eb41561ae3fadacabcf1.png",
-      "trailer": "ooB5Dgb-Ifc",
-      "short_description": "Cuando el\u00a0Androide 17\u00a0y la\u00a0Androide 18\u00a0destruyeron a su propio creador, el\u00a0Dr. Gero, una de las sentencias de su computadora provoc\u00f3 que se activaran tres nuevos androides m\u00e1s d\u00e9biles el\u00a0androide 15\u00a0y el\u00a0androide 14\u00a0y seguidamente el\u00a0androide 13.",
-      "created_at": "2017-05-04 04:50:19",
-      "updated_at": "2017-05-04 04:50:35"
-    },
-    "qualities": [
-      {
-        "quality": "Dvdrip"
-      }
-    ]
-  },
-  {
-    "movie": {
-      "movie_id": "6",
-      "name": "Dragon Ball Z - Guerreros de fuerza ilimitada",
-      "year": "1992",
-      "cover": "http:\/\/moviseries.xyz\/covers\/movie-3ed05d0476b5728f8e5876b4c717a380.png",
-      "trailer": "A8gSZ4LW49Q",
-      "short_description": "Cuando Dende, el nuevo kamisama, se entera de que el planeta Namek est\u00e1 en peligro, pide ayuda a Goku y sus amigos para que salven su planeta natal. Al llegar, Goku y los dem\u00e1s se dan cuenta de que una especie de estrella est\u00e1 atacando al planeta. Detr\u00e1s de todo esto est\u00e1 Cooler, el hermano mayor de",
-      "created_at": "2017-05-04 04:45:19",
-      "updated_at": "2017-05-04 04:45:41"
-    },
-    "qualities": [
-      {
-        "quality": "Dvdrip"
-      }
-    ]
-  },
-  {
-    "movie": {
-      "movie_id": "5",
-      "name": "Dragon Ball Z - Los Rivales m\u00e1s Poderosos",
-      "year": "1991",
-      "cover": "http:\/\/moviseries.xyz\/covers\/movie-94e7c229b606c2775e9476d2a55df1fe.png",
-      "trailer": "0LptNug-OYo",
-      "short_description": "Luego de la muerte de Freezer, parec\u00eda que su raza se hab\u00eda extinguido, pero\u00a0Freezer\u00a0tiene un hermano mayor llamado\u00a0Cooler\u00a0que va junto a sus fuerzas especiales al planeta Tierra para vengar la muerte de su hermano por un simple saiyajin, una gran humillaci\u00f3n para ellos, quien se enter\u00f3 por\u00a0Salza\u00a0mi",
-      "created_at": "2017-05-04 04:37:05",
-      "updated_at": "2017-05-04 04:37:23"
-    },
-    "qualities": [
-      {
-        "quality": "Dvdrip"
-      }
-    ]
-  },
-  {
-    "movie": {
-      "movie_id": "3",
-      "name": "Dragon Ball Z-La Batalla M\u00e1s Grande del Mundo Est\u00e1 Por Comenzar",
-      "year": "1990",
-      "cover": "http:\/\/moviseries.xyz\/covers\/movie-8fe0951b02f80ba2b9220e9952f8ba91.png",
-      "trailer": "dSMI2-myylA",
-      "short_description": "Una extra\u00f1a nave de exploraci\u00f3n llega a la Tierra para ser observada por un desertor de Freezer,\u00a0Turles\u00a0junto a sus secuaces.\r\nCuando llegan a la Tierra para sembrar el \u00e1rbol del poder o \u00e1rbol sagrado, que har\u00eda que sus poderes aumentaran de manera incre\u00edble. Mientras el\u00a0Kaio del Norte\u00a0alerta a los ",
-      "created_at": "2017-05-04 04:21:33",
-      "updated_at": "2017-05-04 04:31:44"
-    },
-    "qualities": [
-      {
-        "quality": "Dvdrip"
-      }
-    ]
-  },
-  {
-    "movie": {
-      "movie_id": "4",
-      "name": "Dragon Ball Z - Gok\u00fa es un Super Saiyajin",
-      "year": "1991",
-      "cover": "http:\/\/moviseries.xyz\/covers\/movie-d99407cfb91b663e38fe070d70cb4647.png",
-      "trailer": "8NzYmAPJb4Y",
-      "short_description": "En \"Capsule Corporation\" descubren que un gigantesco asteroide (o estrella) va a chocar contra la Tierra, todos intentan esconderse para protegerse de asteroide, pero\u00a0Goku\u00a0y\u00a0Krilin\u00a0intentan detenerlo pero por un principio parece que fallan y pierden el conocimiento. Justo antes de que el asteroide (",
-      "created_at": "2017-05-04 04:28:08",
-      "updated_at": "2017-05-04 04:28:25"
-    },
-    "qualities": [
-      {
-        "quality": "Dvdrip"
-      }
-    ]
-  },
-  {
-    "movie": {
-      "movie_id": "1",
-      "name": "Dragon Ball Z - Devu\u00e9lvanme a mi Gohan",
-      "year": "1989",
-      "cover": "http:\/\/moviseries.xyz\/covers\/movie-1d2afa8011d98affc4e85ce0ece8df4b.png",
-      "trailer": "5d9P-w8b_s8",
-      "short_description": "Hace muchos siglos, Kami compiti\u00f3 con Garlick para ser el sucesor del Dios de la Tierra. \u00c9ste se dio cuenta de las malvadas intenciones de Garlick y escogi\u00f3 a Kami como su sucesor. Irritado, Garlick se rebel\u00f3 contra Dios, pero fue desterrado. 300 a\u00f1os despu\u00e9s , unos meses antes de la batalla contra ",
-      "created_at": "2017-05-04 04:10:40",
-      "updated_at": "2017-05-04 04:23:29"
-    },
-    "qualities": [
-      {
-        "quality": "Dvdrip"
-      }
-    ]
-  },
-  {
-    "movie": {
-      "movie_id": "2",
-      "name": "Dragon Ball Z: El m\u00e1s Fuerte del Mundo",
-      "year": "1990",
-      "cover": "http:\/\/moviseries.xyz\/covers\/movie-ff4442302600a7e24d78a96c69773c2e.png",
-      "trailer": "eVsCgX70jOo",
-      "short_description": "La pel\u00edcula comienza con Gohan y Oolong en busca de las esferas del drag\u00f3n que todos han reunido en las monta\u00f1as Tsumisumbri (Oolong quer\u00eda pedir ropa interior). Antes de que lleguen a ellos, Shen Long es convocado por el Dr. Kochin, que desea que el Dr. Wheelo y su laboratorio sean descongelados de",
-      "created_at": "2017-05-04 04:16:52",
-      "updated_at": "2017-05-04 04:17:19"
-    },
-    "qualities": [
-      {
-        "quality": "Dvdrip"
-      }
-    ]
-  }
-]
+    {
+      "mega_id": "3",
+      "name": "Iron man 1 HD1080p Opcion 3",
+      "url": "https:\/\/mega.nz\/#!v8AxWQhA!3B8fSO-anm8S-9A40oRWg2b8u2cRC4Ktwz2lYG_cWw8",
+      "movie_id": "12",
+      "note": "tama\u00f1o 2.4 GB",
+      "language_name": "latino"
+    }
+  ]
+}
