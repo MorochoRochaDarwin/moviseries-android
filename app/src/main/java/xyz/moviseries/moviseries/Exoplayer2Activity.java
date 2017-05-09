@@ -1,15 +1,23 @@
 package xyz.moviseries.moviseries;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -32,32 +40,38 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.ui.PlaybackControlView;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.tonyodev.fetch.Fetch;
+import com.tonyodev.fetch.request.Request;
 
 /**
  * Created by DARWIN on 8/5/2017.
  */
 
-public class Exoplayer2Activity extends Activity {
+public class Exoplayer2Activity extends AppCompatActivity implements PlaybackControlView.VisibilityListener {
 
     public static final String LINK = "exoplayer2.link";
-    private String link;
+    public static final String TITLE = "exoplayer2.title";
+    private String link,title;
 
     private static final String TAG = "Exoplayer2Activity";
     private SimpleExoPlayerView simpleExoPlayerView;
     private SimpleExoPlayer player;
     private ExoPlayer.EventListener exoPlayerEventListener;
     private int currentApiVersion;
+    private LinearLayout topContent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player_activity);
         link = getIntent().getStringExtra(LINK);
+        title = getIntent().getStringExtra(TITLE);
         currentApiVersion = android.os.Build.VERSION.SDK_INT;
 
         final int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -68,8 +82,7 @@ public class Exoplayer2Activity extends Activity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
 
         // This work only for android 4.4+
-        if(currentApiVersion >= Build.VERSION_CODES.KITKAT)
-        {
+        if (currentApiVersion >= Build.VERSION_CODES.KITKAT) {
 
             getWindow().getDecorView().setSystemUiVisibility(flags);
 
@@ -78,14 +91,11 @@ public class Exoplayer2Activity extends Activity {
             // show up and won't hide
             final View decorView = getWindow().getDecorView();
             decorView
-                    .setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()
-                    {
+                    .setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
 
                         @Override
-                        public void onSystemUiVisibilityChange(int visibility)
-                        {
-                            if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
-                            {
+                        public void onSystemUiVisibilityChange(int visibility) {
+                            if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
                                 decorView.setSystemUiVisibility(flags);
                             }
                         }
@@ -106,6 +116,16 @@ public class Exoplayer2Activity extends Activity {
         player = ExoPlayerFactory.newSimpleInstance(this, trackSelector, loadControl);
         simpleExoPlayerView = new SimpleExoPlayerView(this);
         simpleExoPlayerView = (SimpleExoPlayerView) findViewById(R.id.player_view);
+        topContent = (LinearLayout) findViewById(R.id.top);
+        TextView textViewTitle=(TextView) findViewById(R.id.txt_title);
+        ImageButton btn_back = (ImageButton) findViewById(R.id.btn_back);
+        textViewTitle.setText(title);
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
 //Set media controller
         simpleExoPlayerView.setUseController(true);
@@ -113,6 +133,7 @@ public class Exoplayer2Activity extends Activity {
 
 // Bind the player to the view.
         simpleExoPlayerView.setPlayer(player);
+        simpleExoPlayerView.setControllerVisibilityListener(this);
 
 
         DefaultBandwidthMeter bandwidthMeterA = new DefaultBandwidthMeter();
@@ -123,19 +144,18 @@ public class Exoplayer2Activity extends Activity {
                 dataSourceFactory, extractorsFactory, null, null);
 
 
-
         player.prepare(mediaSource);
         player.setPlayWhenReady(true);
+
+
 
     }
 
     @SuppressLint("NewApi")
     @Override
-    public void onWindowFocusChanged(boolean hasFocus)
-    {
+    public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if(currentApiVersion >= Build.VERSION_CODES.KITKAT && hasFocus)
-        {
+        if (currentApiVersion >= Build.VERSION_CODES.KITKAT && hasFocus) {
             getWindow().getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                             | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -151,4 +171,29 @@ public class Exoplayer2Activity extends Activity {
         super.onDestroy();
         player.release();
     }
+
+
+    @Override
+    public void onVisibilityChange(int visibility) {
+        topContent.setVisibility(visibility);
+    }
+
+
+
+    public void descargar(View v){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Debe conceder los permisos de escritura en la SD Card", Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
+
+        Fetch fetch = Fetch.getInstance(this);
+
+        Request request = new Request(link, Environment.getExternalStorageDirectory() + "/Moviseries/",title);
+        long downloadId = fetch.enqueue(request);
+
+    }
+
+
 }

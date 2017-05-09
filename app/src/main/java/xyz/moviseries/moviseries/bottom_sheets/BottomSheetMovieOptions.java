@@ -232,7 +232,7 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment implement
     @Override
     public void onClickEnlace(UrlOnline url) {
         if (url.getServer().equals("stream.moe")) {
-            new DownloadLink(url.getFile_id()).execute();
+            new DownloadLink(url).execute();
         }
     }
 
@@ -302,10 +302,10 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment implement
 
 
     private class DownloadLink extends AsyncTask<Void, Void, Void> implements com.android.volley.Response.ErrorListener, com.android.volley.Response.Listener<String> {
-        private String file_id;
+        private UrlOnline urlOnline;
 
-        DownloadLink(String file_id) {
-            this.file_id = file_id;
+        DownloadLink(UrlOnline url) {
+            this.urlOnline = url;
         }
 
         private ProgressDialog progressDialog;
@@ -323,7 +323,7 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment implement
             RequestQueue queue = Volley.newRequestQueue(context);
 
             // Request a string response from the provided URL.
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, "https://stream.moe/" + file_id, this, this);
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, "https://stream.moe/" + urlOnline.getFile_id(), this, this);
             // Add the request to the RequestQueue.
             queue.add(stringRequest);
             return null;
@@ -342,6 +342,7 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment implement
 
             Intent intent = new Intent(context, Exoplayer2Activity.class);
             intent.putExtra(Exoplayer2Activity.LINK,link);
+            intent.putExtra(Exoplayer2Activity.TITLE,movie.getName()+" - "+urlOnline.getQuality());
 
             startActivity(intent);
         }

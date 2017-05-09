@@ -1,17 +1,23 @@
 package xyz.moviseries.moviseries;
 
+import android.Manifest;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -27,6 +33,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.File;
 
 import xyz.moviseries.moviseries.custom_views.DMTextView;
 import xyz.moviseries.moviseries.fragments.HomeFragment;
@@ -66,6 +75,39 @@ public class DashboardActivity extends BaseActivity
         transaction.commit();
 
 
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
+            }else {
+                checkFolder();
+            }
+        }else{
+            checkFolder();
+        }
+
+    }
+
+    private  int REQUEST_CODE=100;
+
+    private void checkFolder() {
+        File f = new File(Environment.getExternalStorageDirectory() + "/Moviseries/");
+        if (!f.exists())
+            f.mkdirs();
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
+            Log.v("P60","Permission: "+permissions[0]+ "was "+grantResults[0]);
+            //resume tasks needing this permission
+            checkFolder();
+
+        }else{
+            Toast.makeText(context, "ERROR no podra realizar descargas", Toast.LENGTH_SHORT).show();
+        }
     }
 
 

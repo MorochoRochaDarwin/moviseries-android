@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright (C) 2016 The Android Open Source Project
+<?xml version="1.0" encoding="UTF-8"?><!-- Copyright (C) 2016 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -14,6 +13,7 @@
      limitations under the License.
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
     android:layout_width="match_parent"
@@ -21,16 +21,91 @@
     android:background="#000"
     android:keepScreenOn="true">
 
-  <com.google.android.exoplayer2.ui.SimpleExoPlayerView android:id="@+id/player_view"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"/>
 
-  <ImageView
-      android:id="@+id/imageView3"
-      android:layout_width="100dp"
-      android:layout_height="wrap_content"
-      android:adjustViewBounds="true"
-      android:alpha="0.4"
-      android:src="@drawable/logo" />
+    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+        android:id="@+id/player_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:controller_layout_id="@layout/custom_controls"
+        app:fastforward_increment="30000"
+        app:rewind_increment="30000" />
+
+    <LinearLayout
+        android:id="@+id/top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="#cf18356e"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingRight="10dp"
+            android:visibility="visible">
+
+            <ImageButton
+                android:id="@+id/btn_back"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="2"
+                android:padding="10dp"
+                android:src="@drawable/ic_arrow_back_white_24dp" />
+
+            <TextView
+                android:id="@+id/txt_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center|left"
+                android:maxLines="1"
+                android:paddingLeft="10dp"
+                android:text="video title"
+                android:textColor="#fff"
+                android:textSize="15dp" />
+
+            <ImageButton
+                android:id="@+id/btn_cast"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="2"
+                android:src="@drawable/ic_cast_connected_white_24dp" />
+
+            <ImageButton
+                android:id="@+id/btn_save"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="2"
+                android:onClick="descargar"
+                android:src="@drawable/ic_save_white_24dp" />
+
+
+            <ImageButton
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_weight="2"
+                android:src="@drawable/ic_settings_white_24dp" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:alpha="0.5"
+            android:src="@drawable/logo" />
+
+
+    </LinearLayout>
+
 
 </FrameLayout>
