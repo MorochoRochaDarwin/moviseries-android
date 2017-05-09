@@ -1,6 +1,7 @@
 package xyz.moviseries.moviseries.bottom_sheets;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -26,6 +27,15 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.upstream.BandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -41,6 +51,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import xyz.moviseries.moviseries.DeveloperKey;
+import xyz.moviseries.moviseries.Exoplayer2Activity;
 import xyz.moviseries.moviseries.R;
 import xyz.moviseries.moviseries.adapters.EnlacesAdapter;
 import xyz.moviseries.moviseries.adapters.EnlacesMegaAdapter;
@@ -83,6 +94,7 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment implement
     private RecyclerView recyclerViewEnlaces, recyclerViewEnlacesMega;
     private EnlacesAdapter enlacesAdapter;
     private EnlacesMegaAdapter enlacesMegaAdapter;
+
 
 
     public static BottomSheetDialogFragment newInstance(Bundle args) {
@@ -289,11 +301,21 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment implement
     }
 
 
-    private class DownloadLink extends AsyncTask<Void, Void, Void> {
+    private class DownloadLink extends AsyncTask<Void, Void, Void> implements com.android.volley.Response.ErrorListener, com.android.volley.Response.Listener<String> {
         private String file_id;
 
-        public DownloadLink(String file_id) {
+        DownloadLink(String file_id) {
             this.file_id = file_id;
+        }
+
+        private ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = ProgressDialog.show(context, "Obteniendo enlace", "por favor espere", true);
+            progressDialog.show();
+
         }
 
         @Override
@@ -301,23 +323,27 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment implement
             RequestQueue queue = Volley.newRequestQueue(context);
 
             // Request a string response from the provided URL.
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, "https://stream.moe/" + file_id, new com.android.volley.Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-
-                    String firtsString=response.substring(response.lastIndexOf("https://wabbit.moecdn.io/"));
-                    Log.i("response", firtsString.substring(0,firtsString.indexOf("\"")));
-
-                }
-            }, new com.android.volley.Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.i("response", "error");
-                }
-            });
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, "https://stream.moe/" + file_id, this, this);
             // Add the request to the RequestQueue.
             queue.add(stringRequest);
             return null;
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+
+        }
+
+        @Override
+        public void onResponse(String response) {
+            progressDialog.hide();
+            String firtsString = response.substring(response.lastIndexOf("https://wabbit.moecdn.io/"));
+            String link = firtsString.substring(0, firtsString.indexOf("\""));
+
+            Intent intent = new Intent(context, Exoplayer2Activity.class);
+            intent.putExtra(Exoplayer2Activity.LINK,link);
+
+            startActivity(intent);
         }
     }
 
