@@ -1,5 +1,6 @@
 package xyz.moviseries.moviseries.movies_fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
@@ -12,6 +13,8 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import java.util.ArrayList;
@@ -32,14 +35,15 @@ import xyz.moviseries.moviseries.models.Serie;
  * Created by DARWIN on 6/5/2017.
  */
 
-public class LastSeriesFragment extends Fragment {
+public class LastSeriesFragment extends Fragment implements SeriesAdapter.OnCLickSerieListener {
     private Context context;
     private RecyclerView recyclerView;
     private SeriesAdapter adapter;
     private ArrayList<Serie> series = new ArrayList<>();
 
     private ProgressBar progressBar;
-    private  int gridsP=1, gridsL=2;
+    private int gridsP = 1, gridsL = 2;
+    private LinearLayout home;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +51,8 @@ public class LastSeriesFragment extends Fragment {
         context = getActivity();
     }
 
+    private boolean loading;
+    private int limit = 12, offset = 0;
 
     @Nullable
     @Override
@@ -54,27 +60,30 @@ public class LastSeriesFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_recycler, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+        home = (LinearLayout) rootView.findViewById(R.id.home);
         adapter = new SeriesAdapter(context, series);
+        adapter.setOnCLickSerieListener(this);
+
         int screenSize = getResources().getConfiguration().screenLayout &
                 Configuration.SCREENLAYOUT_SIZE_MASK;
 
 
-        switch(screenSize) {
+        switch (screenSize) {
             case Configuration.SCREENLAYOUT_SIZE_LARGE:
-                gridsL=3;
-                gridsP=2;
+                gridsL = 5;
+                gridsP = 4;
                 break;
             case Configuration.SCREENLAYOUT_SIZE_NORMAL:
-                gridsL=2;
-                gridsP=1;
+                gridsL = 4;
+                gridsP = 3;
                 break;
             case Configuration.SCREENLAYOUT_SIZE_SMALL:
-                gridsL=2;
-                gridsP=1;
+                gridsL = 3;
+                gridsP = 2;
                 break;
             default:
-                gridsL=2;
-                gridsP=1;
+                gridsL = 2;
+                gridsP = 1;
         }
 
         if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -87,10 +96,31 @@ public class LastSeriesFragment extends Fragment {
 
         recyclerView.setAdapter(adapter);
 
-        new Load().execute();
+
+        Button more = (Button) rootView.findViewById(R.id.more);
+        more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!loading) {//si no hay una tarea pendiente
+                    offset += limit;
+                    new Load().execute();
+                }
+            }
+        });
+
+        if (savedInstanceState != null) {
+            if (!savedInstanceState.getBoolean("ready load"))
+                new Load().execute();
+        }
         return rootView;
     }
 
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("ready load", true);
+    }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -105,14 +135,20 @@ public class LastSeriesFragment extends Fragment {
 
     }
 
+    @Override
+    public void onClickSerie(Serie serie) {
+        lastSeriesFragmentOnlickListener.lastSeriesOnclick(serie);
+    }
+
     private class Load extends AsyncTask<Void, Void, Void> implements Callback<List<Serie>> {
-        private String url = "http://moviseries.xyz/android/last-series";
+        private String url = "http://moviseries.xyz/android/last-series/" + limit + "/" + offset;
+        ;
+        private int prev_size = 0;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            series.clear();
-            recyclerView.setVisibility(View.GONE);
+            prev_size = series.size();
         }
 
         @Override
@@ -134,23 +170,52 @@ public class LastSeriesFragment extends Fragment {
         @Override
         public void onResponse(Call<List<Serie>> call, Response<List<Serie>> response) {
 
-            if(response!=null){
-                series.addAll(response.body());
-                int n = series.size();
-                //Log.i("apimoviseries","tam:"+n);
-                if (n > 0) {
-                    adapter.notifyItemRangeInserted(0, n);
-                    adapter.notifyDataSetChanged();
+            if (response != null) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        series.addAll(response.body());
+                        int n = series.size();
+                        //Log.i("apimoviseries","tam:"+n);
+                        if (n > prev_size) {
+                            adapter.notifyItemRangeInserted(prev_size - 1, n);
+                            adapter.notifyDataSetChanged();
+
+                        }
+                    }
                 }
+
             }
 
+
             progressBar.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
+            home.setVisibility(View.VISIBLE);
+
+            loading = false;
         }
 
         @Override
         public void onFailure(Call<List<Serie>> call, Throwable t) {
+            loading = false;
+        }
+    }
 
+
+    public interface LastSeriesFragmentOnlickListener {
+        void lastSeriesOnclick(Serie serie);
+    }
+
+
+    private LastSeriesFragmentOnlickListener lastSeriesFragmentOnlickListener;
+
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            lastSeriesFragmentOnlickListener = (LastSeriesFragmentOnlickListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnHeadlineSelectedListener");
         }
     }
 }

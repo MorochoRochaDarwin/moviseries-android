@@ -35,7 +35,7 @@ public class TopMoviesFragment extends Fragment {
     private RecyclerView recyclerView;
     private TopMoviesAdapter adapter;
     private ArrayList<TopMovie> movies = new ArrayList<>();
-
+    private LinearLayout home;
     private ProgressBar progressBar;
 
 
@@ -46,11 +46,14 @@ public class TopMoviesFragment extends Fragment {
     }
 
 
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recycler, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        home = (LinearLayout) rootView.findViewById(R.id.home);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         adapter = new TopMoviesAdapter(context, movies);
         if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -85,7 +88,6 @@ public class TopMoviesFragment extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             movies.clear();
-            recyclerView.setVisibility(View.GONE);
         }
 
         @Override
@@ -121,9 +123,7 @@ public class TopMoviesFragment extends Fragment {
 
 
             progressBar.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
-
-            //recyclerView.scrollToPosition(0);
+            home.setVisibility(View.VISIBLE);
 
 
         }

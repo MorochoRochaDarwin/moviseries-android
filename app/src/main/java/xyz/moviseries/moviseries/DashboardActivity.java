@@ -37,14 +37,15 @@ import android.widget.Toast;
 
 import java.io.File;
 
-import xyz.moviseries.moviseries.custom_views.DMTextView;
-import xyz.moviseries.moviseries.fragments.HomeFragment;
+import xyz.moviseries.moviseries.fragments.SerieFragment;
+import xyz.moviseries.moviseries.models.Serie;
 import xyz.moviseries.moviseries.movies_fragments.LastMoviesFragment;
 import xyz.moviseries.moviseries.movies_fragments.LastSeriesFragment;
 import xyz.moviseries.moviseries.movies_fragments.TopMoviesFragment;
 
 public class DashboardActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemSelectedListener,
+        LastSeriesFragment.LastSeriesFragmentOnlickListener {
 
     private Toolbar toolbar;
     private ViewPager pager;
@@ -75,20 +76,19 @@ public class DashboardActivity extends BaseActivity
         transaction.commit();
 
 
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
-            }else {
+            } else {
                 checkFolder();
             }
-        }else{
+        } else {
             checkFolder();
         }
 
     }
 
-    private  int REQUEST_CODE=100;
+    private int REQUEST_CODE = 100;
 
     private void checkFolder() {
         File f = new File(Environment.getExternalStorageDirectory() + "/Moviseries/");
@@ -100,12 +100,12 @@ public class DashboardActivity extends BaseActivity
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
-            Log.v("P60","Permission: "+permissions[0]+ "was "+grantResults[0]);
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Log.v("P60", "Permission: " + permissions[0] + "was " + grantResults[0]);
             //resume tasks needing this permission
             checkFolder();
 
-        }else{
+        } else {
             Toast.makeText(context, "ERROR no podra realizar descargas", Toast.LENGTH_SHORT).show();
         }
     }
@@ -239,6 +239,24 @@ public class DashboardActivity extends BaseActivity
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+
+    @Override
+    public void lastSeriesOnclick(Serie serie) {
+        Bundle args = new Bundle();
+        args.putString(SerieFragment.SERIE_ID, serie.getSerie_id());
+        args.putString(SerieFragment.NAME, serie.getSerie_name());
+        args.putString(SerieFragment.COVER, serie.getCover());
+        args.putString(SerieFragment.UPDATE_AT, serie.getCreated_at());
+        args.putString(SerieFragment.YEAR, serie.getYear());
+        args.putString(SerieFragment.DESCRIPTION, serie.getShort_description());
+
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_content, SerieFragment.newInstance(args));
+        transaction.addToBackStack(null);
+        transaction.commit();
 
     }
 

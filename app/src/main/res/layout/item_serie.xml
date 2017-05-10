@@ -3,87 +3,59 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="2dp"
     android:orientation="vertical">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="2dp"
-        app:cardCornerRadius="0dp"
-        app:cardElevation="5dp">
+        app:cardBackgroundColor="#ffffff"
+        app:cardElevation="6dp">
 
         <LinearLayout
             android:id="@+id/item"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
             android:orientation="vertical"
-            android:padding="0dp"
-            style="@style/Base.Widget.AppCompat.Button.Borderless">
+            android:paddingTop="2dp">
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/cover" />
 
                 <ImageView
                     android:id="@+id/cover"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="3"
                     android:adjustViewBounds="true"
-                    android:scaleType="fitCenter"
                     android:src="@drawable/cover" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/name"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:maxLines="1"
-                        android:text="Metting Tungurahua"
-                        android:textColor="@color/colorPrimary"
-                        android:textStyle="bold" />
+            </FrameLayout>
 
-                    <TextView
-                        android:id="@+id/timestamp"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:text="22 hours ago"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="10sp" />
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#fff"
+                android:gravity="center"
+                android:maxLines="1"
+                android:padding="1dp"
+                android:text="HD1080p | HD720p"
+                android:textColor="#0f0860"
+                android:textSize="8sp"
+                android:textStyle="bold" />
 
-
-
-                    <xyz.moviseries.moviseries.custom_views.DMTextView
-                        android:id="@+id/short_description"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:maxLines="8"
-                        android:paddingBottom="5dp"
-                        android:paddingLeft="8dp"
-                        android:paddingRight="5dp"
-                        android:text="La Provincia de Tungurahua es una de las 24 provincias que conforman la República del Ecuador, situada en el centro del país, en la zona geográfica conocida como región interandina o sierra"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="8sp"
-                        app:dm_font="segoe_print" />
-
-                </LinearLayout>
-
-
-            </LinearLayout>
 
         </LinearLayout>
     </android.support.v7.widget.CardView>
+
 
 </LinearLayout>

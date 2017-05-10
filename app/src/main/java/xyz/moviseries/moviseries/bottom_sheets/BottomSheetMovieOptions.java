@@ -87,8 +87,9 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment implement
     public static final String DESCRIPTION = "BottomSheetOpcionesPelicula.description";
     public static final String QUALITIES = "BottomSheetOpcionesPelicula.qualities";
     public static final String UPDATE_AT = "BottomSheetOpcionesPelicula.update_at";
+    public static final String YEAR = "BottomSheetOpcionesPelicula.year";
 
-    private String name, movie_id, trailer, cover, description, qualities, update_at;
+    private String name, movie_id, year, trailer, cover, description, qualities, update_at;
 
 
     private Context context;
@@ -134,6 +135,7 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment implement
         description = args.getString(DESCRIPTION);
         qualities = args.getString(QUALITIES);
         update_at = args.getString(UPDATE_AT);
+        year = args.getString(YEAR);
 
 
     }
@@ -492,7 +494,7 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment implement
             @Override
             public void onClick(View view) {
                 String txt_captcha = editTextCaptcha.getText().toString();
-                new ValidadeCaptcha(urlOnline, openLoadTicket.getTicket(), txt_captcha);
+                new ValidadeCaptcha(urlOnline, openLoadTicket.getTicket(), txt_captcha).execute();
 
             }
         });
@@ -568,6 +570,12 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment implement
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setDataAndType(Uri.parse(url_video), "video/mp4");
                     startActivity(intent);
+
+
+                    // Intent intent = new Intent(context, Exoplayer2Activity.class);
+                    // intent.putExtra(Exoplayer2Activity.LINK,link);
+                    // intent.putExtra(Exoplayer2Activity.TITLE,movie.getName()+" - "+urlOnline.getQuality());
+
 
                     dialogOpenload(openLoadTicket, urlOnline);
                 } else {

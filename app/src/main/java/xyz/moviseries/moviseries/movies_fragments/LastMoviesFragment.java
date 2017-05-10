@@ -50,6 +50,7 @@ public class LastMoviesFragment extends Fragment implements MoviesAdapter.MovieO
 
     private ProgressBar progressBar;
     private LinearLayout home;
+    private int limit = 12, offset = 0;
 
 
     @Override
@@ -117,7 +118,7 @@ public class LastMoviesFragment extends Fragment implements MoviesAdapter.MovieO
             @Override
             public void onClick(View view) {
                 if (!loading) {//si no hay una tarea pendiente
-                    offset += 10;
+                    offset += limit;
                     new Load().execute();
                 }
             }
@@ -157,11 +158,12 @@ public class LastMoviesFragment extends Fragment implements MoviesAdapter.MovieO
         args.putString(BottomSheetMovieOptions.UPDATE_AT, movie.getMovie().getUpdated_at());
         args.putString(BottomSheetMovieOptions.DESCRIPTION, movie.getMovie().getShort_description());
         args.putString(BottomSheetMovieOptions.QUALITIES, qualities);
+        args.putString(BottomSheetMovieOptions.YEAR, movie.getMovie().getYear());
         BottomSheetDialogFragment bottomSheet = BottomSheetMovieOptions.newInstance(args);
         bottomSheet.show(getActivity().getSupportFragmentManager(), "BSDialog");
     }
 
-    private int limit = 10, offset = 0;
+
 
     private class Load extends AsyncTask<Void, Void, Void> implements Callback<List<MovieQualities>> {
         private String url = "http://moviseries.xyz/android/last-movies/" + limit + "/" + offset;

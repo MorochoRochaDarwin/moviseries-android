@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="2dp"
+                app:cardCornerRadius="0dp"
+                app:cardElevation="5dp">
+
+                <LinearLayout
+                    android:id="@+id/item"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="0dp">
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:paddingRight="40dp">
+
+                        <ImageView
+                            android:id="@+id/cover"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="2.3"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/cover" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/name"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="8dp"
+                                android:text="Metting Tungurahua"
+                                android:textColor="@color/colorPrimary"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/timestamp"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="8dp"
+                                android:text="22 hours ago"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="10sp" />
+
+
+                            <com.hsalf.smilerating.SmileRating
+                                android:id="@+id/ratingView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="7dp"
+                                app:angryColor="#f29a68"
+                                app:drawingColor="#fcfbfb"
+                                app:normalColor="#0082e6"
+                                app:placeHolderBackgroundColor="#e6e8ed"
+                                app:placeHolderSmileColor="#ffffff"
+                                app:textNonSelectionColor="#AEB3B5"
+                                app:textSelectionColor="#3405dc" />
+
+
+                            <TextView
+                                android:id="@+id/votos"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="8dp"
+                                android:textColor="@color/colorPrimary"
+                                android:textStyle="bold" />
+
+                            <Button
+                                android:id="@+id/btn_share"
+                                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:drawableLeft="@drawable/ic_screen_share_black_24dp"
+                                android:text="Compartir" />
+
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                    <xyz.moviseries.moviseries.custom_views.DMTextView
+                        android:id="@+id/short_description"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="5"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="15dp"
+                        android:paddingTop="5dp"
+                        android:text="La Provincia de Tungurahua es una de las 24 provincias que conforman la República del Ecuador, situada en el centro del país, en la zona geográfica conocida como región interandina o sierra"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="8sp"
+                        app:dm_font="segoe_print" />
+
+
+                </LinearLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorAccent"
+                android:paddingLeft="7dp"
+                android:text="Temporadas"
+                android:textColor="#fff"
+                android:textStyle="bold" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/enlaces"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorAccent"
+                android:paddingLeft="7dp"
+                android:text="Enlaces MEGA"
+                android:textColor="#fff"
+                android:textStyle="bold" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/enlaces_mega"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+
+</android.support.design.widget.CoordinatorLayout>

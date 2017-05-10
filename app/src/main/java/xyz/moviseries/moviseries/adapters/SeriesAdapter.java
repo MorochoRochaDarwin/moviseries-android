@@ -40,11 +40,16 @@ public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.SerieHolde
 
     @Override
     public void onBindViewHolder(SerieHolder holder, int position) {
-        Serie serie = series.get(position);
+        final Serie serie = series.get(position);
 
         holder.name.setText(serie.getSerie_name());
-        holder.description.setText(serie.getShort_description());
-        holder.updated_at.setText(serie.getCreated_at());
+
+        holder.item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onCLickSerieListener.onClickSerie(serie);
+            }
+        });
 
         try {
             Picasso.with(context)
@@ -66,17 +71,25 @@ public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.SerieHolde
 
     class SerieHolder extends RecyclerView.ViewHolder {
         ImageView cover;
-        DMTextView  description;
-        TextView name,updated_at;
+        TextView name;
         LinearLayout item;
 
         public SerieHolder(View itemView) {
             super(itemView);
             cover = (ImageView) itemView.findViewById(R.id.cover);
             name = (TextView) itemView.findViewById(R.id.name);
-            updated_at = (TextView) itemView.findViewById(R.id.timestamp);
-            description = (DMTextView) itemView.findViewById(R.id.short_description);
             item = (LinearLayout) itemView.findViewById(R.id.item);
         }
+    }
+
+
+    public interface OnCLickSerieListener {
+        void onClickSerie(Serie serie);
+    }
+
+    private OnCLickSerieListener onCLickSerieListener;
+
+    public void setOnCLickSerieListener(OnCLickSerieListener onCLickSerieListener) {
+        this.onCLickSerieListener = onCLickSerieListener;
     }
 }
