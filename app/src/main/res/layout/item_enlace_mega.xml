@@ -33,6 +33,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:textIsSelectable="true"
                 android:text="Audio latino | tamaño: 2.3GB"
                 android:layout_weight="1"
                 android:textStyle="bold" />
