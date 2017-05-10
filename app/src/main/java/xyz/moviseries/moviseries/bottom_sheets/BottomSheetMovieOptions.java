@@ -463,9 +463,6 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment implement
     }
 
 
-
-
-
     private void dialogOpenload(final OpenLoadTicket openLoadTicket, final UrlOnline urlOnline) {
         LayoutInflater li = LayoutInflater.from(context);
         View promptsView = li.inflate(R.layout.dialog_openload, null);
@@ -495,7 +492,7 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment implement
             @Override
             public void onClick(View view) {
                 String txt_captcha = editTextCaptcha.getText().toString();
-                alertDialog.dismiss();
+                new ValidadeCaptcha(urlOnline, openLoadTicket.getTicket(), txt_captcha);
 
             }
         });
@@ -559,7 +556,7 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment implement
 
                 if (json.getString("status").equals("200")) {
 
-                    if(alertDialog!=null){
+                    if (alertDialog != null) {
                         alertDialog.dismiss();
                     }
 
