@@ -2,6 +2,7 @@ package xyz.moviseries.moviseries.streaming;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -45,7 +46,7 @@ public class OpenLoad {
     }
 
 
-    public void initStreaming(UrlOnline urlOnline){
+    public void initStreaming(UrlOnline urlOnline) {
         if (openload_task != null) {
             if (openload_task.getStatus() == AsyncTask.Status.PENDING || openload_task.getStatus() == AsyncTask.Status.RUNNING) {
                 openload_task.cancel(true);
@@ -78,6 +79,7 @@ public class OpenLoad {
             RequestQueue queue = Volley.newRequestQueue(context);
 
             String url = "https://api.openload.co/1/file/dlticket?file=" + urlOnline.getFile_id();
+            Log.i("openload url", url);
             // Request a string response from the provided URL.
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, this, this);
             // Add the request to the RequestQueue.
@@ -93,6 +95,8 @@ public class OpenLoad {
 
         @Override
         public void onResponse(String response) {
+
+            Log.i("openload", response);
 
             progressDialog.dismiss();
 
@@ -111,8 +115,32 @@ public class OpenLoad {
 
 
                     dialogOpenload(openLoadTicket, urlOnline);
-                } else {
-                    Toast.makeText(context, "Enlace no valido, por favor notifiquelo", Toast.LENGTH_LONG).show();
+                } else if (json.getString("status").equals("509")) {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("Error 509, openload dice:");
+                    builder.setMessage("Uso de ancho de banda demasiado alto (horas pico). Fuera de capacidad para descargas que no sean del navegador. Utilice la descarga del navegador.\n¿Deseas abrir este enlace en tu navegador?");
+
+                    builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+                    builder.setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            String url = "https://openload.co/embed/" + urlOnline.getFile_id();
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setData(Uri.parse(url));
+                            context.startActivity(intent);
+
+                        }
+                    });
+                    builder.create().show();
+                }else{
+                    Toast.makeText(context, "openload error: "+json.getString("status"), Toast.LENGTH_SHORT).show();
                 }
 
             } catch (JSONException e) {
@@ -166,7 +194,6 @@ public class OpenLoad {
         });
 
 
-        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         // show it
         alertDialog.show();
