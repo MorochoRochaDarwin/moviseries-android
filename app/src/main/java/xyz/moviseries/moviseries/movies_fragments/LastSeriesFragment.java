@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,9 +114,14 @@ public class LastSeriesFragment extends Fragment implements SeriesAdapter.OnCLic
             }
         });
 
-        if (!initLoad) {
+        if (initLoad) {
+            progressBar.setVisibility(View.GONE);
+            home.setVisibility(View.VISIBLE);
+
+        } else {
             new Load().execute();
         }
+
         return rootView;
     }
 
