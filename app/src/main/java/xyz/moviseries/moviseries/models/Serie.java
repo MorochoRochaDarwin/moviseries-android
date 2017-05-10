@@ -5,12 +5,12 @@ package xyz.moviseries.moviseries.models;
  */
 
 public class Serie {
-    private String serie_id;
-    private String serie_name;
-    private String year;
-    private String cover;
-    private String short_description;
-    private String created_at;
+    protected String serie_id;
+    protected String serie_name;
+    protected String year;
+    protected String cover;
+    protected String short_description;
+    protected String created_at;
 
 
     public String getSerie_id() {

@@ -2,26 +2,19 @@ package xyz.moviseries.moviseries.movies_fragments;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTabHost;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TabHost;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,14 +22,12 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.Query;
 import xyz.moviseries.moviseries.MovieQualities;
 import xyz.moviseries.moviseries.R;
 import xyz.moviseries.moviseries.adapters.MoviesAdapter;
 import xyz.moviseries.moviseries.api_clients.MoviseriesApiClient;
 import xyz.moviseries.moviseries.api_services.MoviseriesApiService;
-import xyz.moviseries.moviseries.bottom_sheets.BottomSheetMovieOptions;
-import xyz.moviseries.moviseries.models.Movie;
+import xyz.moviseries.moviseries.bottom_sheets.BottomSheetMovie;
 
 /**
  * Created by DARWIN on 6/5/2017.
@@ -151,15 +142,15 @@ public class LastMoviesFragment extends Fragment implements MoviesAdapter.MovieO
     @Override
     public void MovieOptionsClick(MovieQualities movie,String qualities) {
         Bundle args = new Bundle();
-        args.putString(BottomSheetMovieOptions.MOVIE_ID, movie.getMovie().getMovie_id());
-        args.putString(BottomSheetMovieOptions.NAME, movie.getMovie().getName());
-        args.putString(BottomSheetMovieOptions.TRAILER, movie.getMovie().getTrailer());
-        args.putString(BottomSheetMovieOptions.COVER, movie.getMovie().getCover());
-        args.putString(BottomSheetMovieOptions.UPDATE_AT, movie.getMovie().getUpdated_at());
-        args.putString(BottomSheetMovieOptions.DESCRIPTION, movie.getMovie().getShort_description());
-        args.putString(BottomSheetMovieOptions.QUALITIES, qualities);
-        args.putString(BottomSheetMovieOptions.YEAR, movie.getMovie().getYear());
-        BottomSheetDialogFragment bottomSheet = BottomSheetMovieOptions.newInstance(args);
+        args.putString(BottomSheetMovie.MOVIE_ID, movie.getMovie().getMovie_id());
+        args.putString(BottomSheetMovie.NAME, movie.getMovie().getName());
+        args.putString(BottomSheetMovie.TRAILER, movie.getMovie().getTrailer());
+        args.putString(BottomSheetMovie.COVER, movie.getMovie().getCover());
+        args.putString(BottomSheetMovie.UPDATE_AT, movie.getMovie().getUpdated_at());
+        args.putString(BottomSheetMovie.DESCRIPTION, movie.getMovie().getShort_description());
+        args.putString(BottomSheetMovie.QUALITIES, qualities);
+        args.putString(BottomSheetMovie.YEAR, movie.getMovie().getYear());
+        BottomSheetDialogFragment bottomSheet = BottomSheetMovie.newInstance(args);
         bottomSheet.show(getActivity().getSupportFragmentManager(), "BSDialog");
     }
 

@@ -21,11 +21,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,19 +32,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelection;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.upstream.BandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import com.hsalf.smilerating.BaseRating;
 import com.hsalf.smilerating.SmileRating;
 import com.squareup.picasso.Picasso;
@@ -54,15 +40,12 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import xyz.moviseries.moviseries.DeveloperKey;
-import xyz.moviseries.moviseries.Exoplayer2Activity;
 import xyz.moviseries.moviseries.R;
 import xyz.moviseries.moviseries.adapters.EnlacesAdapter;
 import xyz.moviseries.moviseries.adapters.EnlacesMegaAdapter;
@@ -74,12 +57,14 @@ import xyz.moviseries.moviseries.models.MovieScore;
 import xyz.moviseries.moviseries.models.OpenLoadTicket;
 import xyz.moviseries.moviseries.models.UrlOnline;
 import xyz.moviseries.moviseries.models.ViewMovie;
+import xyz.moviseries.moviseries.streaming.OpenLoad;
+import xyz.moviseries.moviseries.streaming.StreamMoe;
 
 /**
  * Created by DARWIN on 7/5/2017.
  */
 
-public class BottomSheetMovieOptions extends BottomSheetDialogFragment implements EnlacesAdapter.OnClickEnlaceListener {
+public class BottomSheetMovie extends BottomSheetDialogFragment implements EnlacesAdapter.OnClickEnlaceListener {
     public static final String MOVIE_ID = "BottomSheetOpcionesPelicula.movie_id";
     public static final String NAME = "BottomSheetOpcionesPelicula.name";
     public static final String TRAILER = "BottomSheetOpcionesPelicula.trailer";
@@ -109,14 +94,15 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment implement
     private EnlacesMegaAdapter enlacesMegaAdapter;
 
 
-    private OpenLoadDownloadLink openload_task;
-    private DownloadLink stream_task;
-
     private OpenLoadTicket openLoadTicket;
     private AlertDialog alertDialog;
 
+
+    private OpenLoad openLoad;
+    private StreamMoe streamMoe;
+
     public static BottomSheetDialogFragment newInstance(Bundle args) {
-        BottomSheetMovieOptions bottomSheetNuevoEvento = new BottomSheetMovieOptions();
+        BottomSheetMovie bottomSheetNuevoEvento = new BottomSheetMovie();
         bottomSheetNuevoEvento.setArguments(args);
         return bottomSheetNuevoEvento;
     }
@@ -125,6 +111,8 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment implement
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
+        openLoad=new OpenLoad(context);
+        streamMoe=new StreamMoe(context);
 
 
         Bundle args = getArguments();
@@ -143,18 +131,13 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment implement
     @Override
     public void setupDialog(Dialog dialog, int style) {
         super.setupDialog(dialog, style);
-        setStatusBarColorIfPossible(R.color.colorPrimary);
+        //setStatusBarColorIfPossible(R.color.colorPrimary);
 
         View contentView = View.inflate(getContext(), R.layout.bottom_sheet_opciones_pelicula, null);
         dialog.setContentView(contentView);
 
 
-        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) ((View) contentView.getParent()).getLayoutParams();
-        CoordinatorLayout.Behavior behavior = params.getBehavior();
 
-        if (behavior != null && behavior instanceof BottomSheetBehavior) {
-            ((BottomSheetBehavior) behavior).setBottomSheetCallback(mBottomSheetBehaviorCallback);
-        }
 
 
         Button btn_trailer = (Button) contentView.findViewById(R.id.btn_trailer);
@@ -196,6 +179,12 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment implement
 
 
         mBehavior = BottomSheetBehavior.from((View) contentView.getParent());
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) ((View) contentView.getParent()).getLayoutParams();
+        CoordinatorLayout.Behavior behavior = params.getBehavior();
+
+        if (behavior != null && behavior instanceof BottomSheetBehavior) {
+            ((BottomSheetBehavior) behavior).setBottomSheetCallback(mBottomSheetBehaviorCallback);
+        }
 
 
         btn_trailer.setOnClickListener(new View.OnClickListener() {
@@ -259,24 +248,9 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment implement
     @Override
     public void onClickEnlace(UrlOnline url) {
         if (url.getServer().equals("stream.moe")) {
-            new DownloadLink(url).execute();
-            if (stream_task != null) {
-                if (stream_task.getStatus() == AsyncTask.Status.PENDING || stream_task.getStatus() == AsyncTask.Status.RUNNING) {
-                    stream_task.cancel(true);
-                }
-                stream_task = null;
-            }
-            stream_task = new DownloadLink(url);
-            stream_task.execute();
+            streamMoe.initStreaming(url);
         } else if (url.getServer().equals("openload")) {
-            if (openload_task != null) {
-                if (openload_task.getStatus() == AsyncTask.Status.PENDING || openload_task.getStatus() == AsyncTask.Status.RUNNING) {
-                    openload_task.cancel(true);
-                }
-                openload_task = null;
-            }
-            openload_task = new OpenLoadDownloadLink(url);
-            openload_task.execute();
+            openLoad.initStreaming(url);
         }
     }
 
@@ -344,252 +318,5 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment implement
         }
     }
 
-
-    private class DownloadLink extends AsyncTask<Void, Void, Void> implements com.android.volley.Response.ErrorListener, com.android.volley.Response.Listener<String> {
-        private UrlOnline urlOnline;
-
-        DownloadLink(UrlOnline url) {
-            this.urlOnline = url;
-        }
-
-        private ProgressDialog progressDialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = ProgressDialog.show(context, "Obteniendo enlace", "por favor espere", true);
-            progressDialog.show();
-
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            RequestQueue queue = Volley.newRequestQueue(context);
-
-            // Request a string response from the provided URL.
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, "https://stream.moe/" + urlOnline.getFile_id(), this, this);
-            // Add the request to the RequestQueue.
-            queue.add(stringRequest);
-            return null;
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError error) {
-
-        }
-
-        @Override
-        public void onResponse(String response) {
-            progressDialog.hide();
-            String firtsString = response.substring(response.lastIndexOf("https://wabbit.moecdn.io/"));
-            String link = firtsString.substring(0, firtsString.indexOf("\""));
-
-            // Intent intent = new Intent(context, Exoplayer2Activity.class);
-            // intent.putExtra(Exoplayer2Activity.LINK,link);
-            // intent.putExtra(Exoplayer2Activity.TITLE,movie.getName()+" - "+urlOnline.getQuality());
-
-            //startActivity(intent);
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(Uri.parse(link), "video/mp4");
-            startActivity(intent);
-
-
-        }
-    }
-
-
-    private class OpenLoadDownloadLink extends AsyncTask<Void, Void, Void> implements com.android.volley.Response.ErrorListener, com.android.volley.Response.Listener<String> {
-
-        private UrlOnline urlOnline;
-        private ProgressDialog progressDialog;
-
-        OpenLoadDownloadLink(UrlOnline url) {
-            this.urlOnline = url;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = ProgressDialog.show(context, "Obteniendo Captcha", "por favor espere", true);
-            progressDialog.show();
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            RequestQueue queue = Volley.newRequestQueue(context);
-
-            String url = "https://api.openload.co/1/file/dlticket?file=" + urlOnline.getFile_id();
-            // Request a string response from the provided URL.
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, url, this, this);
-            // Add the request to the RequestQueue.
-            queue.add(stringRequest);
-
-            return null;
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError error) {
-
-        }
-
-        @Override
-        public void onResponse(String response) {
-
-            progressDialog.dismiss();
-
-            try {
-                JSONObject json = new JSONObject(response);
-
-                if (json.getString("status").equals("200")) {
-                    JSONObject json_result = json.getJSONObject("result");
-                    String ticket = json_result.getString("ticket");
-                    String captcha_url = json_result.getString("captcha_url");
-                    String captcha_w = json_result.getString("captcha_w");
-                    String captcha_h = json_result.getString("captcha_h");
-                    String wait_time = json_result.getString("wait_time");
-                    String valid_until = json_result.getString("valid_until");
-                    openLoadTicket = new OpenLoadTicket(ticket, captcha_url, captcha_w, captcha_h, wait_time, valid_until);
-
-
-                    dialogOpenload(openLoadTicket, urlOnline);
-                } else {
-                    Toast.makeText(context, "Enlace no valido, por favor notifiquelo", Toast.LENGTH_LONG).show();
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
-
-
-    private void dialogOpenload(final OpenLoadTicket openLoadTicket, final UrlOnline urlOnline) {
-        LayoutInflater li = LayoutInflater.from(context);
-        View promptsView = li.inflate(R.layout.dialog_openload, null);
-
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                context);
-
-
-        // set prompts.xml to alertdialog builder
-        alertDialogBuilder.setView(promptsView);
-
-        final ImageView captcha = (ImageView) promptsView.findViewById(R.id.captcha);
-        final EditText editTextCaptcha = (EditText) promptsView.findViewById(R.id.edit_text_captcha);
-        final Button btn_ok = (Button) promptsView.findViewById(R.id.btn_ok);
-        final Button btn_cancel = (Button) promptsView.findViewById(R.id.btn_cancel);
-
-        Picasso.with(context)
-                .load(openLoadTicket.getCaptcha_url())
-                .resize(Integer.parseInt(openLoadTicket.getCaptcha_w()), Integer.parseInt(openLoadTicket.getCaptcha_h()))
-                .centerCrop()
-                .into(captcha);
-
-        // create alert dialog
-        alertDialog = alertDialogBuilder.create();
-
-        btn_ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String txt_captcha = editTextCaptcha.getText().toString();
-                new ValidadeCaptcha(urlOnline, openLoadTicket.getTicket(), txt_captcha).execute();
-
-            }
-        });
-
-
-        btn_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                alertDialog.dismiss();
-            }
-        });
-
-
-        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        // show it
-        alertDialog.show();
-    }
-
-
-    private class ValidadeCaptcha extends AsyncTask<Void, Void, Void> implements com.android.volley.Response.Listener<String>, com.android.volley.Response.ErrorListener {
-
-        private UrlOnline urlOnline;
-        private String ticket, captcha_response;
-        private ProgressDialog progressDialog;
-
-
-        public ValidadeCaptcha(UrlOnline urlOnline, String ticket, String captcha_response) {
-            this.urlOnline = urlOnline;
-            this.ticket = ticket;
-            this.captcha_response = captcha_response;
-        }
-
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = ProgressDialog.show(context, "Validando Captcha", "por favor espere", true);
-            progressDialog.show();
-        }
-
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            RequestQueue queue = Volley.newRequestQueue(context);
-
-            String url = "https://api.openload.co/1/file/dl?file=" + urlOnline.getFile_id() + "&ticket=" + ticket + "&captcha_response=" + captcha_response;
-            // Request a string response from the provided URL.
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, url, this, this);
-            // Add the request to the RequestQueue.
-            queue.add(stringRequest);
-            return null;
-        }
-
-        @Override
-        public void onResponse(String response) {
-            progressDialog.dismiss();
-
-            try {
-                JSONObject json = new JSONObject(response);
-
-                if (json.getString("status").equals("200")) {
-
-                    if (alertDialog != null) {
-                        alertDialog.dismiss();
-                    }
-
-                    JSONObject json_result = json.getJSONObject("result");
-
-                    String url_video = json_result.getString("url");
-
-
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setDataAndType(Uri.parse(url_video), "video/mp4");
-                    startActivity(intent);
-
-
-                    // Intent intent = new Intent(context, Exoplayer2Activity.class);
-                    // intent.putExtra(Exoplayer2Activity.LINK,link);
-                    // intent.putExtra(Exoplayer2Activity.TITLE,movie.getName()+" - "+urlOnline.getQuality());
-
-
-                    dialogOpenload(openLoadTicket, urlOnline);
-                } else {
-                    Toast.makeText(context, "Error no se pudo obtener el enlace", Toast.LENGTH_LONG).show();
-                }
-            } catch (JSONException e) {
-                Log.i("openload", e.getMessage());
-            }
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError error) {
-
-        }
-    }
 
 }

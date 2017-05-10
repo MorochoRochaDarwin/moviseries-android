@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,6 +31,8 @@ import xyz.moviseries.moviseries.adapters.MoviesAdapter;
 import xyz.moviseries.moviseries.adapters.SeriesAdapter;
 import xyz.moviseries.moviseries.api_clients.MoviseriesApiClient;
 import xyz.moviseries.moviseries.api_services.MoviseriesApiService;
+import xyz.moviseries.moviseries.bottom_sheets.BottomSheetMovie;
+import xyz.moviseries.moviseries.fragments.BottomSheetSerie;
 import xyz.moviseries.moviseries.models.Serie;
 
 /**
@@ -141,7 +144,15 @@ public class LastSeriesFragment extends Fragment implements SeriesAdapter.OnCLic
 
     @Override
     public void onClickSerie(Serie serie) {
-        lastSeriesFragmentOnlickListener.lastSeriesOnclick(serie);
+        Bundle args = new Bundle();
+        args.putString(BottomSheetSerie.SERIE_ID, serie.getSerie_id());
+        args.putString(BottomSheetSerie.NAME, serie.getSerie_name());
+        args.putString(BottomSheetSerie.COVER, serie.getCover());
+        args.putString(BottomSheetSerie.UPDATE_AT, serie.getCreated_at());
+        args.putString(BottomSheetSerie.YEAR, serie.getYear());
+        args.putString(BottomSheetSerie.DESCRIPTION, serie.getShort_description());
+        BottomSheetDialogFragment bottomSheet = BottomSheetSerie.newInstance(args);
+        bottomSheet.show(getActivity().getSupportFragmentManager(), "BSDialog");
     }
 
     private class Load extends AsyncTask<Void, Void, Void> implements Callback<List<Serie>> {

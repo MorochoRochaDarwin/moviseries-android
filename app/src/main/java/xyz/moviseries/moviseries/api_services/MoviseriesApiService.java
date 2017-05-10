@@ -18,6 +18,7 @@ import xyz.moviseries.moviseries.models.Season;
 import xyz.moviseries.moviseries.models.Serie;
 import xyz.moviseries.moviseries.models.TopMovie;
 import xyz.moviseries.moviseries.models.ViewMovie;
+import xyz.moviseries.moviseries.models.ViewSerie;
 
 /**
  * Created by DARWIN on 6/5/2017.
@@ -49,5 +50,10 @@ public interface MoviseriesApiService {
 
     @GET
     Call<ViewMovie> getMovie(@Url String url);
+
+
+    @GET
+    Call<ViewSerie> getSerie(@Url String url);
+
 
 }
