@@ -192,6 +192,7 @@ public class Exoplayer2Activity extends AppCompatActivity implements PlaybackCon
 
         Request request = new Request(link, Environment.getExternalStorageDirectory() + "/Moviseries/",title);
         long downloadId = fetch.enqueue(request);
+        Toast.makeText(this, "Descarga Iniciada", Toast.LENGTH_SHORT).show();
 
     }
 

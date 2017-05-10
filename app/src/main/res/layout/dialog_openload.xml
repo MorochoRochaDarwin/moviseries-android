@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/captcha"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:src="@drawable/logo" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#000"
+        android:text="Para obtener el enlace de descarga openload nos obliga a que valides el siguiente captcha."/>
+
+    <EditText
+        android:id="@+id/edit_text_captcha"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="ingrese el captcha" />
+
+
+</LinearLayout>
