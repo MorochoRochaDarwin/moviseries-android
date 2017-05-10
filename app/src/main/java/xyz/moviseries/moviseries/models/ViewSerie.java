@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ViewSerie {
     private SerieScore serie;
-    private List<Season> seasons;
+    private List<SeasonSerie> seasons;
     private List<MEGAUrlSerie> mega_urls;
 
 
@@ -16,7 +16,7 @@ public class ViewSerie {
         return serie;
     }
 
-    public List<Season> getSeasons() {
+    public List<SeasonSerie> getSeasons() {
         return seasons;
     }
 

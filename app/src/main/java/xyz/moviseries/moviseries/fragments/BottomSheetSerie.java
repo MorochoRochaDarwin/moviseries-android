@@ -10,6 +10,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,6 +35,7 @@ import xyz.moviseries.moviseries.api_services.MoviseriesApiService;
 import xyz.moviseries.moviseries.custom_views.DMTextView;
 import xyz.moviseries.moviseries.models.MEGAUrlSerie;
 import xyz.moviseries.moviseries.models.Season;
+import xyz.moviseries.moviseries.models.SeasonSerie;
 import xyz.moviseries.moviseries.models.SerieScore;
 import xyz.moviseries.moviseries.models.ViewSerie;
 
@@ -60,7 +62,7 @@ public class BottomSheetSerie extends BottomSheetDialogFragment {
     private SerieScore serie;
 
 
-    private ArrayList<Season> urls = new ArrayList<>();
+    private ArrayList<SeasonSerie> urls = new ArrayList<>();
     private ArrayList<MEGAUrlSerie> mega_urls = new ArrayList<>();
     private RecyclerView recyclerViewEnlaces, recyclerViewEnlacesMega;
     private EnlacesSerieMegaAdapter enlacesMegaAdapter;
@@ -99,8 +101,8 @@ public class BottomSheetSerie extends BottomSheetDialogFragment {
         smileRating = (SmileRating) contentView.findViewById(R.id.ratingView);
         recyclerViewEnlaces = (RecyclerView) contentView.findViewById(R.id.enlaces);
         recyclerViewEnlacesMega = (RecyclerView) contentView.findViewById(R.id.enlaces_mega);
-
-        enlacesMegaAdapter=new EnlacesSerieMegaAdapter(context,mega_urls);
+        recyclerViewEnlacesMega.setLayoutManager(new LinearLayoutManager(context));
+        enlacesMegaAdapter = new EnlacesSerieMegaAdapter(context, mega_urls);
         recyclerViewEnlacesMega.setAdapter(enlacesMegaAdapter);
 
         Picasso.with(context)
@@ -127,8 +129,6 @@ public class BottomSheetSerie extends BottomSheetDialogFragment {
     }
 
 
-
-
     private BottomSheetBehavior.BottomSheetCallback mBottomSheetBehaviorCallback = new BottomSheetBehavior.BottomSheetCallback() {
         @Override
         public void onStateChanged(@NonNull View bottomSheet, int newState) {
@@ -142,14 +142,6 @@ public class BottomSheetSerie extends BottomSheetDialogFragment {
 
         }
     };
-
-
-
-
-
-
-
-
 
 
     private class Load extends AsyncTask<Void, Void, Void> implements Callback<ViewSerie> {
@@ -167,6 +159,7 @@ public class BottomSheetSerie extends BottomSheetDialogFragment {
         public void onResponse(Call<ViewSerie> call, Response<ViewSerie> response) {
             if (response != null) {
                 if (response.body() != null) {
+
 
                     if (response.body().getSerie() != null) {
                         serie = response.body().getSerie();
@@ -186,23 +179,26 @@ public class BottomSheetSerie extends BottomSheetDialogFragment {
                         textViewVotos.setText("# votos: " + serie.getVotos());
 
                     } else {
-                        Log.i("apimovi", "null movie");
+                        Log.i("apimovi", "null serie");
                     }
 
 
                     if (response.body().getMega_urls() != null) {
+
                         mega_urls.addAll(response.body().getMega_urls());
+                        Log.i("apimovi", "x serie " + mega_urls.size());
                         if (mega_urls.size() > 0) {
                             enlacesMegaAdapter.notifyItemRangeInserted(0, mega_urls.size());
                             enlacesMegaAdapter.notifyDataSetChanged();
                         }
+
                     }
 
                     if (response.body().getSeasons() != null) {
                         urls.addAll(response.body().getSeasons());
                         if (urls.size() > 0) {
                             //enlacesAdapter.notifyItemRangeInserted(0, urls.size());
-                           // enlacesAdapter.notifyDataSetChanged();
+                            // enlacesAdapter.notifyDataSetChanged();
                         }
                     }
                 }
