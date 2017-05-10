@@ -45,10 +45,15 @@ public class LastSeriesFragment extends Fragment implements SeriesAdapter.OnCLic
     private int gridsP = 1, gridsL = 2;
     private LinearLayout home;
 
+    private Bundle savedInstanceState;
+    private boolean initLoad = false;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         context = getActivity();
+        this.savedInstanceState = savedInstanceState;
     }
 
     private boolean loading;
@@ -108,19 +113,12 @@ public class LastSeriesFragment extends Fragment implements SeriesAdapter.OnCLic
             }
         });
 
-        if (savedInstanceState != null) {
-            if (!savedInstanceState.getBoolean("ready load"))
-                new Load().execute();
+        if (!initLoad) {
+            new Load().execute();
         }
         return rootView;
     }
 
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean("ready load", true);
-    }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -191,6 +189,7 @@ public class LastSeriesFragment extends Fragment implements SeriesAdapter.OnCLic
             home.setVisibility(View.VISIBLE);
 
             loading = false;
+            initLoad = true;
         }
 
         @Override
