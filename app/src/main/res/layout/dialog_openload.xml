@@ -24,5 +24,28 @@
         android:layout_height="wrap_content"
         android:hint="ingrese el captcha" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_ok"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ENVIAR"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CANCELAR"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
 
 </LinearLayout>

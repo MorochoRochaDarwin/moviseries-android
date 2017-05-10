@@ -3,7 +3,6 @@ package xyz.moviseries.moviseries.bottom_sheets;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -112,6 +111,8 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment implement
     private OpenLoadDownloadLink openload_task;
     private DownloadLink stream_task;
 
+    private OpenLoadTicket openLoadTicket;
+    private AlertDialog alertDialog;
 
     public static BottomSheetDialogFragment newInstance(Bundle args) {
         BottomSheetMovieOptions bottomSheetNuevoEvento = new BottomSheetMovieOptions();
@@ -462,7 +463,7 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment implement
     }
 
 
-    private OpenLoadTicket openLoadTicket;
+
 
 
     private void dialogOpenload(final OpenLoadTicket openLoadTicket, final UrlOnline urlOnline) {
@@ -478,7 +479,9 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment implement
 
         final ImageView captcha = (ImageView) promptsView.findViewById(R.id.captcha);
         final EditText editTextCaptcha = (EditText) promptsView.findViewById(R.id.edit_text_captcha);
-        
+        final Button btn_ok = (Button) promptsView.findViewById(R.id.btn_ok);
+        final Button btn_cancel = (Button) promptsView.findViewById(R.id.btn_cancel);
+
         Picasso.with(context)
                 .load(openLoadTicket.getCaptcha_url())
                 .resize(Integer.parseInt(openLoadTicket.getCaptcha_w()), Integer.parseInt(openLoadTicket.getCaptcha_h()))
@@ -486,29 +489,27 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment implement
                 .into(captcha);
 
         // create alert dialog
-        final AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog = alertDialogBuilder.create();
+
+        btn_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String txt_captcha = editTextCaptcha.getText().toString();
+                alertDialog.dismiss();
+
+            }
+        });
 
 
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
 
 
         alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-
-        alertDialogBuilder.setNegativeButton("ENVIAR", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-                String txt_captcha=editTextCaptcha.getText().toString();
-                new ValidadeCaptcha(urlOnline, openLoadTicket.getTicket(), txt_captcha).execute();
-                dialogInterface.dismiss();
-            }
-        });
-        alertDialogBuilder.setPositiveButton("CANCELAR", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
 
         // show it
         alertDialog.show();
@@ -557,10 +558,14 @@ public class BottomSheetMovieOptions extends BottomSheetDialogFragment implement
                 JSONObject json = new JSONObject(response);
 
                 if (json.getString("status").equals("200")) {
+
+                    if(alertDialog!=null){
+                        alertDialog.dismiss();
+                    }
+
                     JSONObject json_result = json.getJSONObject("result");
 
-                    String url_video= json_result.getString("url");
-
+                    String url_video = json_result.getString("url");
 
 
                     Intent intent = new Intent(Intent.ACTION_VIEW);
