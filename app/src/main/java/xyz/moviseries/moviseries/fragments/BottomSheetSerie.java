@@ -101,6 +101,7 @@ public class BottomSheetSerie extends BottomSheetDialogFragment {
         recyclerViewEnlacesMega = (RecyclerView) contentView.findViewById(R.id.enlaces_mega);
 
         enlacesMegaAdapter=new EnlacesSerieMegaAdapter(context,mega_urls);
+        recyclerViewEnlacesMega.setAdapter(enlacesMegaAdapter);
 
         Picasso.with(context)
                 .load(cover)
