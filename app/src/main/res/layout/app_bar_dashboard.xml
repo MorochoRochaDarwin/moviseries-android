@@ -5,8 +5,8 @@
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:focusable="true"
     android:background="#fff"
+    android:focusable="true"
     android:focusableInTouchMode="true">
 
     <android.support.design.widget.AppBarLayout
@@ -19,23 +19,68 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:layout_marginBottom="6dp"
             android:layout_marginLeft="3dp"
             android:layout_marginRight="3dp"
             android:layout_marginTop="2dp"
-            android:layout_marginBottom="6dp"
             android:background="#fff"
             android:gravity="center_vertical"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/WhiteToolbar">
 
-      <xyz.moviseries.moviseries.custom_views.DMTextView
-          android:id="@+id/text_toolbar"
-          android:layout_width="wrap_content"
-          android:gravity="center_vertical"
-          android:textColor="@color/colorPrimary"
-          android:text="Ultimas Peliculas"
+            <LinearLayout
+                android:id="@+id/content_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-          android:layout_height="match_parent" />
+                <xyz.moviseries.moviseries.custom_views.DMTextView
+                    android:id="@+id/text_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Ultimas Peliculas"
+                    android:textColor="@color/colorPrimary" />
+
+                <ImageButton
+                    android:id="@+id/btn_search"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:gravity="center"
+                    android:src="@drawable/ic_search_black_24dp"
+                    android:tint="@color/colorPrimary" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/content_search"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <EditText
+                    android:id="@+id/edit_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:hint="buscar pelicula o serie" />
+
+                <ImageButton
+                    android:id="@+id/btn_close_search"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:gravity="center"
+                    android:src="@drawable/ic_close_black_24dp"
+                    android:tint="@color/colorPrimary" />
+
+            </LinearLayout>
 
         </android.support.v7.widget.Toolbar>
 
@@ -45,14 +90,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
         <FrameLayout
             android:id="@+id/fragment_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="match_parent" />
     </android.support.v4.widget.NestedScrollView>
-
-
 
 
 </android.support.design.widget.CoordinatorLayout>

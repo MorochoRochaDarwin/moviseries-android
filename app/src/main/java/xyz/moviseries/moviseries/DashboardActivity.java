@@ -21,7 +21,10 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -33,7 +36,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,6 +62,7 @@ import xyz.moviseries.moviseries.models.Serie;
 import xyz.moviseries.moviseries.movies_fragments.LastMoviesFragment;
 import xyz.moviseries.moviseries.movies_fragments.LastSeriesFragment;
 import xyz.moviseries.moviseries.movies_fragments.SearchMovieFragment;
+import xyz.moviseries.moviseries.movies_fragments.SearchSerieFragment;
 import xyz.moviseries.moviseries.movies_fragments.TopMoviesFragment;
 
 public class DashboardActivity extends BaseActivity
@@ -77,6 +85,9 @@ public class DashboardActivity extends BaseActivity
 
     private Fragment fragment;
 
+    private LinearLayout content_search, content_title;
+    private ImageButton btn_search, btn_close_search;
+    private EditText editTextSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +98,11 @@ public class DashboardActivity extends BaseActivity
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         textViewToolbar = (DMTextView) findViewById(R.id.text_toolbar);
+        content_search = (LinearLayout) findViewById(R.id.content_search);
+        content_title = (LinearLayout) findViewById(R.id.content_title);
+        btn_search = (ImageButton) findViewById(R.id.btn_search);
+        btn_close_search = (ImageButton) findViewById(R.id.btn_close_search);
+        editTextSearch = (EditText) findViewById(R.id.edit_search);
 
         categories.add(new Category("Todas las categorias"));
         categoriasAdapter = new CategoriasAdapter(context, categories);
@@ -108,6 +124,85 @@ public class DashboardActivity extends BaseActivity
 // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
+
+
+        btn_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                content_title.setVisibility(View.GONE);
+                content_search.setVisibility(View.VISIBLE);
+
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                if (SEE == SEE_MOVIES) {
+                    editTextSearch.setHint("Buscar en películas");
+                    fragment = new SearchMovieFragment();
+                    transaction.replace(R.id.fragment_content, fragment, "searchMovie");
+                } else {
+                    editTextSearch.setHint("Buscar en series");
+                    fragment = new SearchSerieFragment();
+                    transaction.replace(R.id.fragment_content, fragment, "searchSerie");
+                }
+                transaction.commit();
+
+            }
+        });
+
+
+        btn_close_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                content_search.setVisibility(View.GONE);
+                content_title.setVisibility(View.VISIBLE);
+
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                if (SEE == SEE_MOVIES) {
+                    if (category.equals("Todas las categorias"))
+                        textViewToolbar.setText("Ultimas Películas");
+                    else
+                        textViewToolbar.setText("Películas - " + category);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(LastMoviesFragment.CATEGORY_NAME, category);
+                    transaction.replace(R.id.fragment_content, LastMoviesFragment.newInstance(bundle), "movies");
+                } else {
+                    if (category.equals("Todas las categorias"))
+                        textViewToolbar.setText("Ultimas Series");
+                    else
+                        textViewToolbar.setText("Series - " + category);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(LastSeriesFragment.CATEGORY_NAME, category);
+                    transaction.replace(R.id.fragment_content, LastSeriesFragment.newInstance(bundle), "series");
+                }
+
+                transaction.commit();
+
+            }
+        });
+
+
+        editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (SEE == SEE_MOVIES) {
+
+                    SearchMovieFragment fragment = (SearchMovieFragment) getSupportFragmentManager().findFragmentByTag("searchMovie");
+                    fragment.search(s.toString());
+                } else {
+                    SearchSerieFragment fragment = (SearchSerieFragment) getSupportFragmentManager().findFragmentByTag("searchSerie");
+                    fragment.search(s.toString());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
 
         initDrawer();
@@ -162,90 +257,6 @@ public class DashboardActivity extends BaseActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.dashboard, menu);
-
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-
-        SearchView searchView = null;
-        if (searchItem != null) {
-            searchView = (SearchView) searchItem.getActionView();
-        }
-        if (searchView != null) {
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        }
-
-
-        // Get the search close button image view
-        ImageView closeButton = (ImageView)searchView.findViewById(R.id.search_close_btn);
-
-        // Set on click listener
-        closeButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-
-        searchView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                if (b) {
-                    if (SEE == SEE_MOVIES) {
-                        fragment = new SearchMovieFragment();
-                        transaction.replace(R.id.fragment_content, fragment,"searchMovie");
-                    } else {
-
-                    }
-                    transaction.commit();
-                } else {
-
-                    if (SEE == SEE_MOVIES) {
-                        if (category.equals("Todas las categorias"))
-                            textViewToolbar.setText("Ultimas Películas");
-                        else
-                            textViewToolbar.setText("Películas - " + category);
-                        Bundle bundle = new Bundle();
-                        bundle.putString(LastMoviesFragment.CATEGORY_NAME, category);
-                        transaction.replace(R.id.fragment_content, LastMoviesFragment.newInstance(bundle),"movies");
-                    } else {
-                        if (category.equals("Todas las categorias"))
-                            textViewToolbar.setText("Ultimas Series");
-                        else
-                            textViewToolbar.setText("Series - " + category);
-                        Bundle bundle = new Bundle();
-                        bundle.putString(LastSeriesFragment.CATEGORY_NAME, category);
-                        transaction.replace(R.id.fragment_content, LastSeriesFragment.newInstance(bundle),"series");
-                    }
-
-                    transaction.commit();
-                }
-            }
-        });
-
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                if (SEE == SEE_MOVIES) {
-
-                    SearchMovieFragment fragment = (SearchMovieFragment) getSupportFragmentManager().findFragmentByTag("searchMovie");
-                    fragment.search(newText);
-                } else {
-
-                }
-                return false;
-            }
-        });
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -340,7 +351,7 @@ public class DashboardActivity extends BaseActivity
             SEE = SEE_MOVIES;
             Bundle bundle = new Bundle();
             bundle.putString(LastMoviesFragment.CATEGORY_NAME, this.category);
-            transaction.replace(R.id.fragment_content, LastMoviesFragment.newInstance(bundle),"movies");
+            transaction.replace(R.id.fragment_content, LastMoviesFragment.newInstance(bundle), "movies");
         } else {
             if (category.equals("Todas las categorias"))
                 textViewToolbar.setText("Ultimas Series");
@@ -349,7 +360,7 @@ public class DashboardActivity extends BaseActivity
             SEE = SEE_SERIES;
             Bundle bundle = new Bundle();
             bundle.putString(LastSeriesFragment.CATEGORY_NAME, this.category);
-            transaction.replace(R.id.fragment_content, LastSeriesFragment.newInstance(bundle),"series");
+            transaction.replace(R.id.fragment_content, LastSeriesFragment.newInstance(bundle), "series");
         }
         transaction.commit();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -380,7 +391,7 @@ public class DashboardActivity extends BaseActivity
 
             Bundle bundle = new Bundle();
             bundle.putString(LastMoviesFragment.CATEGORY_NAME, this.category);
-            transaction.replace(R.id.fragment_content, LastMoviesFragment.newInstance(bundle),"movies");
+            transaction.replace(R.id.fragment_content, LastMoviesFragment.newInstance(bundle), "movies");
         } else {
             if (this.category.equals("Todas las categorias"))
                 textViewToolbar.setText("Ultimas Series");
@@ -389,7 +400,7 @@ public class DashboardActivity extends BaseActivity
 
             Bundle bundle = new Bundle();
             bundle.putString(LastSeriesFragment.CATEGORY_NAME, this.category);
-            transaction.replace(R.id.fragment_content, LastSeriesFragment.newInstance(bundle),"series");
+            transaction.replace(R.id.fragment_content, LastSeriesFragment.newInstance(bundle), "series");
         }
         transaction.commit();
 
