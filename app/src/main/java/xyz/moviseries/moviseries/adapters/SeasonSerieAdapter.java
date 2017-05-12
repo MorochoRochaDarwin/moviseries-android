@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.squareup.picasso.Picasso;
 
@@ -37,7 +38,7 @@ public class SeasonSerieAdapter extends RecyclerView.Adapter<SeasonSerieAdapter.
 
     @Override
     public void onBindViewHolder(SeasonHolder holder, int position) {
-        SeasonSerie season = seasons.get(position);
+        final SeasonSerie season = seasons.get(position);
 
         holder.number.setText("Temporada " + season.getNumber());
 
@@ -51,6 +52,13 @@ public class SeasonSerieAdapter extends RecyclerView.Adapter<SeasonSerieAdapter.
             Log.i("apimoviseries", " err: " + e.getMessage());
         }
 
+        holder.item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onSeasonSerieClickListener.onSeasonSerieClick(season);
+            }
+        });
+
     }
 
     @Override
@@ -60,11 +68,13 @@ public class SeasonSerieAdapter extends RecyclerView.Adapter<SeasonSerieAdapter.
 
 
     class SeasonHolder extends RecyclerView.ViewHolder {
+        LinearLayout item;
         ImageView cover;
         DMTextView name, number;
 
         public SeasonHolder(View itemView) {
             super(itemView);
+            item = (LinearLayout) itemView.findViewById(R.id.item);
             name = (DMTextView) itemView.findViewById(R.id.name);
             cover = (ImageView) itemView.findViewById(R.id.cover);
             number = (DMTextView) itemView.findViewById(R.id.number);
@@ -72,4 +82,14 @@ public class SeasonSerieAdapter extends RecyclerView.Adapter<SeasonSerieAdapter.
         }
     }
 
+
+    public interface OnSeasonSerieClickListener {
+        void onSeasonSerieClick(SeasonSerie seasonSerie);
+    }
+
+    private OnSeasonSerieClickListener onSeasonSerieClickListener;
+
+    public void setOnSeasonSerieClickListener(OnSeasonSerieClickListener onSeasonSerieClickListener) {
+        this.onSeasonSerieClickListener = onSeasonSerieClickListener;
+    }
 }

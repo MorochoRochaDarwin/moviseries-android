@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -75,7 +76,18 @@ public class StreamMoe {
         @Override
         public void onResponse(String response) {
             progressDialog.hide();
-            String firtsString = response.substring(response.lastIndexOf("https://wabbit.moecdn.io/"));
+            String firtsString = null;
+            try {
+                firtsString = response.substring(response.lastIndexOf("https://wabbit.moecdn.io/"));
+            }catch (StringIndexOutOfBoundsException e){
+                try {
+                    firtsString = response.substring(response.lastIndexOf("https://clank.stream.moe/"));
+                }catch (StringIndexOutOfBoundsException e2){
+                    Toast.makeText(context, "No se pudo obtener el enlace", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+
             String link = firtsString.substring(0, firtsString.indexOf("\""));
 
             // Intent intent = new Intent(context, Exoplayer2Activity.class);

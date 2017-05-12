@@ -1,8 +1,11 @@
 package xyz.moviseries.moviseries;
 
 import android.Manifest;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -15,7 +18,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.MenuInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -31,20 +38,44 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import xyz.moviseries.moviseries.adapters.CategoriasAdapter;
+import xyz.moviseries.moviseries.api_clients.MoviseriesApiClient;
+import xyz.moviseries.moviseries.api_services.MoviseriesApiService;
+import xyz.moviseries.moviseries.custom_views.DMTextView;
 import xyz.moviseries.moviseries.fragments.BottomSheetSerie;
+import xyz.moviseries.moviseries.models.Category;
 import xyz.moviseries.moviseries.models.Serie;
 import xyz.moviseries.moviseries.movies_fragments.LastMoviesFragment;
 import xyz.moviseries.moviseries.movies_fragments.LastSeriesFragment;
+import xyz.moviseries.moviseries.movies_fragments.SearchMovieFragment;
 import xyz.moviseries.moviseries.movies_fragments.TopMoviesFragment;
 
 public class DashboardActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemSelectedListener,
-        LastSeriesFragment.LastSeriesFragmentOnlickListener {
+        CategoriasAdapter.OnCategoryClickListener {
 
     private Toolbar toolbar;
-    private ViewPager pager;
-    private TabLayout tabs;
+    private ArrayList<Category> categories = new ArrayList<>();
+    private CategoriasAdapter categoriasAdapter;
+    private boolean isLoadCategories;
+
+
+    private static int SEE = 0;
+    private static final int SEE_MOVIES = 0;
+    private static final int SEE_SERIES = 1;
+    private static final int SEARCH_MOVIES = 2;
+    private static final int SEARCH_SERIES = 3;
+    private String category = "Todas las categorias";
+    private DMTextView textViewToolbar;
+
+    private Fragment fragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +83,20 @@ public class DashboardActivity extends BaseActivity
         setContentView(R.layout.activity_dashboard);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        textViewToolbar = (DMTextView) findViewById(R.id.text_toolbar);
+
+        categories.add(new Category("Todas las categorias"));
+        categoriasAdapter = new CategoriasAdapter(context, categories);
+        categoriasAdapter.setOnCategoryClickListener(this);
+
+        RecyclerView recyclerViewCategorias = (RecyclerView) findViewById(R.id.menuList);
+        recyclerViewCategorias.setLayoutManager(new LinearLayoutManager(context));
+        recyclerViewCategorias.setAdapter(categoriasAdapter);
+        if (!isLoadCategories) {
+            new LoadCategories().execute();
+        }
 
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
 // Create an ArrayAdapter using the string array and a default spinner layout
@@ -65,10 +110,6 @@ public class DashboardActivity extends BaseActivity
 
 
         initDrawer();
-
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_content, new LastMoviesFragment());
-        transaction.commit();
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -118,9 +159,77 @@ public class DashboardActivity extends BaseActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.dashboard, menu);
-        return true;
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.dashboard, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+
+        SearchView searchView = null;
+        if (searchItem != null) {
+            searchView = (SearchView) searchItem.getActionView();
+        }
+        if (searchView != null) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        }
+
+        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                if (b) {
+                    if (SEE == SEE_MOVIES) {
+                        fragment = new SearchMovieFragment();
+                        transaction.replace(R.id.fragment_content, fragment,"searchMovie");
+                    } else {
+
+                    }
+                    transaction.commit();
+                } else {
+
+                    if (SEE == SEE_MOVIES) {
+                        if (category.equals("Todas las categorias"))
+                            textViewToolbar.setText("Ultimas Películas");
+                        else
+                            textViewToolbar.setText("Películas - " + category);
+                        Bundle bundle = new Bundle();
+                        bundle.putString(LastMoviesFragment.CATEGORY_NAME, category);
+                        transaction.replace(R.id.fragment_content, LastMoviesFragment.newInstance(bundle),"movies");
+                    } else {
+                        if (category.equals("Todas las categorias"))
+                            textViewToolbar.setText("Ultimas Series");
+                        else
+                            textViewToolbar.setText("Series - " + category);
+                        Bundle bundle = new Bundle();
+                        bundle.putString(LastSeriesFragment.CATEGORY_NAME, category);
+                        transaction.replace(R.id.fragment_content, LastSeriesFragment.newInstance(bundle),"series");
+                    }
+
+                    transaction.commit();
+                }
+            }
+        });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (SEE == SEE_MOVIES) {
+
+                    SearchMovieFragment fragment = (SearchMovieFragment) getSupportFragmentManager().findFragmentByTag("searchMovie");
+                    fragment.search(newText);
+                } else {
+
+                }
+                return false;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -142,19 +251,6 @@ public class DashboardActivity extends BaseActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
-        Fragment fragment = null;
-
-        switch (id) {
-            case R.id.nav_topm:
-                fragment = new TopMoviesFragment();
-                break;
-        }
-
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_content, fragment);
-        transaction.commit();
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -205,31 +301,42 @@ public class DashboardActivity extends BaseActivity
         String usuario_id = preferences.getString(getString(R.string.usuario_id), "-1");
 
 
-        View headerView = navigationView.getHeaderView(0);
-
-        TextView textViewUserName = (TextView) headerView.findViewById(R.id.username);
-        TextView textViewUserEmail = (TextView) headerView.findViewById(R.id.email);
-        TextView textViewUserType = (TextView) headerView.findViewById(R.id.type);
-        TextView textViewUserID = (TextView) headerView.findViewById(R.id.user_id);
+        TextView textViewUserName = (TextView) findViewById(R.id.username);
+        TextView textViewUserEmail = (TextView) findViewById(R.id.email);
+        TextView textViewUserType = (TextView) findViewById(R.id.type);
+        TextView textViewUserID = (TextView) findViewById(R.id.user_id);
 
         textViewUserName.setText(nombre_usuario);
         textViewUserEmail.setText(email_usuario);
         textViewUserID.setText("Usuario ID: " + usuario_id);
         textViewUserType.setText("Cuenta: " + tipo);
-
-
     }
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if (i == 0) {
-            transaction.replace(R.id.fragment_content, new LastMoviesFragment());
-
+            if (category.equals("Todas las categorias"))
+                textViewToolbar.setText("Ultimas Películas");
+            else
+                textViewToolbar.setText("Películas - " + category);
+            SEE = SEE_MOVIES;
+            Bundle bundle = new Bundle();
+            bundle.putString(LastMoviesFragment.CATEGORY_NAME, this.category);
+            transaction.replace(R.id.fragment_content, LastMoviesFragment.newInstance(bundle),"movies");
         } else {
-            transaction.replace(R.id.fragment_content, new LastSeriesFragment());
+            if (category.equals("Todas las categorias"))
+                textViewToolbar.setText("Ultimas Series");
+            else
+                textViewToolbar.setText("Series - " + category);
+            SEE = SEE_SERIES;
+            Bundle bundle = new Bundle();
+            bundle.putString(LastSeriesFragment.CATEGORY_NAME, this.category);
+            transaction.replace(R.id.fragment_content, LastSeriesFragment.newInstance(bundle),"series");
         }
         transaction.commit();
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
     }
 
     @Override
@@ -237,54 +344,75 @@ public class DashboardActivity extends BaseActivity
 
     }
 
+
+    /**
+     * cuando se da click en una categoria del nav
+     *
+     * @param category
+     */
     @Override
-    public void lastSeriesOnclick(Serie serie) {
-        Bundle args = new Bundle();
-        args.putString(BottomSheetSerie.SERIE_ID, serie.getSerie_id());
-        args.putString(BottomSheetSerie.NAME, serie.getSerie_name());
-        args.putString(BottomSheetSerie.COVER, serie.getCover());
-        args.putString(BottomSheetSerie.UPDATE_AT, serie.getCreated_at());
-        args.putString(BottomSheetSerie.YEAR, serie.getYear());
-        args.putString(BottomSheetSerie.DESCRIPTION, serie.getShort_description());
+    public void onCategoryClick(Category category) {
 
-
+        this.category = category.getCategory_name();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_content, BottomSheetSerie.newInstance(args));
-        transaction.addToBackStack(null);
+        if (SEE == SEE_MOVIES) {
+            if (this.category.equals("Todas las categorias"))
+                textViewToolbar.setText("Ultimas Películas");
+            else
+                textViewToolbar.setText("Películas - " + this.category);
+
+            Bundle bundle = new Bundle();
+            bundle.putString(LastMoviesFragment.CATEGORY_NAME, this.category);
+            transaction.replace(R.id.fragment_content, LastMoviesFragment.newInstance(bundle),"movies");
+        } else {
+            if (this.category.equals("Todas las categorias"))
+                textViewToolbar.setText("Ultimas Series");
+            else
+                textViewToolbar.setText("Series - " + this.category);
+
+            Bundle bundle = new Bundle();
+            bundle.putString(LastSeriesFragment.CATEGORY_NAME, this.category);
+            transaction.replace(R.id.fragment_content, LastSeriesFragment.newInstance(bundle),"series");
+        }
         transaction.commit();
 
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
     }
 
 
-    private class MPagerAdapter extends FragmentPagerAdapter {
+    private class LoadCategories extends AsyncTask<Void, Void, Void> implements Callback<List<Category>> {
+        private String url = "http://moviseries.xyz/android/categories";
 
-
-        public MPagerAdapter(FragmentManager fm) {
-            super(fm);
+        @Override
+        protected Void doInBackground(Void... voids) {
+            MoviseriesApiService apiService = MoviseriesApiClient.getClient().create(MoviseriesApiService.class);
+            Call<List<Category>> call = apiService.getCategories(url);
+            call.enqueue(this);
+            return null;
         }
 
         @Override
-        public Fragment getItem(int position) {
-            Fragment fragment = null;
-            switch (position) {
-                case 0:
-                    fragment = new LastMoviesFragment();
-                    break;
-                case 1:
-                    fragment = new LastSeriesFragment();
-                    break;
-                default:
-                    fragment = new LastMoviesFragment();
-                    break;
+        public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
+
+            isLoadCategories = true;
+            if (response.body() != null) {
+                categories.addAll(response.body());
+                int n = categories.size();
+                if (n > 0) {
+                    categoriasAdapter.notifyItemRangeInserted(0, n);
+                    categoriasAdapter.notifyDataSetChanged();
+                }
+
             }
-            return fragment;
         }
 
         @Override
-        public int getCount() {
-            return 5;
+        public void onFailure(Call<List<Category>> call, Throwable t) {
+            isLoadCategories = true;
         }
-
-
     }
+
+
 }

@@ -75,16 +75,13 @@ public class OpenLoad {
 
         @Override
         protected Void doInBackground(Void... voids) {
-
             RequestQueue queue = Volley.newRequestQueue(context);
-
             String url = "https://api.openload.co/1/file/dlticket?file=" + urlOnline.getFile_id();
             Log.i("openload url", url);
             // Request a string response from the provided URL.
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, this, this);
             // Add the request to the RequestQueue.
             queue.add(stringRequest);
-
             return null;
         }
 
@@ -264,7 +261,7 @@ public class OpenLoad {
 
                     dialogOpenload(openLoadTicket, urlOnline);
                 } else {
-                    Toast.makeText(context, "Error no se pudo obtener el enlace", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Error Captcha incorrecto o enlace invalido", Toast.LENGTH_LONG).show();
                 }
             } catch (JSONException e) {
                 Log.i("openload", e.getMessage());

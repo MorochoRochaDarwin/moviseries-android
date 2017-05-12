@@ -38,11 +38,17 @@
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
-
         <activity
             android:name=".Exoplayer2Activity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
+        <activity
+            android:name=".SeasonActivity"
+            android:label="@string/title_activity_season"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
     </application>
 
 </manifest>

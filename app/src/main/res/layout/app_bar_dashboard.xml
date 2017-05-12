@@ -28,23 +28,14 @@
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/WhiteToolbar">
 
-       <LinearLayout
-           android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           android:orientation="horizontal">
-           <Spinner
-               android:id="@+id/spinner"
-               android:layout_width="match_parent"
-               android:layout_height="match_parent"
-               android:layout_weight="1"/>
-           <ImageButton
-               style="@style/Base.Widget.AppCompat.Button.Borderless"
-               android:layout_width="match_parent"
-               android:layout_height="match_parent"
-               android:layout_weight="3.4"
-               android:src="@drawable/ic_search_black_24dp"
-               android:tint="@color/colorPrimary"/>
-       </LinearLayout>
+      <xyz.moviseries.moviseries.custom_views.DMTextView
+          android:id="@+id/text_toolbar"
+          android:layout_width="wrap_content"
+          android:gravity="center_vertical"
+          android:textColor="@color/colorPrimary"
+          android:text="Ultimas Peliculas"
+
+          android:layout_height="match_parent" />
 
         </android.support.v7.widget.Toolbar>
 

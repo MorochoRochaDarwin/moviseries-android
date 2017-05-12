@@ -13,6 +13,8 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 import retrofit2.http.Url;
 import xyz.moviseries.moviseries.MovieQualities;
+import xyz.moviseries.moviseries.models.Capitulo;
+import xyz.moviseries.moviseries.models.Category;
 import xyz.moviseries.moviseries.models.Movie;
 import xyz.moviseries.moviseries.models.Season;
 import xyz.moviseries.moviseries.models.Serie;
@@ -39,7 +41,6 @@ public interface MoviseriesApiService {
     Call<List<Serie>> getLastSeries(@Url String url);
 
 
-
     @GET
     Call<List<Season>> getLastSeasons(@Url String url);
 
@@ -55,5 +56,11 @@ public interface MoviseriesApiService {
     @GET
     Call<ViewSerie> getSerie(@Url String url);
 
+    @GET
+    Call<List<Capitulo>> getSeason(@Url String url);
+
+
+    @GET
+    Call<List<Category>> getCategories(@Url String url);
 
 }

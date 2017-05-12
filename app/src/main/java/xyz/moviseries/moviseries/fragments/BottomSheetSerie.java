@@ -2,6 +2,7 @@ package xyz.moviseries.moviseries.fragments;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import xyz.moviseries.moviseries.R;
+import xyz.moviseries.moviseries.SeasonActivity;
 import xyz.moviseries.moviseries.adapters.EnlacesSerieMegaAdapter;
 import xyz.moviseries.moviseries.adapters.SeasonSerieAdapter;
 import xyz.moviseries.moviseries.api_clients.MoviseriesApiClient;
@@ -46,7 +48,7 @@ import xyz.moviseries.moviseries.models.ViewSerie;
  * Created by DARWIN on 10/5/2017.
  */
 
-public class BottomSheetSerie extends BottomSheetDialogFragment {
+public class BottomSheetSerie extends BottomSheetDialogFragment implements SeasonSerieAdapter.OnSeasonSerieClickListener {
     public static final String SERIE_ID = "BottomSheetSerie.seriee_id";
     public static final String NAME = "BottomSheetSerie.name";
     public static final String YEAR = "BottomSheetSerie.year";
@@ -92,6 +94,7 @@ public class BottomSheetSerie extends BottomSheetDialogFragment {
         description = args.getString(DESCRIPTION);
         update_at = args.getString(UPDATE_AT);
     }
+
     private GridLayoutManager glm;
 
     @Override
@@ -143,6 +146,7 @@ public class BottomSheetSerie extends BottomSheetDialogFragment {
         recyclerViewSeasons.setLayoutManager(glm);
         enlacesMegaAdapter = new EnlacesSerieMegaAdapter(context, mega_urls);
         seasonSerieAdapter = new SeasonSerieAdapter(context, urls);
+        seasonSerieAdapter.setOnSeasonSerieClickListener(this);
         recyclerViewEnlacesMega.setAdapter(enlacesMegaAdapter);
         recyclerViewSeasons.setAdapter(seasonSerieAdapter);
 
@@ -177,9 +181,9 @@ public class BottomSheetSerie extends BottomSheetDialogFragment {
 
         // Checks the orientation of the screen
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            glm=new GridLayoutManager(context, gridsL);
+            glm = new GridLayoutManager(context, gridsL);
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            glm=new GridLayoutManager(context, gridsP);
+            glm = new GridLayoutManager(context, gridsP);
 
         }
         recyclerViewSeasons.setLayoutManager(glm);
@@ -199,6 +203,21 @@ public class BottomSheetSerie extends BottomSheetDialogFragment {
 
         }
     };
+
+    @Override
+    public void onSeasonSerieClick(SeasonSerie seasonSerie) {
+
+        Intent intent = new Intent(context, SeasonActivity.class);
+        intent.putExtra(SeasonActivity.SEASON_ID, seasonSerie.getSeason_id());
+        intent.putExtra(SeasonActivity.SEASON_NUMBER, seasonSerie.getNumber());
+        intent.putExtra(SeasonActivity.SERIE_NAME, name);
+        intent.putExtra(SeasonActivity.COVER, seasonSerie.getCover());
+        intent.putExtra(SeasonActivity.TRAILER, seasonSerie.getTrailer());
+
+        startActivity(intent);
+
+
+    }
 
 
     private class Load extends AsyncTask<Void, Void, Void> implements Callback<ViewSerie> {

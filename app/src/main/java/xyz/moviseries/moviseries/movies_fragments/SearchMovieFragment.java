@@ -33,10 +33,10 @@ import xyz.moviseries.moviseries.api_services.MoviseriesApiService;
 import xyz.moviseries.moviseries.bottom_sheets.BottomSheetMovie;
 
 /**
- * Created by DARWIN on 6/5/2017.
+ * Created by DARWIN on 12/5/2017.
  */
 
-public class LastMoviesFragment extends Fragment implements MoviesAdapter.MovieOnclickListener {
+public class SearchMovieFragment extends Fragment implements MoviesAdapter.MovieOnclickListener {
 
     public static final String CATEGORY_NAME = "movies.category_name";
     private String category;
@@ -48,20 +48,34 @@ public class LastMoviesFragment extends Fragment implements MoviesAdapter.MovieO
 
     private ProgressBar progressBar;
     private LinearLayout home;
-    private int limit = 12, offset = 0;
 
-    public static LastMoviesFragment newInstance(Bundle bundle) {
-        LastMoviesFragment fragment = new LastMoviesFragment();
-        fragment.setArguments(bundle);
-        return fragment;
+
+    private Load load_task;
+
+    private String query = "";
+
+
+
+
+    public void search(String query) {
+        if (query.trim().length() > 2) {
+            this.query=query;
+            if(load_task!=null){
+                if (load_task.getStatus() == AsyncTask.Status.RUNNING) {
+                    load_task.cancel(true);
+                    load_task = null;
+                }
+            }
+            load_task = new Load();
+            load_task.execute();
+        }
     }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
-        Bundle args = getArguments();
-        category = args.getString(CATEGORY_NAME,"Todas las categorias");
     }
 
     private int gridsP = 1, gridsL = 2;
@@ -77,6 +91,7 @@ public class LastMoviesFragment extends Fragment implements MoviesAdapter.MovieO
         home = (LinearLayout) rootView.findViewById(R.id.home);
         adapter = new MoviesAdapter(context, movies);
         adapter.setMovieOnclickListener(this);
+
 
 
         int screenSize = getResources().getConfiguration().screenLayout &
@@ -114,19 +129,11 @@ public class LastMoviesFragment extends Fragment implements MoviesAdapter.MovieO
         recyclerView.setLayoutManager(glm);
 
 
-        new Load().execute();
+
 
 
         Button more = (Button) rootView.findViewById(R.id.more);
-        more.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!loading) {//si no hay una tarea pendiente
-                    offset += limit;
-                    new Load().execute();
-                }
-            }
-        });
+        more.setVisibility(View.GONE);
 
 
         return rootView;
@@ -169,22 +176,23 @@ public class LastMoviesFragment extends Fragment implements MoviesAdapter.MovieO
         private String url;
 
 
-
-        private int prev_size = 0;
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
-            if(category.equals("Todas las categorias")){
-                url = "http://moviseries.xyz/android/last-movies/" + limit + "/" + offset;
-            }else{
-                url = "http://moviseries.xyz/android/movies/category/"+ category.replace(" ","+")+"/limit_offset/" + limit + "/" + offset;
+            movies.clear();
+            if (adapter.getItemCount() > 0) {
+                adapter.notifyDataSetChanged();
+            }
+            progressBar.setVisibility(View.VISIBLE);
+            home.setVisibility(View.GONE);
+            try {
+                url = "http://moviseries.xyz/android/search-movie/" + URLEncoder.encode(query, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+                return;
             }
 
-
-            prev_size = movies.size();
-            loading = true;
+            Log.i("search url", url );
         }
 
         @Override
@@ -205,7 +213,7 @@ public class LastMoviesFragment extends Fragment implements MoviesAdapter.MovieO
 
         @Override
         public void onResponse(Call<List<MovieQualities>> call, Response<List<MovieQualities>> response) {
-
+            Log.i("search response", response.body().toString() );
 
             if (response != null) {
                 if (response.isSuccessful()) {
@@ -213,8 +221,8 @@ public class LastMoviesFragment extends Fragment implements MoviesAdapter.MovieO
                         movies.addAll(response.body());
                         int n = movies.size();
                         //Log.i("apimoviseries","tam:"+n);
-                        if (n > prev_size) {
-                            adapter.notifyItemRangeInserted(prev_size - 1, n);
+                        if (n > 0) {
+                            adapter.notifyItemRangeInserted(0, n);
                             adapter.notifyDataSetChanged();
 
                         }
@@ -227,13 +235,12 @@ public class LastMoviesFragment extends Fragment implements MoviesAdapter.MovieO
             progressBar.setVisibility(View.GONE);
             home.setVisibility(View.VISIBLE);
 
-            loading = false;
 
         }
 
         @Override
         public void onFailure(Call<List<MovieQualities>> call, Throwable t) {
-            loading = false;
+
         }
     }
 }

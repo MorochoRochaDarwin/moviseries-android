@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
@@ -13,61 +13,59 @@
         app:cardElevation="6dp">
 
         <LinearLayout
+            android:id="@+id/item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:gravity="center"
+            android:orientation="vertical"
             android:paddingTop="2dp">
 
             <FrameLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:src="@drawable/cover" />
 
                 <ImageView
                     android:id="@+id/cover"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     android:src="@drawable/cover" />
-
 
 
             </FrameLayout>
 
             <xyz.moviseries.moviseries.custom_views.DMTextView
                 android:id="@+id/name"
-                android:background="#fff"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#fff"
                 android:gravity="center"
+                android:maxLines="1"
                 android:padding="1dp"
                 android:text="HD1080p | HD720p"
                 android:textColor="#0f0860"
-                android:maxLines="1"
                 android:textSize="8sp"
                 android:textStyle="bold" />
 
 
             <xyz.moviseries.moviseries.custom_views.DMTextView
                 android:id="@+id/number"
-                android:background="#fff"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#fff"
                 android:gravity="center"
+                android:maxLines="1"
                 android:padding="1dp"
                 android:text="HD1080p | HD720p"
                 android:textColor="#0f0860"
-                android:maxLines="1"
                 android:textSize="8sp"
                 android:textStyle="bold" />
-
-
 
 
         </LinearLayout>

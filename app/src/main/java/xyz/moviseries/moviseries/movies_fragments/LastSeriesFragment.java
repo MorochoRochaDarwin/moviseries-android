@@ -40,6 +40,8 @@ import xyz.moviseries.moviseries.models.Serie;
  */
 
 public class LastSeriesFragment extends Fragment implements SeriesAdapter.OnCLickSerieListener {
+    public static final String CATEGORY_NAME = "series.category_name";
+    private String category;
     private Context context;
     private RecyclerView recyclerView;
     private SeriesAdapter adapter;
@@ -52,11 +54,19 @@ public class LastSeriesFragment extends Fragment implements SeriesAdapter.OnCLic
     private Bundle savedInstanceState;
     private boolean initLoad = false;
 
+
+    public  static LastSeriesFragment newInstance(Bundle bundle){
+        LastSeriesFragment fragment=new LastSeriesFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         context = getActivity();
+        category = getArguments().getString(CATEGORY_NAME,"Todas las categorias");
         this.savedInstanceState = savedInstanceState;
     }
 
@@ -156,13 +166,19 @@ public class LastSeriesFragment extends Fragment implements SeriesAdapter.OnCLic
     }
 
     private class Load extends AsyncTask<Void, Void, Void> implements Callback<List<Serie>> {
-        private String url = "http://moviseries.xyz/android/last-series/" + limit + "/" + offset;
-        ;
+        private String url ;
         private int prev_size = 0;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
+            if(category.equals("Todas las categorias")){
+                url = "http://moviseries.xyz/android/last-series/" + limit + "/" + offset;
+            }else{
+                url = "http://moviseries.xyz/android/series/category/"+ category.replace(" ","+")+"/limit_offset/" + limit + "/" + offset;
+            }
+
             prev_size = series.size();
         }
 
@@ -216,22 +232,5 @@ public class LastSeriesFragment extends Fragment implements SeriesAdapter.OnCLic
     }
 
 
-    public interface LastSeriesFragmentOnlickListener {
-        void lastSeriesOnclick(Serie serie);
-    }
 
-
-    private LastSeriesFragmentOnlickListener lastSeriesFragmentOnlickListener;
-
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            lastSeriesFragmentOnlickListener = (LastSeriesFragmentOnlickListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnHeadlineSelectedListener");
-        }
-    }
 }
