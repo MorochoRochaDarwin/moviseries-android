@@ -33,6 +33,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -174,7 +175,21 @@ public class DashboardActivity extends BaseActivity
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         }
 
-        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+
+        // Get the search close button image view
+        ImageView closeButton = (ImageView)searchView.findViewById(R.id.search_close_btn);
+
+        // Set on click listener
+        closeButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
+        searchView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -210,6 +225,8 @@ public class DashboardActivity extends BaseActivity
                 }
             }
         });
+
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
