@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -73,14 +74,14 @@ public class EnlacesMegaAdapter extends RecyclerView.Adapter<EnlacesMegaAdapter.
 
     class MViewHolder extends RecyclerView.ViewHolder {
         TextView title, note;
-        ImageButton mega, copy;
+        Button mega, copy;
 
         public MViewHolder(View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.title);
             note = (TextView) itemView.findViewById(R.id.note);
-            mega = (ImageButton) itemView.findViewById(R.id.mega);
-            copy = (ImageButton) itemView.findViewById(R.id.copy);
+            mega = (Button) itemView.findViewById(R.id.mega);
+            copy = (Button) itemView.findViewById(R.id.copy);
         }
     }
 

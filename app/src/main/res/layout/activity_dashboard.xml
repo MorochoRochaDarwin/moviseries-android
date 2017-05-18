@@ -19,6 +19,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        android:background="@color/colorPrimary"
         >
 
         <LinearLayout
@@ -33,13 +34,15 @@
                 android:layout_marginLeft="5dp"
                 android:text="Resultados por: "
                 android:layout_width="match_parent"
+                android:textColor="#fff"
                 android:layout_height="wrap_content" />
 
             <Spinner
                 android:id="@+id/spinner"
                 android:padding="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:popupBackground="@color/colorPrimary"/>
 
             <TextView
                 android:layout_marginTop="4dp"

@@ -57,7 +57,9 @@ import xyz.moviseries.moviseries.models.MovieScore;
 import xyz.moviseries.moviseries.models.OpenLoadTicket;
 import xyz.moviseries.moviseries.models.UrlOnline;
 import xyz.moviseries.moviseries.models.ViewMovie;
+import xyz.moviseries.moviseries.streaming.NowVideo;
 import xyz.moviseries.moviseries.streaming.OpenLoad;
+import xyz.moviseries.moviseries.streaming.RapidVideo;
 import xyz.moviseries.moviseries.streaming.StreamMoe;
 
 /**
@@ -100,6 +102,8 @@ public class BottomSheetMovie extends BottomSheetDialogFragment implements Enlac
 
     private OpenLoad openLoad;
     private StreamMoe streamMoe;
+    private RapidVideo rapidVideo;
+    private NowVideo nowVideo;
 
     public static BottomSheetDialogFragment newInstance(Bundle args) {
         BottomSheetMovie bottomSheetNuevoEvento = new BottomSheetMovie();
@@ -111,8 +115,10 @@ public class BottomSheetMovie extends BottomSheetDialogFragment implements Enlac
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
-        openLoad=new OpenLoad(context);
-        streamMoe=new StreamMoe(context);
+        openLoad = new OpenLoad(context);
+        streamMoe = new StreamMoe(context);
+        rapidVideo = new RapidVideo(context);
+        nowVideo = new NowVideo(context);
 
 
         Bundle args = getArguments();
@@ -135,9 +141,6 @@ public class BottomSheetMovie extends BottomSheetDialogFragment implements Enlac
 
         View contentView = View.inflate(getContext(), R.layout.bottom_sheet_opciones_pelicula, null);
         dialog.setContentView(contentView);
-
-
-
 
 
         Button btn_trailer = (Button) contentView.findViewById(R.id.btn_trailer);
@@ -246,12 +249,31 @@ public class BottomSheetMovie extends BottomSheetDialogFragment implements Enlac
     }
 
     @Override
-    public void onClickEnlace(UrlOnline url) {
-        if (url.getServer().equals("stream.moe")) {
-            streamMoe.initStreaming(url);
-        } else if (url.getServer().equals("openload")) {
-            openLoad.initStreaming(url);
+    public void onClickEnlace(UrlOnline url, boolean isDownload) {
+
+        if (url.getServer().equals("openload") && isDownload) {
+            String link = "https://openload.co/f/" + url.getFile_id();
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(link));
+            context.startActivity(intent);
+        }else {
+            switch (url.getServer()) {
+                case "stream.moe":
+                    streamMoe.initStreaming(url, name, isDownload);
+                    break;
+                case "openload":
+                    openLoad.initStreaming(url);
+                    break;
+                case "rapidvideo":
+                    rapidVideo.initStreaming(url, name);
+                    break;
+                case "nowvideo":
+                    nowVideo.initStreaming(url, name, isDownload);
+                    break;
+            }
         }
+
+
     }
 
 

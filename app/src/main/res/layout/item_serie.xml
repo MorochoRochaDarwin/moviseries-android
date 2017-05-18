@@ -18,7 +18,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingTop="2dp">
+            android:paddingTop="0dp">
 
             <FrameLayout
                 android:layout_width="match_parent"

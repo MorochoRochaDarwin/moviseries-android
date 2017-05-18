@@ -3,6 +3,7 @@ package xyz.moviseries.moviseries;
 import android.Manifest;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -52,10 +53,12 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import xyz.moviseries.moviseries.adapters.AlfabetoAdapter;
 import xyz.moviseries.moviseries.adapters.CategoriasAdapter;
 import xyz.moviseries.moviseries.api_clients.MoviseriesApiClient;
 import xyz.moviseries.moviseries.api_services.MoviseriesApiService;
 import xyz.moviseries.moviseries.custom_views.DMTextView;
+import xyz.moviseries.moviseries.downloads.DownloadListActivity;
 import xyz.moviseries.moviseries.fragments.BottomSheetSerie;
 import xyz.moviseries.moviseries.models.Category;
 import xyz.moviseries.moviseries.models.Serie;
@@ -66,8 +69,10 @@ import xyz.moviseries.moviseries.movies_fragments.SearchSerieFragment;
 import xyz.moviseries.moviseries.movies_fragments.TopMoviesFragment;
 
 public class DashboardActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemSelectedListener,
-        CategoriasAdapter.OnCategoryClickListener {
+        implements AdapterView.OnItemSelectedListener,
+        CategoriasAdapter.OnCategoryClickListener, AlfabetoAdapter.OnClickLetraListener {
+
+    private String letra = "none";
 
     private Toolbar toolbar;
     private ArrayList<Category> categories = new ArrayList<>();
@@ -78,16 +83,19 @@ public class DashboardActivity extends BaseActivity
     private static int SEE = 0;
     private static final int SEE_MOVIES = 0;
     private static final int SEE_SERIES = 1;
-    private static final int SEARCH_MOVIES = 2;
-    private static final int SEARCH_SERIES = 3;
     private String category = "Todas las categorias";
     private DMTextView textViewToolbar;
+
+    private boolean buscando;
 
     private Fragment fragment;
 
     private LinearLayout content_search, content_title;
     private ImageButton btn_search, btn_close_search;
     private EditText editTextSearch;
+    private RecyclerView recyclerViewAlfabeto;
+
+    private AlfabetoAdapter alfabetoAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +111,11 @@ public class DashboardActivity extends BaseActivity
         btn_search = (ImageButton) findViewById(R.id.btn_search);
         btn_close_search = (ImageButton) findViewById(R.id.btn_close_search);
         editTextSearch = (EditText) findViewById(R.id.edit_search);
+        recyclerViewAlfabeto = (RecyclerView) findViewById(R.id.recyclerView);
+        alfabetoAdapter = new AlfabetoAdapter(context);
+        alfabetoAdapter.setOnClickLetraListener(this);
+        recyclerViewAlfabeto.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recyclerViewAlfabeto.setAdapter(alfabetoAdapter);
 
         categories.add(new Category("Todas las categorias"));
         categoriasAdapter = new CategoriasAdapter(context, categories);
@@ -111,16 +124,13 @@ public class DashboardActivity extends BaseActivity
         RecyclerView recyclerViewCategorias = (RecyclerView) findViewById(R.id.menuList);
         recyclerViewCategorias.setLayoutManager(new LinearLayoutManager(context));
         recyclerViewCategorias.setAdapter(categoriasAdapter);
-        if (!isLoadCategories) {
-            new LoadCategories().execute();
-        }
 
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
 // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.spinner_home, android.R.layout.simple_spinner_item);
+                R.array.spinner_home, R.layout.spinner_style);
 // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
 // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
@@ -129,6 +139,7 @@ public class DashboardActivity extends BaseActivity
         btn_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                buscando = true;
                 content_title.setVisibility(View.GONE);
                 content_search.setVisibility(View.VISIBLE);
 
@@ -151,6 +162,7 @@ public class DashboardActivity extends BaseActivity
         btn_close_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                buscando = false;
 
                 content_search.setVisibility(View.GONE);
                 content_title.setVisibility(View.VISIBLE);
@@ -188,13 +200,15 @@ public class DashboardActivity extends BaseActivity
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (SEE == SEE_MOVIES) {
+                if (buscando) {
+                    if (SEE == SEE_MOVIES) {
 
-                    SearchMovieFragment fragment = (SearchMovieFragment) getSupportFragmentManager().findFragmentByTag("searchMovie");
-                    fragment.search(s.toString());
-                } else {
-                    SearchSerieFragment fragment = (SearchSerieFragment) getSupportFragmentManager().findFragmentByTag("searchSerie");
-                    fragment.search(s.toString());
+                        SearchMovieFragment fragment = (SearchMovieFragment) getSupportFragmentManager().findFragmentByTag("searchMovie");
+                        fragment.search(s.toString());
+                    } else {
+                        SearchSerieFragment fragment = (SearchSerieFragment) getSupportFragmentManager().findFragmentByTag("searchSerie");
+                        fragment.search(s.toString());
+                    }
                 }
             }
 
@@ -204,19 +218,12 @@ public class DashboardActivity extends BaseActivity
             }
         });
 
-
         initDrawer();
 
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
-            } else {
-                checkFolder();
-            }
-        } else {
-            checkFolder();
+        if (!isLoadCategories) {
+            new LoadCategories().execute();
         }
+
 
     }
 
@@ -234,8 +241,6 @@ public class DashboardActivity extends BaseActivity
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             Log.v("P60", "Permission: " + permissions[0] + "was " + grantResults[0]);
-            //resume tasks needing this permission
-            checkFolder();
 
         } else {
             Toast.makeText(context, "ERROR no podra realizar descargas", Toast.LENGTH_SHORT).show();
@@ -268,21 +273,12 @@ public class DashboardActivity extends BaseActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_downloads) {
+            startActivity(new Intent(context, DownloadListActivity.class));
             return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 
 
@@ -294,8 +290,7 @@ public class DashboardActivity extends BaseActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         drawer.setScrimColor(getResources().getColor(android.R.color.transparent));
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
@@ -351,6 +346,7 @@ public class DashboardActivity extends BaseActivity
             SEE = SEE_MOVIES;
             Bundle bundle = new Bundle();
             bundle.putString(LastMoviesFragment.CATEGORY_NAME, this.category);
+            bundle.putString(LastMoviesFragment.LETRA, this.letra);
             transaction.replace(R.id.fragment_content, LastMoviesFragment.newInstance(bundle), "movies");
         } else {
             if (category.equals("Todas las categorias"))
@@ -360,6 +356,7 @@ public class DashboardActivity extends BaseActivity
             SEE = SEE_SERIES;
             Bundle bundle = new Bundle();
             bundle.putString(LastSeriesFragment.CATEGORY_NAME, this.category);
+            bundle.putString(LastSeriesFragment.LETRA, this.letra);
             transaction.replace(R.id.fragment_content, LastSeriesFragment.newInstance(bundle), "series");
         }
         transaction.commit();
@@ -381,6 +378,7 @@ public class DashboardActivity extends BaseActivity
     @Override
     public void onCategoryClick(Category category) {
 
+
         this.category = category.getCategory_name();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if (SEE == SEE_MOVIES) {
@@ -391,6 +389,7 @@ public class DashboardActivity extends BaseActivity
 
             Bundle bundle = new Bundle();
             bundle.putString(LastMoviesFragment.CATEGORY_NAME, this.category);
+            bundle.putString(LastMoviesFragment.LETRA, this.letra);
             transaction.replace(R.id.fragment_content, LastMoviesFragment.newInstance(bundle), "movies");
         } else {
             if (this.category.equals("Todas las categorias"))
@@ -400,6 +399,7 @@ public class DashboardActivity extends BaseActivity
 
             Bundle bundle = new Bundle();
             bundle.putString(LastSeriesFragment.CATEGORY_NAME, this.category);
+            bundle.putString(LastSeriesFragment.LETRA, this.letra);
             transaction.replace(R.id.fragment_content, LastSeriesFragment.newInstance(bundle), "series");
         }
         transaction.commit();
@@ -407,6 +407,42 @@ public class DashboardActivity extends BaseActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+    }
+
+    @Override
+    public void onClickLetra(String letra) {
+
+        if (alfabetoAdapter.isSelect()) {
+            this.letra = letra;
+        } else {
+            this.letra = "none";
+        }
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (SEE == SEE_MOVIES) {
+            if (this.category.equals("Todas las categorias"))
+                textViewToolbar.setText("Ultimas Películas");
+            else
+                textViewToolbar.setText("Películas - " + this.category);
+
+            Bundle bundle = new Bundle();
+            bundle.putString(LastMoviesFragment.CATEGORY_NAME, this.category);
+            bundle.putString(LastMoviesFragment.LETRA, this.letra);
+            transaction.replace(R.id.fragment_content, LastMoviesFragment.newInstance(bundle), "movies");
+        } else {
+            if (this.category.equals("Todas las categorias"))
+                textViewToolbar.setText("Ultimas Series");
+            else
+                textViewToolbar.setText("Series - " + this.category);
+
+            Bundle bundle = new Bundle();
+            bundle.putString(LastSeriesFragment.CATEGORY_NAME, this.category);
+            bundle.putString(LastSeriesFragment.LETRA, this.letra);
+            transaction.replace(R.id.fragment_content, LastSeriesFragment.newInstance(bundle), "series");
+        }
+        transaction.commit();
+
+
     }
 
 

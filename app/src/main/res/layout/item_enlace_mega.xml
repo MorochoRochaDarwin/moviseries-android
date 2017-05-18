@@ -45,24 +45,23 @@
                 android:orientation="horizontal">
 
 
-                <ImageButton
+                <Button
                     android:id="@+id/mega"
-                    style="@style/Base.Widget.AppCompat.Button.Borderless"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:src="@drawable/ic_mega"
-                    tools:scaleType="fitCenter" />
+                    android:maxLines="1"
+                    android:text="VER EN MEGA"/>
 
-                <ImageButton
+                <Button
                     android:id="@+id/copy"
-                    style="@style/Base.Widget.AppCompat.Button.Borderless"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_content_copy_black_24dp"
-                    tools:scaleType="centerInside" />
+                    android:maxLines="1"
+                    android:text="COPIAR LINK" />
 
 
             </LinearLayout>

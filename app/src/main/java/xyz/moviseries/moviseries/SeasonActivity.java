@@ -14,6 +14,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -37,7 +39,9 @@ import xyz.moviseries.moviseries.api_clients.MoviseriesApiClient;
 import xyz.moviseries.moviseries.api_services.MoviseriesApiService;
 import xyz.moviseries.moviseries.models.Capitulo;
 import xyz.moviseries.moviseries.models.UrlOnline;
+import xyz.moviseries.moviseries.streaming.NowVideo;
 import xyz.moviseries.moviseries.streaming.OpenLoad;
+import xyz.moviseries.moviseries.streaming.RapidVideo;
 import xyz.moviseries.moviseries.streaming.StreamMoe;
 
 public class SeasonActivity extends BaseActivity implements CapitulosAdapter.OnClickCapituloListener, YouTubePlayer.OnInitializedListener {
@@ -57,6 +61,8 @@ public class SeasonActivity extends BaseActivity implements CapitulosAdapter.OnC
 
     private OpenLoad openLoad;
     private StreamMoe streamMoe;
+    private RapidVideo rapidVideo;
+    private NowVideo nowVideo;
 
 
     @Override
@@ -65,6 +71,8 @@ public class SeasonActivity extends BaseActivity implements CapitulosAdapter.OnC
         setContentView(R.layout.activity_season);
         openLoad = new OpenLoad(context);
         streamMoe = new StreamMoe(context);
+        rapidVideo = new RapidVideo(context);
+        nowVideo=new NowVideo(context);
         Intent intent = getIntent();
         serie_name = intent.getStringExtra(SERIE_NAME);
         season_id = intent.getStringExtra(SEASON_ID);
@@ -82,13 +90,14 @@ public class SeasonActivity extends BaseActivity implements CapitulosAdapter.OnC
 
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView.setNestedScrollingEnabled(false);
         adapter = new CapitulosAdapter(context, capitulos);
         adapter.setOnClickCapituloListener(this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(adapter);
 
 
@@ -99,14 +108,7 @@ public class SeasonActivity extends BaseActivity implements CapitulosAdapter.OnC
     }
 
 
-
-
-
-
-
-
     private void initCollapse() {
-
 
 
         final RelativeLayout content_collapse = (RelativeLayout) findViewById(R.id.content_collapse);
@@ -160,32 +162,56 @@ public class SeasonActivity extends BaseActivity implements CapitulosAdapter.OnC
     }
 
 
-
-
-
-
     @Override
-    public void onCapituloClickPlay(Capitulo capitulo) {
-        UrlOnline url = new UrlOnline(capitulo.getUrl_id(), capitulo.getFile_id(), capitulo.getQuality(), capitulo.getServer(), capitulo.getLanguage_name());
-
-        if (capitulo.getServer().equals("stream.moe")) {
-            streamMoe.initStreaming(url);
-        } else if (capitulo.getServer().equals("openload")) {
-            openLoad.initStreaming(url);
-        }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_season, menu);
+        return true;
     }
 
     @Override
-    public void onCapituloClickDownload(Capitulo capitulo) {
-        if (capitulo.getServer().equals("stream.moe")) {
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-        } else if (capitulo.getServer().equals("openload")) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCapituloClickPlay(Capitulo capitulo, boolean isDownload) {
+
+        if (capitulo.getServer().equals("openload") && isDownload) {
             String url = "https://openload.co/f/" + capitulo.getFile_id();
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(url));
             context.startActivity(intent);
+        }else{
+            UrlOnline url = new UrlOnline(capitulo.getUrl_id(), capitulo.getFile_id(), capitulo.getQuality(), capitulo.getServer(), capitulo.getLanguage_name());
+
+            switch (capitulo.getServer()) {
+                case "stream.moe":
+                    streamMoe.initStreaming(url, serie_name + ": temporada " + season_number + " capitulo " + capitulo.getEpisode(), isDownload);
+                    break;
+                case "openload":
+                    openLoad.initStreaming(url);
+                    break;
+                case "rapidvideo":
+                    rapidVideo.initStreaming(url, serie_name + ": temporada " + season_number + " capitulo " + capitulo.getEpisode());
+                    break;
+                case "nowvideo":
+                    nowVideo.initStreaming(url, serie_name + ": temporada " + season_number + " capitulo " + capitulo.getEpisode(), isDownload);
+                    break;
+            }
         }
+
+
     }
+
+
 
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean wasRestored) {

@@ -69,6 +69,7 @@ public class SearchSerieFragment extends Fragment implements SeriesAdapter.OnCLi
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recycler, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        recyclerView.setNestedScrollingEnabled(false);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         home = (LinearLayout) rootView.findViewById(R.id.home);
         adapter = new SeriesAdapter(context, series);

@@ -26,6 +26,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import xyz.moviseries.moviseries.JWplayerActivity;
 import xyz.moviseries.moviseries.R;
 import xyz.moviseries.moviseries.models.OpenLoadTicket;
 import xyz.moviseries.moviseries.models.UrlOnline;
@@ -248,18 +249,17 @@ public class OpenLoad {
 
                     String url_video = json_result.getString("url");
 
+                    Intent intent = new Intent(context, JWplayerActivity.class);
+                    intent.putExtra(JWplayerActivity.LINK, url_video);
+                    intent.putExtra(JWplayerActivity.TITLE, urlOnline.getQuality());
 
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setDataAndType(Uri.parse(url_video), "video/mp4");
                     context.startActivity(intent);
-
 
                     // Intent intent = new Intent(context, Exoplayer2Activity.class);
                     // intent.putExtra(Exoplayer2Activity.LINK,link);
                     // intent.putExtra(Exoplayer2Activity.TITLE,movie.getName()+" - "+urlOnline.getQuality());
 
 
-                    dialogOpenload(openLoadTicket, urlOnline);
                 } else {
                     Toast.makeText(context, "Error Captcha incorrecto o enlace invalido", Toast.LENGTH_LONG).show();
                 }

@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -39,10 +40,16 @@ public class EnlacesAdapter extends RecyclerView.Adapter<EnlacesAdapter.MViewHol
         holder.audio.setText(url.getLanguage_name());
         holder.quality.setText(url.getQuality());
         holder.server.setText(url.getServer());
-        holder.item.setOnClickListener(new View.OnClickListener() {
+        holder.play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onClickEnlaceListener.onClickEnlace(url);
+                onClickEnlaceListener.onClickEnlace(url,false);
+            }
+        });
+        holder.download.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickEnlaceListener.onClickEnlace(url,true);
             }
         });
     }
@@ -53,22 +60,23 @@ public class EnlacesAdapter extends RecyclerView.Adapter<EnlacesAdapter.MViewHol
     }
 
     class MViewHolder extends RecyclerView.ViewHolder {
-        private LinearLayout item;
         private TextView audio, quality, server;
+        ImageButton play, download;
 
         public MViewHolder(View itemView) {
             super(itemView);
-            item = (LinearLayout) itemView.findViewById(R.id.item);
             audio = (TextView) itemView.findViewById(R.id.audio);
             quality = (TextView) itemView.findViewById(R.id.quality);
             server = (TextView) itemView.findViewById(R.id.server);
+            play = (ImageButton) itemView.findViewById(R.id.play);
+            download = (ImageButton) itemView.findViewById(R.id.download);
 
         }
     }
 
 
-    public interface OnClickEnlaceListener{
-        void onClickEnlace(UrlOnline url);
+    public interface OnClickEnlaceListener {
+        void onClickEnlace(UrlOnline url, boolean isDownload);
     }
 
     private OnClickEnlaceListener onClickEnlaceListener;

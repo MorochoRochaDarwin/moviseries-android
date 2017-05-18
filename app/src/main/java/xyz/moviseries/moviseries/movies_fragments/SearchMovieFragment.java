@@ -92,6 +92,7 @@ public class SearchMovieFragment extends Fragment implements MoviesAdapter.Movie
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_last_movies, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        recyclerView.setNestedScrollingEnabled(false);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         home = (LinearLayout) rootView.findViewById(R.id.home);
         adapter = new MoviesAdapter(context, movies);

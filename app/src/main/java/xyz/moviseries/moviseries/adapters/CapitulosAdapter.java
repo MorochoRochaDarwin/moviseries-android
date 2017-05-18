@@ -46,14 +46,14 @@ public class CapitulosAdapter extends RecyclerView.Adapter<CapitulosAdapter.CVie
         holder.play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onClickCapituloListener.onCapituloClickPlay(capitulo);
+                onClickCapituloListener.onCapituloClickPlay(capitulo,false);
             }
         });
 
         holder.download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onClickCapituloListener.onCapituloClickDownload(capitulo);
+                onClickCapituloListener.onCapituloClickPlay(capitulo,true);
             }
         });
 
@@ -88,9 +88,7 @@ public class CapitulosAdapter extends RecyclerView.Adapter<CapitulosAdapter.CVie
 
 
     public interface OnClickCapituloListener {
-        void onCapituloClickPlay(Capitulo capitulo);
-
-        void onCapituloClickDownload(Capitulo capitulo);
+        void onCapituloClickPlay(Capitulo capitulo,boolean isDownload);
     }
 
 

@@ -6,6 +6,34 @@
 
     <string name="action_settings">Settings</string>
 
+    <string-array name="alfabeto">
+        <item>A</item>
+        <item>B</item>
+        <item>C</item>
+        <item>D</item>
+        <item>E</item>
+        <item>F</item>
+        <item>G</item>
+        <item>H</item>
+        <item>I</item>
+        <item>J</item>
+        <item>K</item>
+        <item>L</item>
+        <item>M</item>
+        <item>N</item>
+        <item>O</item>
+        <item>P</item>
+        <item>Q</item>
+        <item>R</item>
+        <item>S</item>
+        <item>T</item>
+        <item>U</item>
+        <item>V</item>
+        <item>W</item>
+        <item>X</item>
+        <item>Y</item>
+        <item>Z</item>
+    </string-array>
 
     <!--NO modificar este array-->
     <string-array name="fonts">
@@ -186,6 +214,47 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+
+    <string name="title_activity_jwplayer">Moviseries video player</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_downloads">DownloadsActivity</string>
+
+
+
+
+
+
+    <string name="pause">PAUSAE</string>
+    <string name="resume">RENAURAR</string>
+    <string name="permission_not_enabled">Please enable the Write External Storage Permission</string>
+    <string name="delete_files">Delete Downloads test files from the file system and try again.</string>
+    <string name="delete_title">Are you sure you want to delete %1$s?</string>
+    <string name="delete">ELIMINAR</string>
+    <string name="cancel">CANCELAR</string>
+    <string name="view">Ver</string>
+    <string name="wifiOnly">Descargar solo por WiFi</string>
+    <string name="retry">REINTENTAR</string>
+    <string name="start">INICIAR</string>
+    <string name="complete_over">%1$d/%2$d</string>
+    <string name="start_fetching">Click start to start fetching game files.</string>
+    <string name="fetch_started">Fetching Game Files...</string>
+    <string name="fetch_done">Fetching done.</string>
+    <string name="fetch_failed">An error occured whiles fetching the game files.</string>
+    <string name="reset">REINICIAR</string>
+    <string name="single_download_demo">Single Download Demo</string>
+    <string name="download_list_demo">Download List Demo</string>
+    <string name="game_file_download_demo">Game File Download Demo</string>
+    <string name="percent_progress">%1$d%%</string>
+    <string name="downloading">Descargando...</string>
+    <string name="queued">QUEUED</string>
+    <string name="status_unknown">Estado desconocido</string>
+    <string name="delete_all_files">Delete Downloaded Files</string>
+    <string name="downloaded_files_deleted">Downloads Files Deleted</string>
+    <string name="game_download_error">An error occurred, could not get game files.</string>
+    <string name="multi_enqueue">Multi Enqueue Demo</string>
+    <string name="multi_fragment">MULTI FRAGMENT DEMO</string>
+    <string name="enqueue_error">Could not enqueue this request. Check logcat.</string>
 
 
 </resources>

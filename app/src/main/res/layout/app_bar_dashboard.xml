@@ -5,7 +5,7 @@
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff"
+    android:background="@color/colorPrimary"
     android:focusable="true"
     android:focusableInTouchMode="true">
 
@@ -13,20 +13,17 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/WhitePopupOverlay">
+        android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:layout_marginBottom="6dp"
             android:layout_marginLeft="3dp"
             android:layout_marginRight="3dp"
             android:layout_marginTop="2dp"
-            android:background="#fff"
             android:gravity="center_vertical"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/WhiteToolbar">
+            app:layout_scrollFlags="scroll|enterAlways">
 
             <LinearLayout
                 android:id="@+id/content_title"
@@ -41,7 +38,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="Ultimas Peliculas"
-                    android:textColor="@color/colorPrimary" />
+                    android:textColor="#fff" />
 
                 <ImageButton
                     android:id="@+id/btn_search"
@@ -51,7 +48,7 @@
                     android:layout_weight="4"
                     android:gravity="center"
                     android:src="@drawable/ic_search_black_24dp"
-                    android:tint="@color/colorPrimary" />
+                    android:tint="#fff" />
 
             </LinearLayout>
 
@@ -78,11 +75,16 @@
                     android:layout_weight="4"
                     android:gravity="center"
                     android:src="@drawable/ic_close_black_24dp"
-                    android:tint="@color/colorPrimary" />
+                    android:tint="#fff" />
 
             </LinearLayout>
 
         </android.support.v7.widget.Toolbar>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </android.support.design.widget.AppBarLayout>
 

@@ -41,7 +41,8 @@ import xyz.moviseries.moviseries.models.Serie;
 
 public class LastSeriesFragment extends Fragment implements SeriesAdapter.OnCLickSerieListener {
     public static final String CATEGORY_NAME = "series.category_name";
-    private String category;
+    public static final String LETRA = "series.category_letra";
+    private String category, letra;
     private Context context;
     private RecyclerView recyclerView;
     private SeriesAdapter adapter;
@@ -55,8 +56,8 @@ public class LastSeriesFragment extends Fragment implements SeriesAdapter.OnCLic
     private boolean initLoad = false;
 
 
-    public  static LastSeriesFragment newInstance(Bundle bundle){
-        LastSeriesFragment fragment=new LastSeriesFragment();
+    public static LastSeriesFragment newInstance(Bundle bundle) {
+        LastSeriesFragment fragment = new LastSeriesFragment();
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -66,7 +67,8 @@ public class LastSeriesFragment extends Fragment implements SeriesAdapter.OnCLic
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         context = getActivity();
-        category = getArguments().getString(CATEGORY_NAME,"Todas las categorias");
+        category = getArguments().getString(CATEGORY_NAME, "Todas las categorias");
+        letra = getArguments().getString(LETRA, "none");
         this.savedInstanceState = savedInstanceState;
     }
 
@@ -78,6 +80,7 @@ public class LastSeriesFragment extends Fragment implements SeriesAdapter.OnCLic
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recycler, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        recyclerView.setNestedScrollingEnabled(false);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         home = (LinearLayout) rootView.findViewById(R.id.home);
         adapter = new SeriesAdapter(context, series);
@@ -166,18 +169,26 @@ public class LastSeriesFragment extends Fragment implements SeriesAdapter.OnCLic
     }
 
     private class Load extends AsyncTask<Void, Void, Void> implements Callback<List<Serie>> {
-        private String url ;
+        private String url;
         private int prev_size = 0;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
 
-            if(category.equals("Todas las categorias")){
+            if (category.equals("Todas las categorias") && category.equals("Todas las categorias") && letra.equals("none")) {
                 url = "http://moviseries.xyz/android/last-series/" + limit + "/" + offset;
-            }else{
-                url = "http://moviseries.xyz/android/series/category/"+ category.replace(" ","+")+"/limit_offset/" + limit + "/" + offset;
+            } else if (category.equals("Todas las categorias") && !letra.equals("none")) {
+                url = "http://moviseries.xyz/android/last-series/" + limit + "/" + offset + "/" + letra;
+            } else if (letra.equals("none")) {
+                url = "http://moviseries.xyz/android/series/category/" + category.replace(" ", "+") + "/limit_offset/" + limit + "/" + offset;
+            } else {
+                url = "http://moviseries.xyz/android/series/category/" + category.replace(" ", "+") + "/limit_offset/" + limit + "/" + offset+"/letra/"+letra;
             }
+
+
+
+
 
             prev_size = series.size();
         }
@@ -230,7 +241,6 @@ public class LastSeriesFragment extends Fragment implements SeriesAdapter.OnCLic
             loading = false;
         }
     }
-
 
 
 }

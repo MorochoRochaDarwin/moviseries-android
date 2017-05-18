@@ -28,27 +28,37 @@
             android:name=".DashboardActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".LoginActivity"
             android:configChanges="orientation|screenSize"
             android:label="INGRESO AL SISTEMA"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Exoplayer2Activity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
             android:name=".SeasonActivity"
-            android:label="@string/title_activity_season"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:label="@string/title_activity_season"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".JWplayerActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:label="@string/title_activity_jwplayer"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"></activity>
 
-        </activity>
+        <meta-data
+            android:name="JW_LICENSE_KEY"
+            android:value="Z4ZKabQBtaAH01bwARpYNvao8FErjPA13EQLtw==" />
+
+        <activity
+            android:name=".downloads.DownloadListActivity"
+            android:label="Download Manager"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,7 +58,7 @@ public class Exoplayer2Activity extends AppCompatActivity implements PlaybackCon
 
     public static final String LINK = "exoplayer2.link";
     public static final String TITLE = "exoplayer2.title";
-    private String link,title;
+    private String link, title;
 
     private static final String TAG = "Exoplayer2Activity";
     private SimpleExoPlayerView simpleExoPlayerView;
@@ -65,6 +66,8 @@ public class Exoplayer2Activity extends AppCompatActivity implements PlaybackCon
     private ExoPlayer.EventListener exoPlayerEventListener;
     private int currentApiVersion;
     private LinearLayout topContent;
+    private RelativeLayout loadingVPanel;
+    private long posPrev = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -116,8 +119,9 @@ public class Exoplayer2Activity extends AppCompatActivity implements PlaybackCon
         player = ExoPlayerFactory.newSimpleInstance(this, trackSelector, loadControl);
         simpleExoPlayerView = new SimpleExoPlayerView(this);
         simpleExoPlayerView = (SimpleExoPlayerView) findViewById(R.id.player_view);
+        loadingVPanel = (RelativeLayout) findViewById(R.id.loadingVPanel);
         topContent = (LinearLayout) findViewById(R.id.top);
-        TextView textViewTitle=(TextView) findViewById(R.id.txt_title);
+        TextView textViewTitle = (TextView) findViewById(R.id.txt_title);
         ImageButton btn_back = (ImageButton) findViewById(R.id.btn_back);
         textViewTitle.setText(title);
         btn_back.setOnClickListener(new View.OnClickListener() {
@@ -147,6 +151,46 @@ public class Exoplayer2Activity extends AppCompatActivity implements PlaybackCon
         player.prepare(mediaSource);
         player.setPlayWhenReady(true);
 
+        player.addListener(new ExoPlayer.EventListener() {
+            @Override
+            public void onTimelineChanged(Timeline timeline, Object manifest) {
+
+            }
+
+            @Override
+            public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+
+            }
+
+            @Override
+            public void onLoadingChanged(boolean isLoading) {
+                if (isLoading) {
+                    loadingVPanel.setVisibility(View.VISIBLE);
+                } else {
+                    loadingVPanel.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+
+            }
+
+            @Override
+            public void onPlayerError(ExoPlaybackException error) {
+
+            }
+
+            @Override
+            public void onPositionDiscontinuity() {
+
+            }
+
+            @Override
+            public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+
+            }
+        });
 
 
     }
@@ -166,10 +210,24 @@ public class Exoplayer2Activity extends AppCompatActivity implements PlaybackCon
         }
     }
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(player.getPlayWhenReady()){
+            if(posPrev>0){
+                player.seekTo(posPrev);
+            }
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        posPrev = player.getCurrentPosition();
         player.release();
+
+
     }
 
 
@@ -179,8 +237,7 @@ public class Exoplayer2Activity extends AppCompatActivity implements PlaybackCon
     }
 
 
-
-    public void descargar(View v){
+    public void descargar(View v) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Debe conceder los permisos de escritura en la SD Card", Toast.LENGTH_LONG).show();
@@ -190,7 +247,7 @@ public class Exoplayer2Activity extends AppCompatActivity implements PlaybackCon
 
         Fetch fetch = Fetch.getInstance(this);
 
-        Request request = new Request(link, Environment.getExternalStorageDirectory() + "/Moviseries/",title);
+        Request request = new Request(link, Environment.getExternalStorageDirectory() + "/Moviseries/", title);
         long downloadId = fetch.enqueue(request);
         Toast.makeText(this, "Descarga Iniciada", Toast.LENGTH_SHORT).show();
 

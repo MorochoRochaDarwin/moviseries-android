@@ -39,7 +39,8 @@ import xyz.moviseries.moviseries.bottom_sheets.BottomSheetMovie;
 public class LastMoviesFragment extends Fragment implements MoviesAdapter.MovieOnclickListener {
 
     public static final String CATEGORY_NAME = "movies.category_name";
-    private String category;
+    public static final String LETRA = "movies.letra";
+    private String category,letra="none";
 
     private Context context;
     private RecyclerView recyclerView;
@@ -62,6 +63,7 @@ public class LastMoviesFragment extends Fragment implements MoviesAdapter.MovieO
         context = getActivity();
         Bundle args = getArguments();
         category = args.getString(CATEGORY_NAME,"Todas las categorias");
+        letra = args.getString(LETRA,"none");
     }
 
     private int gridsP = 1, gridsL = 2;
@@ -73,6 +75,7 @@ public class LastMoviesFragment extends Fragment implements MoviesAdapter.MovieO
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_last_movies, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        recyclerView.setNestedScrollingEnabled(false);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         home = (LinearLayout) rootView.findViewById(R.id.home);
         adapter = new MoviesAdapter(context, movies);
@@ -176,10 +179,15 @@ public class LastMoviesFragment extends Fragment implements MoviesAdapter.MovieO
         protected void onPreExecute() {
             super.onPreExecute();
 
-            if(category.equals("Todas las categorias")){
+
+            if (category.equals("Todas las categorias") && letra.equals("none")) {
                 url = "http://moviseries.xyz/android/last-movies/" + limit + "/" + offset;
-            }else{
-                url = "http://moviseries.xyz/android/movies/category/"+ category.replace(" ","+")+"/limit_offset/" + limit + "/" + offset;
+            } else if (category.equals("Todas las categorias") && !letra.equals("none")) {
+                url = "http://moviseries.xyz/android/last-movies/" + limit + "/" + offset + "/" + letra;
+            } else if (letra.equals("none")) {
+                url = "http://moviseries.xyz/android/movies/category/" + category.replace(" ", "+") + "/limit_offset/" + limit + "/" + offset;
+            } else {
+                url = "http://moviseries.xyz/android/movies/category/" + category.replace(" ", "+") + "/limit_offset/" + limit + "/" + offset + "/letra/" + letra;
             }
 
 

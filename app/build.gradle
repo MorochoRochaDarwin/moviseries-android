@@ -24,6 +24,9 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    // Only required if using IMA features
+    // Only required if using Chromecast
+    compile files('libs/YouTubeAndroidPlayerApi.jar')
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -37,6 +40,10 @@ dependencies {
     compile 'com.google.android.exoplayer:exoplayer:r2.4.0'
     compile 'com.tonyodev.fetch:fetch:1.1.1'
     compile 'com.hannesdorfmann:swipeback:1.0.4'
+    compile 'com.longtailvideo.jwplayer:jwplayer-core:+'
+    compile 'com.longtailvideo.jwplayer:jwplayer-common:+'
+    compile 'com.longtailvideo.jwplayer:jwplayer-ima:+'
+    compile 'com.longtailvideo.jwplayer:jwplayer-chromecast:+'
+    compile 'com.android.support:support-v4:25.3.1'
     testCompile 'junit:junit:4.12'
-    compile files('libs/YouTubeAndroidPlayerApi.jar')
 }

@@ -5,10 +5,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -19,20 +19,21 @@ import com.android.volley.toolbox.Volley;
 import com.tonyodev.fetch.Fetch;
 
 import xyz.moviseries.moviseries.Exoplayer2Activity;
+import xyz.moviseries.moviseries.JWplayerActivity;
 import xyz.moviseries.moviseries.downloads.Data;
 import xyz.moviseries.moviseries.models.UrlOnline;
 import xyz.moviseries.moviseries.models.VideoDownload;
 
 /**
- * Created by DARWIN on 10/5/2017.
+ * Created by DARWIN on 18/5/2017.
  */
 
-public class StreamMoe {
+public class NowVideo {
     private Context context;
     private DownloadLink stream_task;
 
 
-    public StreamMoe(Context context) {
+    public NowVideo(Context context) {
         this.context = context;
     }
 
@@ -75,34 +76,36 @@ public class StreamMoe {
             RequestQueue queue = Volley.newRequestQueue(context);
 
             // Request a string response from the provided URL.
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, "https://stream.moe/" + urlOnline.getFile_id(), this, this);
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, "http://www.nowvideo.sx/mobile/video.php?id=" + urlOnline.getFile_id(), this, this);
             // Add the request to the RequestQueue.
+
             queue.add(stringRequest);
             return null;
         }
 
         @Override
         public void onErrorResponse(VolleyError error) {
-
+            progressDialog.hide();
+            Toast.makeText(context, "No se pudo obtener el enlace", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onResponse(String response) {
+
             progressDialog.hide();
             String firtsString = null;
             try {
-                firtsString = response.substring(response.lastIndexOf("https://wabbit.moecdn.io/"));
+                firtsString = response.substring(response.lastIndexOf("source src="));
+                firtsString = firtsString.replace("source src=\"", "");
+                Log.i("resp first", firtsString);
             } catch (StringIndexOutOfBoundsException e) {
-                try {
-                    firtsString = response.substring(response.lastIndexOf("https://clank.stream.moe/"));
-                } catch (StringIndexOutOfBoundsException e2) {
-                    Toast.makeText(context, "No se pudo obtener el enlace", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                Toast.makeText(context, "No se pudo obtener el enlace", Toast.LENGTH_SHORT).show();
+                return;
             }
 
             String link = firtsString.substring(0, firtsString.indexOf("\""));
 
+            
 
             if (isDownload) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -122,15 +125,11 @@ public class StreamMoe {
                 Data data = new Data(context);
                 data.addDownload(new VideoDownload(downloadId + "", video_name + " " + urlOnline.getQuality() + ".mp4", link));
             } else {
-               /*
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.parse(link), "video/mp4");
-                context.startActivity(intent);
-                */
 
-                Intent intent = new Intent(context, Exoplayer2Activity.class);
-                intent.putExtra(Exoplayer2Activity.LINK, link);
-                intent.putExtra(Exoplayer2Activity.TITLE, video_name + " - " + urlOnline.getQuality());
+
+                Intent intent = new Intent(context, JWplayerActivity.class);
+                intent.putExtra(JWplayerActivity.LINK, link);
+                intent.putExtra(JWplayerActivity.TITLE, urlOnline.getQuality());
 
                 context.startActivity(intent);
 
@@ -139,5 +138,6 @@ public class StreamMoe {
 
         }
     }
+
 
 }
