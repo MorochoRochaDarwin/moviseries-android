@@ -64,14 +64,15 @@ import xyz.moviseries.moviseries.fragments.BottomSheetSerie;
 import xyz.moviseries.moviseries.models.Category;
 import xyz.moviseries.moviseries.models.Serie;
 import xyz.moviseries.moviseries.movies_fragments.LastMoviesFragment;
+import xyz.moviseries.moviseries.movies_fragments.LastSeasonsFragment;
 import xyz.moviseries.moviseries.movies_fragments.LastSeriesFragment;
 import xyz.moviseries.moviseries.movies_fragments.SearchMovieFragment;
 import xyz.moviseries.moviseries.movies_fragments.SearchSerieFragment;
 import xyz.moviseries.moviseries.movies_fragments.TopMoviesFragment;
 
 public class DashboardActivity extends BaseActivity
-        implements AdapterView.OnItemSelectedListener,
-        CategoriasAdapter.OnCategoryClickListener, AlfabetoAdapter.OnClickLetraListener {
+        implements
+        CategoriasAdapter.OnCategoryClickListener, AlfabetoAdapter.OnClickLetraListener, View.OnClickListener {
 
     private String letra = "none";
 
@@ -95,10 +96,12 @@ public class DashboardActivity extends BaseActivity
     private ImageButton btn_search, btn_close_search;
     private EditText editTextSearch;
     private RecyclerView recyclerViewAlfabeto;
-    private RecyclerView recyclerViewMenu;
+
 
     private AlfabetoAdapter alfabetoAdapter;
-    private MainMenuAdapter menuAdapter;
+
+    private LinearLayout btn_movies, btn_series, btn_topmovies, btn_topseries;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,14 +118,16 @@ public class DashboardActivity extends BaseActivity
         btn_close_search = (ImageButton) findViewById(R.id.btn_close_search);
         editTextSearch = (EditText) findViewById(R.id.edit_search);
         recyclerViewAlfabeto = (RecyclerView) findViewById(R.id.recyclerView);
-        recyclerViewMenu = (RecyclerView) findViewById(R.id.recyclerViewMenu);
+
+        btn_movies = (LinearLayout) findViewById(R.id.movies);
+        btn_topmovies = (LinearLayout) findViewById(R.id.topMovies);
+        btn_series = (LinearLayout) findViewById(R.id.series);
+        btn_topseries = (LinearLayout) findViewById(R.id.topSeries);
+
         alfabetoAdapter = new AlfabetoAdapter(context);
-        menuAdapter = new MainMenuAdapter(context);
         alfabetoAdapter.setOnClickLetraListener(this);
         recyclerViewAlfabeto.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        recyclerViewMenu.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recyclerViewAlfabeto.setAdapter(alfabetoAdapter);
-        recyclerViewMenu.setAdapter(menuAdapter);
 
         categories.add(new Category("Todas las categorias"));
         categoriasAdapter = new CategoriasAdapter(context, categories);
@@ -132,15 +137,11 @@ public class DashboardActivity extends BaseActivity
         recyclerViewCategorias.setLayoutManager(new LinearLayoutManager(context));
         recyclerViewCategorias.setAdapter(categoriasAdapter);
 
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
-// Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.spinner_home, R.layout.spinner_style);
-// Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
-// Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
+
+        btn_movies.setOnClickListener(this);
+        btn_topmovies.setOnClickListener(this);
+        btn_series.setOnClickListener(this);
+        btn_topseries.setOnClickListener(this);
 
 
         btn_search.setOnClickListener(new View.OnClickListener() {
@@ -340,40 +341,19 @@ public class DashboardActivity extends BaseActivity
         textViewUserEmail.setText(email_usuario);
         textViewUserID.setText("Usuario ID: " + usuario_id);
         textViewUserType.setText("Cuenta: " + tipo);
-    }
 
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+        Bundle bundle = new Bundle();
+        if (category.equals("Todas las categorias"))
+            textViewToolbar.setText("Ultimas Películas");
+        else
+            textViewToolbar.setText("Películas - " + category);
+        SEE = SEE_MOVIES;
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        if (i == 0) {
-            if (category.equals("Todas las categorias"))
-                textViewToolbar.setText("Ultimas Películas");
-            else
-                textViewToolbar.setText("Películas - " + category);
-            SEE = SEE_MOVIES;
-            Bundle bundle = new Bundle();
-            bundle.putString(LastMoviesFragment.CATEGORY_NAME, this.category);
-            bundle.putString(LastMoviesFragment.LETRA, this.letra);
-            transaction.replace(R.id.fragment_content, LastMoviesFragment.newInstance(bundle), "movies");
-        } else {
-            if (category.equals("Todas las categorias"))
-                textViewToolbar.setText("Ultimas Series");
-            else
-                textViewToolbar.setText("Series - " + category);
-            SEE = SEE_SERIES;
-            Bundle bundle = new Bundle();
-            bundle.putString(LastSeriesFragment.CATEGORY_NAME, this.category);
-            bundle.putString(LastSeriesFragment.LETRA, this.letra);
-            transaction.replace(R.id.fragment_content, LastSeriesFragment.newInstance(bundle), "series");
-        }
+        bundle.putString(LastMoviesFragment.CATEGORY_NAME, this.category);
+        bundle.putString(LastMoviesFragment.LETRA, this.letra);
+        transaction.replace(R.id.fragment_content, LastMoviesFragment.newInstance(bundle), "movies");
         transaction.commit();
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
     }
 
 
@@ -450,6 +430,51 @@ public class DashboardActivity extends BaseActivity
         transaction.commit();
 
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        int id = view.getId();
+        Bundle bundle = new Bundle();
+        switch (id) {
+            case R.id.movies:
+                if (category.equals("Todas las categorias"))
+                    textViewToolbar.setText("Ultimas Películas");
+                else
+                    textViewToolbar.setText("Películas - " + category);
+                SEE = SEE_MOVIES;
+
+                bundle.putString(LastMoviesFragment.CATEGORY_NAME, this.category);
+                bundle.putString(LastMoviesFragment.LETRA, this.letra);
+                transaction.replace(R.id.fragment_content, LastMoviesFragment.newInstance(bundle), "movies");
+                break;
+            case R.id.series:
+                if (category.equals("Todas las categorias"))
+                    textViewToolbar.setText("Ultimas Series");
+                else
+                    textViewToolbar.setText("Series - " + category);
+                SEE = SEE_SERIES;
+
+                bundle.putString(LastSeriesFragment.CATEGORY_NAME, this.category);
+                bundle.putString(LastSeriesFragment.LETRA, this.letra);
+                transaction.replace(R.id.fragment_content, LastSeriesFragment.newInstance(bundle), "series");
+                break;
+
+            case R.id.topMovies:
+                textViewToolbar.setText("Top 20 Películas");
+                transaction.replace(R.id.fragment_content, new TopMoviesFragment(), "topMovies");
+                break;
+
+            case R.id.topSeries:
+                textViewToolbar.setText("Series Actualizadas");
+                transaction.replace(R.id.fragment_content, new LastSeasonsFragment(), "SeriesActua");
+                break;
+        }
+
+        transaction.commit();
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
     }
 
 

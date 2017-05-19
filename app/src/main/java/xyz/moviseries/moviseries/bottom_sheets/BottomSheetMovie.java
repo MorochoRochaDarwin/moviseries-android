@@ -127,7 +127,7 @@ public class BottomSheetMovie extends BottomSheetDialogFragment implements Enlac
         trailer = args.getString(TRAILER);
         cover = args.getString(COVER);
         description = args.getString(DESCRIPTION);
-        qualities = args.getString(QUALITIES);
+        qualities = args.getString(QUALITIES,"");
         update_at = args.getString(UPDATE_AT);
         year = args.getString(YEAR);
 
@@ -144,6 +144,7 @@ public class BottomSheetMovie extends BottomSheetDialogFragment implements Enlac
 
 
         Button btn_trailer = (Button) contentView.findViewById(R.id.btn_trailer);
+        Button btn_share = (Button) contentView.findViewById(R.id.btn_share);
 
         imageViewCover = (ImageView) contentView.findViewById(R.id.cover);
         textViewName = (TextView) contentView.findViewById(R.id.name);
@@ -197,6 +198,18 @@ public class BottomSheetMovie extends BottomSheetDialogFragment implements Enlac
                 Intent intent = YouTubeStandalonePlayer.createVideoIntent(
                         getActivity(), DeveloperKey.DEVELOPER_KEY, trailer, 0, true, false);
                 startActivity(intent);
+            }
+        });
+
+
+        btn_share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_SUBJECT, "Sharing URL");
+                i.putExtra(Intent.EXTRA_TEXT, "http://moviseries.xyz/peliculas/"+movie_id);
+                startActivity(Intent.createChooser(i, "Compartir URL"));
             }
         });
 

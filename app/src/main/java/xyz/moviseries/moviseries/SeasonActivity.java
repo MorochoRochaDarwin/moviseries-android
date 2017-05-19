@@ -47,13 +47,14 @@ import xyz.moviseries.moviseries.streaming.StreamMoe;
 public class SeasonActivity extends BaseActivity implements CapitulosAdapter.OnClickCapituloListener, YouTubePlayer.OnInitializedListener {
 
     public static final String SERIE_NAME = "SeasonActivity.serie_name";
+    public static final String SERIE_ID = "SeasonActivity.serie_id";
     public static final String SEASON_ID = "SeasonActivity.season_id";
     public static final String SEASON_NUMBER = "SeasonActivity.season_number";
     public static final String COVER = "SeasonActivity.cover";
     public static final String TRAILER = "SeasonActivity.trailer";
 
 
-    private String serie_name, season_id, season_number, cover, trailer;
+    private String serie_name,serie_id, season_id, season_number, cover, trailer;
 
     private RecyclerView recyclerView;
     private CapitulosAdapter adapter;
@@ -72,9 +73,10 @@ public class SeasonActivity extends BaseActivity implements CapitulosAdapter.OnC
         openLoad = new OpenLoad(context);
         streamMoe = new StreamMoe(context);
         rapidVideo = new RapidVideo(context);
-        nowVideo=new NowVideo(context);
+        nowVideo = new NowVideo(context);
         Intent intent = getIntent();
         serie_name = intent.getStringExtra(SERIE_NAME);
+        serie_id = intent.getStringExtra(SERIE_ID);
         season_id = intent.getStringExtra(SEASON_ID);
         season_number = intent.getStringExtra(SEASON_NUMBER);
         cover = intent.getStringExtra(COVER);
@@ -176,6 +178,13 @@ public class SeasonActivity extends BaseActivity implements CapitulosAdapter.OnC
             case android.R.id.home:
                 finish();
                 break;
+            case R.id.action_share:
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_SUBJECT, "Sharing URL");
+                i.putExtra(Intent.EXTRA_TEXT, "http://moviseries.xyz/series/" + serie_id);
+                startActivity(Intent.createChooser(i, "Compartir URL"));
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -189,7 +198,7 @@ public class SeasonActivity extends BaseActivity implements CapitulosAdapter.OnC
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(url));
             context.startActivity(intent);
-        }else{
+        } else {
             UrlOnline url = new UrlOnline(capitulo.getUrl_id(), capitulo.getFile_id(), capitulo.getQuality(), capitulo.getServer(), capitulo.getLanguage_name());
 
             switch (capitulo.getServer()) {
@@ -210,7 +219,6 @@ public class SeasonActivity extends BaseActivity implements CapitulosAdapter.OnC
 
 
     }
-
 
 
     @Override

@@ -40,6 +40,9 @@
                 android:text="Ver más ..."
                 style="@style/Widget.AppCompat.Button.Borderless.Colored"/>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="60dp"/>
 
         </LinearLayout>
     </FrameLayout>

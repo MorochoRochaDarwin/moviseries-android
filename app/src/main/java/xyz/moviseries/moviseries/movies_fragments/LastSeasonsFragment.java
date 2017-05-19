@@ -1,6 +1,7 @@
 package xyz.moviseries.moviseries.movies_fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,7 +12,9 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +23,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import xyz.moviseries.moviseries.R;
+import xyz.moviseries.moviseries.SeasonActivity;
 import xyz.moviseries.moviseries.adapters.SeasonAdapter;
 import xyz.moviseries.moviseries.adapters.SeriesAdapter;
 import xyz.moviseries.moviseries.api_clients.MoviseriesApiClient;
@@ -31,13 +35,14 @@ import xyz.moviseries.moviseries.models.Serie;
  * Created by DARWIN on 7/5/2017.
  */
 
-public class LastSeasonsFragment extends Fragment {
+public class LastSeasonsFragment extends Fragment implements SeasonAdapter.OnSeasonClickListener {
     private Context context;
     private RecyclerView recyclerView;
     private SeasonAdapter adapter;
     private ArrayList<Season> seasons = new ArrayList<>();
 
     private ProgressBar progressBar;
+    private LinearLayout home;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,14 +57,16 @@ public class LastSeasonsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_recycler, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         recyclerView.setNestedScrollingEnabled(false);
+        home = (LinearLayout) rootView.findViewById(R.id.home);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         adapter = new SeasonAdapter(context, seasons);
+        adapter.setOnSeasonClickListener(this);
         if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             // Portrait Mode
-            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(3,StaggeredGridLayoutManager.VERTICAL));
+            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
         } else {
             // Landscape Mode
-            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(4,StaggeredGridLayoutManager.VERTICAL));
+            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL));
         }
 
         recyclerView.setAdapter(adapter);
@@ -74,11 +81,23 @@ public class LastSeasonsFragment extends Fragment {
         super.onConfigurationChanged(newConfig);
         // Checks the orientation of the screen
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(4,StaggeredGridLayoutManager.VERTICAL));
+            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL));
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(3,StaggeredGridLayoutManager.VERTICAL));
+            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
         }
 
+    }
+
+    @Override
+    public void OnCLickSeason(Season season) {
+        Intent intent = new Intent(context, SeasonActivity.class);
+        intent.putExtra(SeasonActivity.SEASON_ID, season.getSeason_id());
+        intent.putExtra(SeasonActivity.SEASON_NUMBER, season.getNumber());
+        intent.putExtra(SeasonActivity.SERIE_NAME, season.getSerie_name());
+        intent.putExtra(SeasonActivity.COVER, season.getCover());
+        intent.putExtra(SeasonActivity.TRAILER, season.getTrailer());
+
+        startActivity(intent);
     }
 
     private class Load extends AsyncTask<Void, Void, Void> implements Callback<List<Season>> {
@@ -88,7 +107,7 @@ public class LastSeasonsFragment extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             seasons.clear();
-            recyclerView.setVisibility(View.GONE);
+            home.setVisibility(View.GONE);
         }
 
         @Override
@@ -110,7 +129,7 @@ public class LastSeasonsFragment extends Fragment {
         @Override
         public void onResponse(Call<List<Season>> call, Response<List<Season>> response) {
 
-            if(response!=null){
+            if (response != null) {
                 seasons.addAll(response.body());
                 int n = seasons.size();
                 //Log.i("apimoviseries","tam:"+n);
@@ -121,12 +140,12 @@ public class LastSeasonsFragment extends Fragment {
             }
 
             progressBar.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
+            home.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onFailure(Call<List<Season>> call, Throwable t) {
-
+            Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 }

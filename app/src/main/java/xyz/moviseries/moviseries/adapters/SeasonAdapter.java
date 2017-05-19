@@ -39,10 +39,10 @@ public class SeasonAdapter extends RecyclerView.Adapter<SeasonAdapter.SeasonHold
 
     @Override
     public void onBindViewHolder(SeasonHolder holder, int position) {
-        Season season=seasons.get(position);
+        final Season season = seasons.get(position);
 
         holder.name.setText(season.getSerie_name());
-        holder.number.setText("Temporada "+season.getNumber());
+        holder.number.setText("Temporada " + season.getNumber());
 
         try {
             Picasso.with(context)
@@ -54,6 +54,13 @@ public class SeasonAdapter extends RecyclerView.Adapter<SeasonAdapter.SeasonHold
             Log.i("apimoviseries", " err: " + e.getMessage());
         }
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onSeasonClickListener.OnCLickSeason(season);
+            }
+        });
+
     }
 
     @Override
@@ -62,14 +69,26 @@ public class SeasonAdapter extends RecyclerView.Adapter<SeasonAdapter.SeasonHold
     }
 
 
-    class SeasonHolder extends RecyclerView.ViewHolder{
+    class SeasonHolder extends RecyclerView.ViewHolder {
         ImageView cover;
-        DMTextView name,number;
+        DMTextView name, number;
+
         public SeasonHolder(View itemView) {
             super(itemView);
-            name=(DMTextView) itemView.findViewById(R.id.name);
+            name = (DMTextView) itemView.findViewById(R.id.name);
             cover = (ImageView) itemView.findViewById(R.id.cover);
             number = (DMTextView) itemView.findViewById(R.id.number);
         }
+    }
+
+
+    public interface OnSeasonClickListener {
+        void OnCLickSeason(Season season);
+    }
+
+    private OnSeasonClickListener onSeasonClickListener;
+
+    public void setOnSeasonClickListener(OnSeasonClickListener onSeasonClickListener) {
+        this.onSeasonClickListener = onSeasonClickListener;
     }
 }

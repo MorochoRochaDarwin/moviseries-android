@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -113,6 +114,14 @@ public class BottomSheetSerie extends BottomSheetDialogFragment implements Seaso
         recyclerViewEnlacesMega = (RecyclerView) contentView.findViewById(R.id.enlaces_mega);
         recyclerViewEnlacesMega.setLayoutManager(new LinearLayoutManager(context));
 
+        smileRating.setNameForSmile(BaseRating.TERRIBLE, "Terrible");
+        smileRating.setNameForSmile(BaseRating.BAD, "Mala");
+        smileRating.setNameForSmile(BaseRating.OKAY, "Regular");
+        smileRating.setNameForSmile(BaseRating.GOOD, "Buena");
+        smileRating.setNameForSmile(BaseRating.GREAT, "Excelente");
+
+        Button btn_share = (Button) contentView.findViewById(R.id.btn_share);
+
         int screenSize = getResources().getConfiguration().screenLayout &
                 Configuration.SCREENLAYOUT_SIZE_MASK;
 
@@ -168,6 +177,16 @@ public class BottomSheetSerie extends BottomSheetDialogFragment implements Seaso
             ((BottomSheetBehavior) behavior).setBottomSheetCallback(mBottomSheetBehaviorCallback);
         }
 
+        btn_share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_SUBJECT, "Sharing URL");
+                i.putExtra(Intent.EXTRA_TEXT, "http://moviseries.xyz/series/"+serie_id);
+                startActivity(Intent.createChooser(i, "Compartir URL"));
+            }
+        });
 
         new Load().execute();
 
@@ -211,6 +230,7 @@ public class BottomSheetSerie extends BottomSheetDialogFragment implements Seaso
         intent.putExtra(SeasonActivity.SEASON_ID, seasonSerie.getSeason_id());
         intent.putExtra(SeasonActivity.SEASON_NUMBER, seasonSerie.getNumber());
         intent.putExtra(SeasonActivity.SERIE_NAME, name);
+        intent.putExtra(SeasonActivity.SERIE_ID, serie_id);
         intent.putExtra(SeasonActivity.COVER, seasonSerie.getCover());
         intent.putExtra(SeasonActivity.TRAILER, seasonSerie.getTrailer());
 

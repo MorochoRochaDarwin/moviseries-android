@@ -26,6 +26,7 @@ public class MainMenuAdapter extends RecyclerView.Adapter<MainMenuAdapter.MViewH
         this.context = context;
         items.add(new MainMenuItem("PELICULAS",R.mipmap.ic_movie,true));
         items.add(new MainMenuItem("SERIES",R.mipmap.ic_dc,false));
+        items.add(new MainMenuItem("SERIES ACTUALIZ.",R.mipmap.ic_dc,false));
         items.add(new MainMenuItem("TOP PELICULAS",R.mipmap.ic_start,false));
         items.add(new MainMenuItem("TOP SERIES",R.mipmap.ic_start,false));
     }

@@ -74,6 +74,13 @@ public class TopMoviesAdapter extends RecyclerView.Adapter<TopMoviesAdapter.Movi
             Log.i("apimoviseries", " err: " + e.getMessage());
         }
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onTopMovieListener.onClickTopMovie(movie);
+            }
+        });
+
     }
 
     @Override
@@ -97,5 +104,17 @@ public class TopMoviesAdapter extends RecyclerView.Adapter<TopMoviesAdapter.Movi
             mSmileRating.setNameForSmile(BaseRating.GOOD, "Buena");
             mSmileRating.setNameForSmile(BaseRating.GREAT, "Excelente");
         }
+    }
+
+
+
+    public  interface  OnTopMovieListener{
+       void onClickTopMovie (TopMovie movie);
+    }
+
+    private OnTopMovieListener onTopMovieListener;
+
+    public void setOnTopMovieListener(OnTopMovieListener onTopMovieListener) {
+        this.onTopMovieListener = onTopMovieListener;
     }
 }
