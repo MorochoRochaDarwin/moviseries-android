@@ -105,7 +105,7 @@ public class NowVideo {
 
             String link = firtsString.substring(0, firtsString.indexOf("\""));
 
-            
+
 
             if (isDownload) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

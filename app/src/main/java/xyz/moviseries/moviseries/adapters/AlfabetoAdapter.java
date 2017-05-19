@@ -49,11 +49,11 @@ public class AlfabetoAdapter extends RecyclerView.Adapter<AlfabetoAdapter.AViewH
                 holder.letra.setBackgroundColor(Color.parseColor("#de054e"));
 
             } else {
-                holder.letra.setBackgroundColor(Color.parseColor("#001174"));
+                holder.letra.setBackgroundColor(Color.parseColor("#00FFFFFF"));
             }
 
         } else {
-            holder.letra.setBackgroundColor(Color.parseColor("#001174"));
+            holder.letra.setBackgroundColor(Color.parseColor("#00FFFFFF"));
         }
         holder.letra.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -55,6 +55,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import xyz.moviseries.moviseries.adapters.AlfabetoAdapter;
 import xyz.moviseries.moviseries.adapters.CategoriasAdapter;
+import xyz.moviseries.moviseries.adapters.MainMenuAdapter;
 import xyz.moviseries.moviseries.api_clients.MoviseriesApiClient;
 import xyz.moviseries.moviseries.api_services.MoviseriesApiService;
 import xyz.moviseries.moviseries.custom_views.DMTextView;
@@ -94,8 +95,10 @@ public class DashboardActivity extends BaseActivity
     private ImageButton btn_search, btn_close_search;
     private EditText editTextSearch;
     private RecyclerView recyclerViewAlfabeto;
+    private RecyclerView recyclerViewMenu;
 
     private AlfabetoAdapter alfabetoAdapter;
+    private MainMenuAdapter menuAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,10 +115,14 @@ public class DashboardActivity extends BaseActivity
         btn_close_search = (ImageButton) findViewById(R.id.btn_close_search);
         editTextSearch = (EditText) findViewById(R.id.edit_search);
         recyclerViewAlfabeto = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerViewMenu = (RecyclerView) findViewById(R.id.recyclerViewMenu);
         alfabetoAdapter = new AlfabetoAdapter(context);
+        menuAdapter = new MainMenuAdapter(context);
         alfabetoAdapter.setOnClickLetraListener(this);
         recyclerViewAlfabeto.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recyclerViewMenu.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recyclerViewAlfabeto.setAdapter(alfabetoAdapter);
+        recyclerViewMenu.setAdapter(menuAdapter);
 
         categories.add(new Category("Todas las categorias"));
         categoriasAdapter = new CategoriasAdapter(context, categories);
