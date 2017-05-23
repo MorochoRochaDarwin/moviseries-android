@@ -1,4 +1,4 @@
-package xyz.moviseries.moviseries.fragments;
+package xyz.moviseries.moviseries.bottom_sheets;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -12,22 +12,17 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hsalf.smilerating.BaseRating;
 import com.hsalf.smilerating.SmileRating;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -42,7 +37,6 @@ import xyz.moviseries.moviseries.api_clients.MoviseriesApiClient;
 import xyz.moviseries.moviseries.api_services.MoviseriesApiService;
 import xyz.moviseries.moviseries.custom_views.DMTextView;
 import xyz.moviseries.moviseries.models.MEGAUrlSerie;
-import xyz.moviseries.moviseries.models.Season;
 import xyz.moviseries.moviseries.models.SeasonSerie;
 import xyz.moviseries.moviseries.models.SerieScore;
 import xyz.moviseries.moviseries.models.ViewSerie;

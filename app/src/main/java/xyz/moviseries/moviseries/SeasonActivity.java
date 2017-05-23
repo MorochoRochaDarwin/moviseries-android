@@ -203,7 +203,7 @@ public class SeasonActivity extends BaseActivity implements CapitulosAdapter.OnC
 
             switch (capitulo.getServer()) {
                 case "stream.moe":
-                    streamMoe.initStreaming(url, serie_name + ": temporada " + season_number + " capitulo " + capitulo.getEpisode(), isDownload);
+                    streamMoe.initStreaming(url, serie_name + "_temporada_" + season_number + "_capitulo_" + capitulo.getEpisode(), isDownload);
                     break;
                 case "openload":
                     openLoad.initStreaming(url);

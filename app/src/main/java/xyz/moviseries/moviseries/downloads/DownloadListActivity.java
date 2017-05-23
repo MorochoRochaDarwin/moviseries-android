@@ -3,6 +3,7 @@ package xyz.moviseries.moviseries.downloads;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -50,19 +51,24 @@ public class DownloadListActivity extends AppCompatActivity implements ActionLis
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        fetch = Fetch.getInstance(this);
+        clearAllDownloads();
         try {
 
             String link = getIntent().getStringExtra("video link");
             String video_name = getIntent().getStringExtra("video name");
             String video_quality = getIntent().getStringExtra("video quality");
-            Fetch fetch = Fetch.getInstance(context);
+
+            String filename = video_name + "_" + video_quality + ".mp4";
+
             com.tonyodev.fetch.request.Request request = new com.tonyodev.fetch.request.Request(link,
-                    Environment.getExternalStorageDirectory() + "/Moviseries/", video_name + " " + video_quality + ".mp4");
+                    Environment.getExternalStorageDirectory() + "/Moviseries/", filename);
             long downloadId = fetch.enqueue(request);
             Toast.makeText(context, "Descarga Iniciada", Toast.LENGTH_SHORT).show();
 
             Data data = new Data(context);
-            data.addDownload(new VideoDownload(downloadId + "", video_name + " " + video_quality + ".mp4", link));
+            data.addDownload(new VideoDownload(downloadId + "", filename, link));
 
         } catch (Exception e) {
             Log.i("derror", e.getMessage());
@@ -72,15 +78,14 @@ public class DownloadListActivity extends AppCompatActivity implements ActionLis
         data = new Data(this);
         setViews();
 
-        fetch = Fetch.getInstance(this);
-        clearAllDownloads();
+
     }
 
     /*Removes all downloads managed by Fetch*/
     private void clearAllDownloads() {
 
         Fetch fetch = Fetch.getInstance(this);
-        //fetch.removeAll();
+        fetch.removeAll();
 
         createNewRequests();
         fetch.release();
@@ -169,7 +174,7 @@ public class DownloadListActivity extends AppCompatActivity implements ActionLis
 
         for (VideoDownload v : Data.videoDownloads) {
 
-            Request request = new Request(v.getUrl(), data.getFilePath(v.getUrl()));
+            Request request = new Request(v.getUrl(), getFilePath(v.getUrl()));
             requests.add(request);
         }
 
@@ -191,6 +196,23 @@ public class DownloadListActivity extends AppCompatActivity implements ActionLis
 
             fileAdapter.addDownload(download);
         }
+    }
+
+
+    public static String getFilePath(String url) {
+
+        Uri uri = Uri.parse(url);
+
+        String fileName = uri.getLastPathSegment();
+
+        String dir = getSaveDir();
+
+        return (dir + System.nanoTime() + "_" + fileName);
+    }
+
+
+    public static String getSaveDir() {
+        return Environment.getExternalStorageDirectory() + "/Moviseries/";
     }
 
     @Override

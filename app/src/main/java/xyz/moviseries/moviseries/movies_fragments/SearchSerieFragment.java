@@ -28,7 +28,7 @@ import xyz.moviseries.moviseries.R;
 import xyz.moviseries.moviseries.adapters.SeriesAdapter;
 import xyz.moviseries.moviseries.api_clients.MoviseriesApiClient;
 import xyz.moviseries.moviseries.api_services.MoviseriesApiService;
-import xyz.moviseries.moviseries.fragments.BottomSheetSerie;
+import xyz.moviseries.moviseries.bottom_sheets.BottomSheetSerie;
 import xyz.moviseries.moviseries.models.Serie;
 
 /**

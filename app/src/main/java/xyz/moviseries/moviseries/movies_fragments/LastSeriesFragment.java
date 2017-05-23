@@ -1,6 +1,5 @@
 package xyz.moviseries.moviseries.movies_fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
@@ -10,8 +9,6 @@ import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,14 +22,11 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import xyz.moviseries.moviseries.MovieQualities;
 import xyz.moviseries.moviseries.R;
-import xyz.moviseries.moviseries.adapters.MoviesAdapter;
 import xyz.moviseries.moviseries.adapters.SeriesAdapter;
 import xyz.moviseries.moviseries.api_clients.MoviseriesApiClient;
 import xyz.moviseries.moviseries.api_services.MoviseriesApiService;
-import xyz.moviseries.moviseries.bottom_sheets.BottomSheetMovie;
-import xyz.moviseries.moviseries.fragments.BottomSheetSerie;
+import xyz.moviseries.moviseries.bottom_sheets.BottomSheetSerie;
 import xyz.moviseries.moviseries.models.Serie;
 
 /**
