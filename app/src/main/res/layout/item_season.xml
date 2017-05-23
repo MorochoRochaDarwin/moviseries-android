@@ -30,12 +30,12 @@
                     android:adjustViewBounds="true"
                     android:src="@drawable/cover" />
 
-                <ImageView
+                <com.facebook.drawee.view.SimpleDraweeView
                     android:id="@+id/cover"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
-                    android:src="@drawable/cover" />
+                    app:placeholderImage="@drawable/cover" />
 
 
             </FrameLayout>

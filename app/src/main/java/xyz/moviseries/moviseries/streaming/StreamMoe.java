@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -91,18 +92,19 @@ public class StreamMoe {
             progressDialog.hide();
             String firtsString = null;
             try {
-                firtsString = response.substring(response.lastIndexOf("https://wabbit.moecdn.io/"));
+                firtsString = response.substring(response.lastIndexOf("Filename:"));
+                firtsString = firtsString.substring(firtsString.indexOf("<a href=\""));
+                firtsString = firtsString.replace("<a href=\"", "");
             } catch (StringIndexOutOfBoundsException e) {
-                try {
-                    firtsString = response.substring(response.lastIndexOf("https://clank.stream.moe/"));
-                } catch (StringIndexOutOfBoundsException e2) {
-                    Toast.makeText(context, "No se pudo obtener el enlace", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                Log.i("firts", firtsString);
+                Toast.makeText(context, "No se pudo obtener el enlace", Toast.LENGTH_SHORT).show();
+                return;
             }
 
-            String link = firtsString.substring(0, firtsString.indexOf("\""));
 
+
+            String link = firtsString.substring(0, firtsString.indexOf("\""));
+            Log.i("link", link);
 
             if (isDownload) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -123,16 +125,23 @@ public class StreamMoe {
                 data.addDownload(new VideoDownload(downloadId + "", video_name + " " + urlOnline.getQuality() + ".mp4", link));
             } else {
                /*
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.parse(link), "video/mp4");
-                context.startActivity(intent);
+
+
+
+
+
                 */
+
+
 
                 Intent intent = new Intent(context, Exoplayer2Activity.class);
                 intent.putExtra(Exoplayer2Activity.LINK, link);
                 intent.putExtra(Exoplayer2Activity.TITLE, video_name + " - " + urlOnline.getQuality());
 
                 context.startActivity(intent);
+
+
+
 
             }
 

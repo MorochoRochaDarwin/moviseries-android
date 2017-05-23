@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,6 +24,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.hsalf.smilerating.BaseRating;
 import com.hsalf.smilerating.SmileRating;
 import com.squareup.picasso.Picasso;
@@ -59,7 +61,7 @@ public class BottomSheetSerie extends BottomSheetDialogFragment implements Seaso
 
     private String name, serie_id, year, cover, description, update_at;
     private Context context;
-    private ImageView imageViewCover;
+    private SimpleDraweeView imageViewCover;
     private TextView textViewName, textViewUpdateAt, textViewVotos;
     private DMTextView textViewDescription;
     private SmileRating smileRating;
@@ -104,7 +106,7 @@ public class BottomSheetSerie extends BottomSheetDialogFragment implements Seaso
         View contentView = View.inflate(getContext(), R.layout.fragment_serie, null);
         dialog.setContentView(contentView);
 
-        imageViewCover = (ImageView) contentView.findViewById(R.id.cover);
+        imageViewCover = (SimpleDraweeView) contentView.findViewById(R.id.cover);
         textViewName = (TextView) contentView.findViewById(R.id.name);
         textViewUpdateAt = (TextView) contentView.findViewById(R.id.timestamp);
         textViewDescription = (DMTextView) contentView.findViewById(R.id.short_description);
@@ -159,11 +161,11 @@ public class BottomSheetSerie extends BottomSheetDialogFragment implements Seaso
         recyclerViewEnlacesMega.setAdapter(enlacesMegaAdapter);
         recyclerViewSeasons.setAdapter(seasonSerieAdapter);
 
-        Picasso.with(context)
-                .load(cover)
-                .resize(351, 526)
-                .centerCrop()
-                .into(imageViewCover);
+
+        Uri uri = Uri.parse(cover);
+        imageViewCover.setImageURI(uri);
+
+
         textViewName.setText(name);
         textViewUpdateAt.setText(update_at);
         textViewDescription.setText(description);

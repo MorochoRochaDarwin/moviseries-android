@@ -44,14 +44,14 @@ public class DownloadListActivity extends AppCompatActivity implements ActionLis
         setViews();
 
         fetch = Fetch.getInstance(this);
-       // clearAllDownloads();
+        clearAllDownloads();
     }
 
     /*Removes all downloads managed by Fetch*/
     private void clearAllDownloads() {
 
         Fetch fetch = Fetch.getInstance(this);
-        fetch.removeAll();
+        //fetch.removeAll();
 
         createNewRequests();
         fetch.release();

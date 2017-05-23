@@ -1,6 +1,7 @@
 package xyz.moviseries.moviseries.adapters;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -43,16 +45,8 @@ public class SeasonAdapter extends RecyclerView.Adapter<SeasonAdapter.SeasonHold
 
         holder.name.setText(season.getSerie_name());
         holder.number.setText("Temporada " + season.getNumber());
-
-        try {
-            Picasso.with(context)
-                    .load(season.getCover())
-                    .resize(351, 526)
-                    .centerCrop()
-                    .into(holder.cover);
-        } catch (Exception e) {
-            Log.i("apimoviseries", " err: " + e.getMessage());
-        }
+        Uri uri = Uri.parse(season.getCover());
+        holder.cover.setImageURI(uri);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,13 +64,13 @@ public class SeasonAdapter extends RecyclerView.Adapter<SeasonAdapter.SeasonHold
 
 
     class SeasonHolder extends RecyclerView.ViewHolder {
-        ImageView cover;
+        SimpleDraweeView cover;
         DMTextView name, number;
 
         public SeasonHolder(View itemView) {
             super(itemView);
             name = (DMTextView) itemView.findViewById(R.id.name);
-            cover = (ImageView) itemView.findViewById(R.id.cover);
+            cover = (SimpleDraweeView) itemView.findViewById(R.id.cover);
             number = (DMTextView) itemView.findViewById(R.id.number);
         }
     }

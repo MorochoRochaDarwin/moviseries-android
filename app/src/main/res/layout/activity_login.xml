@@ -98,20 +98,24 @@
                     android:orientation="horizontal">
 
                     <xyz.moviseries.moviseries.custom_views.DMTextView
+                        android:id="@+id/resetpass"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
                         android:padding="10dp"
+                        android:onClick="resetpass"
                         android:text="¿Olvido su contraseña?"
                         android:textColor="@color/colorAccent" />
 
                     <xyz.moviseries.moviseries.custom_views.DMTextView
+                        android:id="@+id/newacc"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
                         android:padding="10dp"
+                        android:onClick="resetpass"
                         android:text="Crear una nueva cuenta"
                         android:textColor="@color/colorAccent" />
                 </LinearLayout>

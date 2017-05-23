@@ -1,6 +1,7 @@
 package xyz.moviseries.moviseries.adapters;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -51,15 +53,8 @@ public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.SerieHolde
             }
         });
 
-        try {
-            Picasso.with(context)
-                    .load(serie.getCover())
-                    .resize(351, 526)
-                    .centerCrop()
-                    .into(holder.cover);
-        } catch (Exception e) {
-            Log.i("apimoviseries", " err: " + e.getMessage());
-        }
+        Uri uri = Uri.parse(serie.getCover());
+        holder.cover.setImageURI(uri);
 
     }
 
@@ -70,13 +65,13 @@ public class SeriesAdapter extends RecyclerView.Adapter<SeriesAdapter.SerieHolde
 
 
     class SerieHolder extends RecyclerView.ViewHolder {
-        ImageView cover;
+        SimpleDraweeView cover;
         TextView name;
         LinearLayout item;
 
         public SerieHolder(View itemView) {
             super(itemView);
-            cover = (ImageView) itemView.findViewById(R.id.cover);
+            cover = (SimpleDraweeView) itemView.findViewById(R.id.cover);
             name = (TextView) itemView.findViewById(R.id.name);
             item = (LinearLayout) itemView.findViewById(R.id.item);
         }

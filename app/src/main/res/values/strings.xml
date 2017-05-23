@@ -221,10 +221,6 @@
     <string name="title_activity_downloads">DownloadsActivity</string>
 
 
-
-
-
-
     <string name="pause">PAUSAE</string>
     <string name="resume">RENAURAR</string>
     <string name="permission_not_enabled">Please enable the Write External Storage Permission</string>

@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -135,6 +136,15 @@ public class LoginActivity extends AppCompatActivity {
             Log.i("apimoviseries", t.getMessage());
         }
     }
+
+
+    public void resetpass(View v){
+        String url = "http://moviseries.xyz";
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        context.startActivity(intent);
+    }
+
 
 
 }

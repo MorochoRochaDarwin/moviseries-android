@@ -3,6 +3,7 @@ package xyz.moviseries.moviseries.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.InputStream;
@@ -35,9 +38,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieHolde
     private Context context;
     private ArrayList<MovieQualities> movies;
 
+
     public MoviesAdapter(Context context, ArrayList<MovieQualities> movies) {
         this.context = context;
         this.movies = movies;
+
     }
 
     @Override
@@ -64,17 +69,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieHolde
         holder.qualities.setText(tmp);
         final String squalities = tmp;
 
-
-        try {
-            Picasso.with(context)
-                    .load(movie.getMovie().getCover())
-                    .resize(153, 219)
-                    .centerCrop()
-                    .into(holder.cover);
-        } catch (Exception e) {
-            Log.i("apimoviseries", " err: " + e.getMessage());
-        }
-
+        Uri uri = Uri.parse(movie.getMovie().getCover());
+        holder.cover.setImageURI(uri);
 
         holder.item.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,14 +88,14 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieHolde
 
 
     class MovieHolder extends RecyclerView.ViewHolder {
-        ImageView cover;
+        SimpleDraweeView cover;
         DMTextView description;
         TextView name, updated_at, qualities;
         LinearLayout item;
 
         public MovieHolder(View itemView) {
             super(itemView);
-            cover = (ImageView) itemView.findViewById(R.id.cover);
+            cover = (SimpleDraweeView) itemView.findViewById(R.id.cover);
             name = (TextView) itemView.findViewById(R.id.name);
             qualities = (TextView) itemView.findViewById(R.id.qualities);
             item = (LinearLayout) itemView.findViewById(R.id.item);

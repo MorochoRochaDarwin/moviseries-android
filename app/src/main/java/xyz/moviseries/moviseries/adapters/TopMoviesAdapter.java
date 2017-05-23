@@ -2,6 +2,7 @@ package xyz.moviseries.moviseries.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.hsalf.smilerating.BaseRating;
 import com.hsalf.smilerating.SmileRating;
 import com.squareup.picasso.Picasso;
@@ -64,15 +66,8 @@ public class TopMoviesAdapter extends RecyclerView.Adapter<TopMoviesAdapter.Movi
         }
 
 
-        try {
-            Picasso.with(context)
-                    .load(movie.getCover())
-                    .resize(351, 526)
-                    .centerCrop()
-                    .into(holder.cover);
-        } catch (Exception e) {
-            Log.i("apimoviseries", " err: " + e.getMessage());
-        }
+        Uri uri = Uri.parse(movie.getCover());
+        holder.cover.setImageURI(uri);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,12 +85,12 @@ public class TopMoviesAdapter extends RecyclerView.Adapter<TopMoviesAdapter.Movi
 
 
     class MovieHolder extends RecyclerView.ViewHolder {
-        ImageView cover;
+        SimpleDraweeView cover;
         SmileRating mSmileRating;
 
         public MovieHolder(View itemView) {
             super(itemView);
-            cover = (ImageView) itemView.findViewById(R.id.cover);
+            cover = (SimpleDraweeView) itemView.findViewById(R.id.cover);
             mSmileRating = (SmileRating) itemView.findViewById(R.id.ratingView);
 
             mSmileRating.setNameForSmile(BaseRating.TERRIBLE, "Terrible");

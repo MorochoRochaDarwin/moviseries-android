@@ -32,6 +32,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.hsalf.smilerating.BaseRating;
 import com.hsalf.smilerating.SmileRating;
@@ -82,7 +83,7 @@ public class BottomSheetMovie extends BottomSheetDialogFragment implements Enlac
     private Context context;
     private BottomSheetBehavior mBehavior;
 
-    private ImageView imageViewCover;
+    private SimpleDraweeView imageViewCover;
     private TextView textViewName, textViewUpdateAt, textViewQualities, textViewVotos;
     private DMTextView textViewDescription;
     private SmileRating smileRating;
@@ -146,7 +147,7 @@ public class BottomSheetMovie extends BottomSheetDialogFragment implements Enlac
         Button btn_trailer = (Button) contentView.findViewById(R.id.btn_trailer);
         Button btn_share = (Button) contentView.findViewById(R.id.btn_share);
 
-        imageViewCover = (ImageView) contentView.findViewById(R.id.cover);
+        imageViewCover = (SimpleDraweeView) contentView.findViewById(R.id.cover);
         textViewName = (TextView) contentView.findViewById(R.id.name);
         textViewQualities = (TextView) contentView.findViewById(R.id.qualities);
         textViewUpdateAt = (TextView) contentView.findViewById(R.id.timestamp);
@@ -171,11 +172,10 @@ public class BottomSheetMovie extends BottomSheetDialogFragment implements Enlac
         smileRating.setNameForSmile(BaseRating.GREAT, "Excelente");
 
 
-        Picasso.with(context)
-                .load(cover)
-                .resize(351, 526)
-                .centerCrop()
-                .into(imageViewCover);
+        Uri uri = Uri.parse(cover);
+        imageViewCover.setImageURI(uri);
+
+
         textViewName.setText(name);
         textViewQualities.setText(qualities);
         textViewUpdateAt.setText(update_at);

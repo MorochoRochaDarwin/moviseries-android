@@ -228,6 +228,8 @@ public class DashboardActivity extends BaseActivity
 
         initDrawer();
 
+        checkWriteSDCard();
+
         if (!isLoadCategories) {
             new LoadCategories().execute();
         }
@@ -235,7 +237,7 @@ public class DashboardActivity extends BaseActivity
 
     }
 
-    private int REQUEST_CODE = 100;
+    private int REQUEST_CODE_W = 100;
 
     private void checkFolder() {
         File f = new File(Environment.getExternalStorageDirectory() + "/Moviseries/");
@@ -243,15 +245,25 @@ public class DashboardActivity extends BaseActivity
             f.mkdirs();
     }
 
+    private void checkWriteSDCard() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_W);
+            }
+        }
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.v("P60", "Permission: " + permissions[0] + "was " + grantResults[0]);
+        if (requestCode == REQUEST_CODE_W) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.v("P60", "Permission: " + permissions[0] + "was " + grantResults[0]);
 
-        } else {
-            Toast.makeText(context, "ERROR no podra realizar descargas", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, "ERROR no podra realizar descargas", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

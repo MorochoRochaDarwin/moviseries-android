@@ -37,15 +37,16 @@
                         android:orientation="horizontal"
                         android:paddingRight="40dp">
 
-                        <ImageView
+                        <com.facebook.drawee.view.SimpleDraweeView
                             android:id="@+id/cover"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="2.3"
+                            android:layout_height="match_parent"
                             android:adjustViewBounds="true"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/cover" />
+                            app:placeholderImage="@drawable/cover"
+                            android:layout_weight="2.3"
+                            android:layout_gravity="center"
+                            />
+
 
                         <LinearLayout
                             android:layout_width="match_parent"
