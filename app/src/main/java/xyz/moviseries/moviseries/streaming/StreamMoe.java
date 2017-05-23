@@ -21,6 +21,7 @@ import com.tonyodev.fetch.Fetch;
 
 import xyz.moviseries.moviseries.Exoplayer2Activity;
 import xyz.moviseries.moviseries.downloads.Data;
+import xyz.moviseries.moviseries.downloads.DownloadListActivity;
 import xyz.moviseries.moviseries.models.UrlOnline;
 import xyz.moviseries.moviseries.models.VideoDownload;
 
@@ -114,16 +115,13 @@ public class StreamMoe {
                     }
                 }
 
-                Fetch fetch = Fetch.getInstance(context);
+                Intent intent=new Intent(context, DownloadListActivity.class);
+                intent.putExtra("video link",link);
+                intent.putExtra("video name",video_name);
+                intent.putExtra("video quality",urlOnline.getQuality());
+                context.startActivity(intent);
 
-                com.tonyodev.fetch.request.Request request = new com.tonyodev.fetch.request.Request(link,
-                        Environment.getExternalStorageDirectory() + "/Moviseries/", video_name + " " + urlOnline.getQuality() + ".mp4");
-                long downloadId = fetch.enqueue(request);
-                Toast.makeText(context, "Descarga Iniciada", Toast.LENGTH_SHORT).show();
-
-                Data data = new Data(context);
-                data.addDownload(new VideoDownload(downloadId + "", video_name + " " + urlOnline.getQuality() + ".mp4", link));
-            } else {
+               } else {
                /*
 
 

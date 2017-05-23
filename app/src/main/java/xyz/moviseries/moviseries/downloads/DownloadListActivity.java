@@ -1,9 +1,11 @@
 package xyz.moviseries.moviseries.downloads;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,7 +13,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
@@ -28,6 +32,7 @@ import xyz.moviseries.moviseries.models.VideoDownload;
 public class DownloadListActivity extends AppCompatActivity implements ActionListener {
 
     private static final int STORAGE_PERMISSION_CODE = 200;
+    private Context context;
 
     private RecyclerView recyclerView;
     private SwitchCompat networkSwitch;
@@ -40,6 +45,30 @@ public class DownloadListActivity extends AppCompatActivity implements ActionLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download_list);
+        context = this;
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        try {
+
+            String link = getIntent().getStringExtra("video link");
+            String video_name = getIntent().getStringExtra("video name");
+            String video_quality = getIntent().getStringExtra("video quality");
+            Fetch fetch = Fetch.getInstance(context);
+            com.tonyodev.fetch.request.Request request = new com.tonyodev.fetch.request.Request(link,
+                    Environment.getExternalStorageDirectory() + "/Moviseries/", video_name + " " + video_quality + ".mp4");
+            long downloadId = fetch.enqueue(request);
+            Toast.makeText(context, "Descarga Iniciada", Toast.LENGTH_SHORT).show();
+
+            Data data = new Data(context);
+            data.addDownload(new VideoDownload(downloadId + "", video_name + " " + video_quality + ".mp4", link));
+
+        } catch (Exception e) {
+            Log.i("derror", e.getMessage());
+        }
+
+
         data = new Data(this);
         setViews();
 
@@ -182,5 +211,17 @@ public class DownloadListActivity extends AppCompatActivity implements ActionLis
     @Override
     public void onRetryDownload(long id) {
         fetch.retry(id);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

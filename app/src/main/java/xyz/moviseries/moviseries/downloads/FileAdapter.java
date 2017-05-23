@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xyz.moviseries.moviseries.R;
+import xyz.moviseries.moviseries.models.VideoDownload;
 
 /**
  * Created by tonyofrancis on 1/24/17.
@@ -42,7 +43,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> im
     public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.download_item,parent,false);
+                .inflate(R.layout.download_item, parent, false);
 
         return new ViewHolder(view);
     }
@@ -54,10 +55,10 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> im
 
         Uri uri = Uri.parse(download.getUrl());
         holder.titleTextView.setText(download.getFileName());
-        holder.statusTextView.setText(getStatusString(download.getStatus())+" "+download.getProgress()+"%");
+        holder.statusTextView.setText(getStatusString(download.getStatus()) + " " + download.getProgress() + "%");
         holder.progressBar.setProgress(download.getProgress());
 
-        onBindViewHolderActions(holder,position);
+        onBindViewHolderActions(holder, position);
 
         switch (download.getStatus()) {
             case Fetch.STATUS_DONE: {
@@ -83,7 +84,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> im
         }
     }
 
-    private void onBindViewHolderActions(final ViewHolder holder, int position) {
+    private void onBindViewHolderActions(final ViewHolder holder, final int position) {
 
         final Download download = downloads.get(position);
         final int status = download.getStatus();
@@ -94,10 +95,10 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> im
             @Override
             public void onClick(View v) {
 
-                if(status == Fetch.STATUS_PAUSED) {
+                if (status == Fetch.STATUS_PAUSED) {
                     actionListener.onResumeDownload(download.getId());
 
-                }else if(status == Fetch.STATUS_DOWNLOADING || status == Fetch.STATUS_QUEUED) {
+                } else if (status == Fetch.STATUS_DOWNLOADING || status == Fetch.STATUS_QUEUED) {
                     actionListener.onPauseDownload(download.getId());
                 }
             }
@@ -111,15 +112,19 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> im
                 Uri uri = Uri.parse(download.getUrl());
 
                 new AlertDialog.Builder(context)
-                        .setMessage(context.getString(R.string.delete_title,uri.getLastPathSegment()))
+                        .setMessage("¿Eliminar descarga?\n" + download.getFileName())
                         .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
                                 actionListener.onRemoveDownload(download.getId());
+                                Data data = new Data(context);
+                                data.removeDownload(position);
+
+
                             }
                         })
-                        .setNegativeButton(R.string.cancel,null)
+                        .setNegativeButton(R.string.cancel, null)
                         .show();
 
                 return true;
@@ -131,12 +136,12 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> im
             @Override
             public void onClick(View v) {
 
-                if(status == Fetch.STATUS_DONE) {
+                if (status == Fetch.STATUS_DONE) {
 
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 
-                        Toast.makeText(context,"Downloaded Path:" +
-                                download.getFilePath(),Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Downloaded Path:" +
+                                download.getFilePath(), Toast.LENGTH_LONG).show();
 
                         return;
                     }
@@ -145,7 +150,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> im
                     Uri uri = Uri.fromFile(file);
 
                     Intent share = new Intent(Intent.ACTION_VIEW);
-                    share.setDataAndType(uri,Utils.getMimeType(context,uri));
+                    share.setDataAndType(uri, Utils.getMimeType(context, uri));
 
                     context.startActivity(share);
                 }
@@ -174,7 +179,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> im
 
         for (Download download : downloads) {
 
-            if(download.getId() == id) {
+            if (download.getId() == id) {
                 return download;
             }
         }
@@ -188,11 +193,11 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> im
 
             Download download = downloads.get(i);
 
-            if(download.getId() == id) {
+            if (download.getId() == id) {
                 return i;
             }
         }
-        return  -1;
+        return -1;
     }
 
     @Override
@@ -205,11 +210,11 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> im
 
         Download download = getDownload(id);
 
-        if(download != null) {
+        if (download != null) {
 
             int position = getPosition(id);
 
-            if(status != Fetch.STATUS_REMOVED) {
+            if (status != Fetch.STATUS_REMOVED) {
 
                 download.setStatus(status);
                 download.setProgress(progress);
@@ -217,7 +222,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> im
 
                 notifyItemChanged(position);
 
-            }else {
+            } else {
                 downloads.remove(position);
                 notifyItemRemoved(position);
             }
